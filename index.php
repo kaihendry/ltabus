@@ -91,7 +91,7 @@ foreach ($j["Services"] as $service) {
 <ol id=stations></ol>
 
 <script>
-function foo(id, time) {
+function countdown(id, time) {
 	// console.log(id,time);
 	var seconds =  time / 1000;
 	if (Math.abs(seconds) > 60) {
@@ -99,7 +99,7 @@ function foo(id, time) {
 	} else {
 		id.innerHTML = parseInt(seconds) + "s";
 	}
-	setTimeout(foo,1000, id, time - 1000);
+	setTimeout(countdown,1000, id, time - 1000);
 }
 
 window.addEventListener('load', function() {
@@ -108,27 +108,27 @@ window.addEventListener('load', function() {
 	for (var i = 0; i < timings.length; i++) {
 		var arr = new Date(timings[i].getAttribute("datetime"));
 		var elapsed = arr.getTime() - now.getTime();
-		foo(timings[i], elapsed);
+		countdown(timings[i], elapsed);
 	}
 	var lastupdated = document.getElementById("lastupdated");
-	foo(lastupdated, Date.now() - now);
+	countdown(lastupdated, Date.now() - now);
 
-	localStorage.setItem('<?php echo $id;?>', 1 + (parseInt(localStorage.getItem('<?php echo $id;?>')) || 0));
 
-	var tuples = [];
+	slog = (JSON.parse(localStorage.getItem("history")) || {});
+	slog['<?php echo $id;?>'] = 1 + (slog['<?php echo $id;?>'] || 0);
+	localStorage.setItem('history', JSON.stringify(slog));
+	console.debug(localStorage['history']);
 
-	for (var key in localStorage) tuples.push([key, parseInt(localStorage[key])]);
-
-	tuples.sort(function(a, b) {
-		a = a[1];
-		b = b[1];
-		return a > b ? -1 : (a < b ? 1 : 0);
-	});
-
+	var sortable = [];
+	for (var station in slog) {
+		sortable.push([station, slog[station]])
+	}
+	sortable.sort(function(a, b) {return a[1] - b[1]})
+	// console.debug(sortable);
 	var ul = document.getElementById("stations");
-	for (var i = 0; i < tuples.length; i++) {
-		var key = tuples[i][0];
-		var value = tuples[i][1];
+	for (var i = sortable.length - 1; i >= 0; i--) {
+		var key = sortable[i][0];
+		var value = sortable[i][1];
 		// console.log(key, value);
 
 		var li = document.createElement("li");
@@ -138,6 +138,7 @@ window.addEventListener('load', function() {
 		li.appendChild(link);
 		ul.appendChild(li);
 	}
+
 }, false);
 </script>
 </body>
