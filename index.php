@@ -38,6 +38,7 @@ ul#buses li:before {
 
 #busstopid {
   transform: rotate(-90deg);
+  -webkit-transform: rotate(-90deg);
   width: 5em;
   position: absolute;
   left: -2em;
@@ -141,5 +142,6 @@ window.addEventListener('load', function() {
 
 }, false);
 </script>
+<footer><a href=https://github.com/kaihendry/ltabus>Source code</a></footer>
 </body>
 </html>
