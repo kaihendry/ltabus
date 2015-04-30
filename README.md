@@ -13,6 +13,11 @@ Name bus stops and link to map to find bus stop ids.
 
 	wget http://www.mytransport.sg/content/dam/mytransport/DataMall_StaticData/Geospatial/BusStops.zip
 	unzip BusStops.zip
-	ogr2ogr -f KML [Jan2015.kml](http://s.natalian.org/2015-04-28/Jan2015.kml) BusStop.shp
+	ogr2ogr -f GeoJSON -t_srs crs:84 bus-stops.json BusStops_Jan2015/BusStop.shp
 
-ogr2ogr binary is from the [gdap package](https://www.archlinux.org/packages/community/i686/gdal/)
+ogr2ogr binary is from the [gdal package](https://www.archlinux.org/packages/community/i686/gdal/)
+
+## Related
+
+* <https://github.com/cheeaun/arrivelah>
+* <https://cheeaun.github.io/busrouter-sg/>

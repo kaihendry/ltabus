@@ -91,6 +91,8 @@ foreach ($j["Services"] as $service) {
 </form>
 <ol id=stations></ol>
 
+<p><a href=/map.html>Experimental map of bus stops</a></p>
+
 <script>
 function countdown(id, time) {
 	// console.log(id,time);
@@ -142,6 +144,6 @@ window.addEventListener('load', function() {
 
 }, false);
 </script>
-<footer><a href=https://github.com/kaihendry/ltabus>Source code</a></footer>
+<footer><a href=https://github.com/kaihendry/ltabus>Source code</a>&diam;<a href="mailto:hendry+bus@iki.fi">Email feedback</a></footer>
 </body>
 </html>

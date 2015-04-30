@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Singapore bus stops</title>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <style>
+      html, body, #map-canvas {
+        height: 100%;
+        margin: 0px;
+        padding: 0px
+      }
+    </style>
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp"></script>
+<script>
+var map;
+function initialize() {
+	// Create a simple map.
+	map = new google.maps.Map(document.getElementById('map-canvas'), {
+		zoom: 12,
+		center: {lat: 1.290270, lng: 103.851959}
+	});
+
+	// Load a GeoJSON from the same server as our demo.
+	map.data.loadGeoJson('bus-stops.json');
+
+
+	if(navigator.geolocation) {
+		navigator.geolocation.getCurrentPosition(function(position) {
+			var pos = new google.maps.LatLng(position.coords.latitude,
+					position.coords.longitude);
+			map.panTo(pos);
+			map.setZoom(16);
+		});
+	}
+
+	// global infowindow
+	var infowindow = new google.maps.InfoWindow();
+
+	// When the user clicks, open an infowindow
+	map.data.addListener('click', function(event) {
+		var id = event.feature.getProperty("BUS_STOP_N");
+		infowindow.setContent("<a href=http://bus.dabase.com/?id=" + id + ">" + id + "</a>");
+		infowindow.setPosition(event.feature.getGeometry().get());
+		infowindow.setOptions({pixelOffset: new google.maps.Size(0,-30)});
+		infowindow.open(map);
+	});
+
+
+
+}
+
+google.maps.event.addDomListener(window, 'load', initialize);
+
+</script>
+  </head>
+  <body>
+    <div id="map-canvas"></div>
+  </body>
+</html>
