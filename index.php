@@ -24,6 +24,18 @@ curl_close($ch);
 $j = json_decode($result, true);
 if (isset($j["odata.error"])) { die ($j["odata.error"]["message"]["value"]); }
 
+function my_sort($a, $b) {
+    if ($a["NextBus"]["EstimatedArrival"] < $b["NextBus"]["EstimatedArrival"]) {
+        return -1;
+    } else if ($a["NextBus"]["EstimatedArrival"] > $b["NextBus"]["EstimatedArrival"]) {
+        return 1;
+    } else {
+        return 0;
+    }
+}
+
+usort($j["Services"], 'my_sort');
+
 ?>
 <!DOCTYPE html>
 <html>

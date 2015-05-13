@@ -9,8 +9,6 @@ Make sure your Webserver does not serve dotfiles, e.g. <http://bus.dabase.com/.c
 
 # TODO
 
-Name bus stops and link to map to find bus stop ids.
-
 	wget http://www.mytransport.sg/content/dam/mytransport/DataMall_StaticData/Geospatial/BusStops.zip
 	unzip BusStops.zip
 	ogr2ogr -f GeoJSON -t_srs crs:84 bus-stops.json BusStops_Jan2015/BusStop.shp
