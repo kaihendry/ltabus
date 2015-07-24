@@ -42,6 +42,7 @@ usort($j["Services"], 'my_sort');
 <head>
 <title><?php echo $j["BusStopID"] . " " . $_GET["name"]; ?></title>
 <meta name=viewport content="width=device-width, initial-scale=1">
+<link rel='icon' href='data:;base64,iVBORw0KGgo='>
 <style>
 ul#buses li { list-style: none; }
 ul#buses li:before {
@@ -101,11 +102,14 @@ foreach ($j["Services"] as $service) {
 }
 ?>
 </ul>
-<h4>Last updated: <span id=lastupdated></span> ago</h4>
+<h4>Last updated: <span id=lastupdated></span></h4>
 <form>
 <input required type=number value=<?php echo $id;?> name=id>
 <input type=submit>
 </form>
+
+<p><a href=/close.html>Experimental: Closest stops</a></p>
+
 <ol id=stations></ol>
 
 <p><a href=/map.html>Map of Singapore bus stops</a></p>
