@@ -93,7 +93,7 @@ function tmark($s) {
 foreach ($j["Services"] as $service) {
 	if (empty($service["NextBus"]["EstimatedArrival"])) { continue; }
 	echo "<li>";
-	echo "<strong><a href='https://cheeaun.github.io/busrouter-sg/#/services/" . $service["ServiceNo"] . "'>" . $service["ServiceNo"] . "</a></strong> ";
+	echo "<strong><a href='https://busrouter.sg/#/services/" . $service["ServiceNo"] . "'>" . $service["ServiceNo"] . "</a></strong> ";
 	echo tmark($service["NextBus"]) . ", ";
 	if (isset($service["SubsequentBus"]["EstimatedArrival"])) {
 		echo tmark($service["SubsequentBus"]);

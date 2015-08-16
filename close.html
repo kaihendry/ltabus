@@ -32,8 +32,9 @@ function closest(lat, lon) {
 		var out = "";
 		var i;
 		for(i = 0; i < arr.length; i++) {
+			console.log(arr[i]);
 			out += '<a href=/?id=' + arr[i].id + '&name=' + encodeURI(arr[i].name) + '>' +
-				arr[i].name + '</a><br>';
+				arr[i].id + ' ' + arr[i].name + '</a><br>';
 		}
 		document.getElementById("id01").innerHTML = out;
 	}
