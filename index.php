@@ -19,9 +19,20 @@ $headers = array(
 );
 curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 $result=curl_exec($ch);
+$info = curl_getinfo($ch);
+$errinfo = curl_error($ch);
 curl_close($ch);
 
 $j = json_decode($result, true);
+
+if (empty($j)) {
+	echo "<h1>ERROR</h1><pre>";
+	print_r($info);
+	print_r($errinfo);
+	echo "</pre>";
+	die("<h1>No result from LTA API</h1>");
+}
+
 if (isset($j["odata.error"])) { die ($j["odata.error"]["message"]["value"]); }
 
 function my_sort($a, $b) {
@@ -54,18 +65,10 @@ ol#stations li:before {
   content: "🚏";
 }
 
-#busstopid {
-  transform: rotate(-90deg);
-  -webkit-transform: rotate(-90deg);
-  width: 5em;
-  position: absolute;
-  left: -2em;
-  top: -1em;
-}
 </style>
 </head>
 <body>
-<h1 id=busstopid><?php echo $j["BusStopID"]; ?></h1>
+<h1 id=busstopid><?php echo $j["BusStopID"] . " " . $_GET["name"]; ?></h1>
 <ul id=buses>
 <?php
 
@@ -104,7 +107,7 @@ foreach ($j["Services"] as $service) {
 </ul>
 <h4>Last updated: <span id=lastupdated></span></h4>
 <form>
-<input required type=number value=<?php echo $id;?> name=id>
+<input required type=number inputmode="numeric" pattern="[0-9]*" value=<?php echo $id;?> name=id>
 <input type=submit>
 </form>
 
