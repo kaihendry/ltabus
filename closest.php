@@ -24,7 +24,11 @@ $ch = curl_init();
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 curl_setopt($ch, CURLOPT_URL,$url);
 $json=curl_exec($ch);
+$info = curl_getinfo($ch);
+$errinfo = curl_error($ch);
 curl_close($ch);
+
+echo $errinfo;
 
 $r = json_decode($json);
 

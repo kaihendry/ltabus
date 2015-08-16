@@ -1,11 +1,7 @@
 <?php
 
 if (isset($_GET["id"]) && is_numeric($_GET["id"])) {
-	$id = $_GET["id"];
-} else {
-	$id = "07379";
-}
-
+$id = $_GET["id"];
 $url = "http://datamall2.mytransport.sg/ltaodataservice/BusArrival?BusStopID=$id";
 
 $creds = parse_ini_file(".creds.ini");
@@ -46,12 +42,13 @@ function my_sort($a, $b) {
 }
 
 usort($j["Services"], 'my_sort');
+}
 
 ?>
 <!DOCTYPE html>
 <html>
 <head>
-<title><?php echo $j["BusStopID"] . " " . $_GET["name"]; ?></title>
+<title>Singapore bus arrival times</title>
 <meta name=viewport content="width=device-width, initial-scale=1">
 <link rel='icon' href='data:;base64,iVBORw0KGgo='>
 <style>
@@ -71,10 +68,21 @@ ol { padding-left: 0; list-style: none; }
 }
 
 .busstopid { white-space: nowrap; display:inline-block; border-bottom: thin solid black; padding-bottom:2px; margin: 0 }
+
+input[type=text] {
+    font-size: 1em;
+    width: 4em;
+}
+
+input[type=submit] {
+    font-size: 1em;
+}
 </style>
 </head>
 <body>
+<?php if($id) {?>
 <h3 class=busstopid><?php echo "🚏" . $j["BusStopID"] . " " . $_GET["name"]; ?></h3>
+<?php } ?>
 <ul class=buses>
 <?php
 
@@ -111,9 +119,12 @@ foreach ($j["Services"] as $service) {
 }
 ?>
 </ul>
+<?php if($id) {?>
 <h4>Last updated: <span id=lastupdated></span></h4>
+<?php } ?>
 <form>
-<input required type=number inputmode="numeric" pattern="[0-9]*" value=<?php echo $id;?> name=id>
+<label for=id>Bus stop #</label>
+<input required type=text inputmode="numeric" pattern="[0-9]{5}" value="<?php echo $id;?>" name=id>
 <input type=submit>
 </form>
 
@@ -176,10 +187,11 @@ window.addEventListener('load', function() {
 
 		var li = document.createElement("li");
 		var link = document.createElement('a');
-		link.setAttribute('href', '/?id=' + key + '&name=' + encodeURI(value.name));
 		if (value.name) {
+		link.setAttribute('href', '/?id=' + key + '&name=' + encodeURI(value.name));
 		link.appendChild(document.createTextNode(key + " " + value.name));
 		} else {
+		link.setAttribute('href', '/?id=' + key);
 		link.appendChild(document.createTextNode(key));
 		}
 		li.appendChild(link);
@@ -188,6 +200,6 @@ window.addEventListener('load', function() {
 
 }, false);
 </script>
-<footer><a href=https://github.com/kaihendry/ltabus>Source code</a>&diam;<a href="mailto:hendry+bus@iki.fi">Email feedback</a></footer>
+<footer><a href=https://github.com/kaihendry/ltabus>Source code</a>&diam;<a href="mailto:hendry+bus@iki.fi">Please email feedback</a></footer>
 </body>
 </html>

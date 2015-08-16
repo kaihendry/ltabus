@@ -1,43 +1,16 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Your closest bus stop</title>
+<title>Your closest Singaporean bus stops</title>
 <meta name=viewport content="width=device-width, initial-scale=1">
 <link rel='icon' href='data:;base64,iVBORw0KGgo='>
+<style>
+body { padding: 5px; font-size: 120%; }
+ul { display: flex; }
+ul > * { flex: 1; }
+</style>
 </head>
 <body>
-<div id="id01"></div>
-
-<script>
-if(navigator.geolocation) {
-	navigator.geolocation.getCurrentPosition(function(position) {
-		closest(position.coords.latitude, position.coords.longitude);
-	});
-}
-
-function closest(lat, lon) {
-	var xmlhttp = new XMLHttpRequest();
-	var url = "closest.php?lat=" + lat + "&lon=" + lon;
-
-	xmlhttp.onreadystatechange = function() {
-		if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-			var myArr = JSON.parse(xmlhttp.responseText);
-			myFunction(myArr);
-		}
-	}
-	xmlhttp.open("GET", url, true);
-	xmlhttp.send();
-
-	function myFunction(arr) {
-		var out = "";
-		var i;
-		for(i = 0; i < arr.length; i++) {
-			console.log(arr[i]);
-			out += '<a href=/?id=' + arr[i].id + '&name=' + encodeURI(arr[i].name) + '>' +
-				arr[i].id + ' ' + arr[i].name + '</a><br>';
-		}
-		document.getElementById("id01").innerHTML = out;
-	}
-}
-</script>
+<div id="output"></div>
+<script src=close.js></script>
 </body></html>
