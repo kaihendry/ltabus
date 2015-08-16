@@ -55,21 +55,26 @@ usort($j["Services"], 'my_sort');
 <meta name=viewport content="width=device-width, initial-scale=1">
 <link rel='icon' href='data:;base64,iVBORw0KGgo='>
 <style>
-ul#buses li { list-style: none; }
-ul#buses li:before {
+body { padding: 5px; }
+ul,ol { padding-left: 0; }
+.buses li { list-style: none; }
+.buses li:before {
   content: "\1F68C";
+  padding-right: 8px;
 }
 
 ol { padding-left: 0; list-style: none; }
-ol#stations li:before {
+.stations li:before {
   content: "🚏";
+  padding-right: 8px;
 }
 
+.busstopid { white-space: nowrap; display:inline-block; border-bottom: thin solid black; padding-bottom:2px; margin: 0 }
 </style>
 </head>
 <body>
-<h1 id=busstopid><?php echo $j["BusStopID"] . " " . $_GET["name"]; ?></h1>
-<ul id=buses>
+<h3 class=busstopid><?php echo "🚏" . $j["BusStopID"] . " " . $_GET["name"]; ?></h3>
+<ul class=buses>
 <?php
 
 function tmark($s) {
@@ -113,7 +118,7 @@ foreach ($j["Services"] as $service) {
 
 <p><a href=/close.html>Experimental: Closest stops</a></p>
 
-<ol id=stations></ol>
+<ol class=stations></ol>
 
 <p><a href=/map.html>Map of Singapore bus stops</a></p>
 
@@ -170,7 +175,7 @@ window.addEventListener('load', function() {
 
 		var li = document.createElement("li");
 		var link = document.createElement('a');
-		link.setAttribute('href', '/?id=' + key);
+		link.setAttribute('href', '/?id=' + key + '&name=' + encodeURI(value.name));
 		if (value.name) {
 		link.appendChild(document.createTextNode(key + " " + value.name));
 		} else {
