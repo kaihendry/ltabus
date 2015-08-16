@@ -170,7 +170,7 @@ window.addEventListener('load', function() {
 <?php } else { ?>
 	slog['<?php echo $id;?>'].count = count;
 <?php } ?> } catch(e) { console.log(e); }
-	console.debug(slog);
+	// console.debug(slog);
 	localStorage.setItem('history', JSON.stringify(slog));
 	//console.debug(localStorage['history']);
 
@@ -178,13 +178,13 @@ window.addEventListener('load', function() {
 	for (var station in slog) {
 		sortable.push([station, slog[station]])
 	}
-	sortable.sort(function(a, b) {return a[1] - b[1]})
-	console.debug(sortable);
+	sortable.sort(function(a, b) { return a[1].count - b[1].count })
+	// console.debug(sortable);
 	var ul = document.getElementById("stations");
 	for (var i = sortable.length - 1; i >= 0; i--) {
 		var key = sortable[i][0];
 		var value = sortable[i][1];
-		console.log(key, value);
+		// console.log(key, value);
 
 		var li = document.createElement("li");
 		var link = document.createElement('a');
