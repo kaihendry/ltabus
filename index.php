@@ -54,18 +54,18 @@ usort($j["Services"], 'my_sort');
 <style>
 body { padding: 5px; font-size: 120%; }
 a { font-size: 110%; }
-ul,ol { padding-left: 0; }
-.buses li { list-style: none; }
+ul,ol { padding-left: 0; list-style: none; }
 .buses li:before {
   content: "\1F68C";
   padding-right: 8px;
 }
 
-ol { padding-left: 0; list-style: none; }
 #stations li:before {
   content: "🚏";
   padding-right: 8px;
 }
+
+#stations li { white-space: nowrap; }
 
 .busstopid { white-space: nowrap; display:inline-block; border-bottom: thin solid black; padding-bottom:2px; margin: 0 }
 
@@ -136,6 +136,7 @@ foreach ($j["Services"] as $service) {
 
 <script>
 function countdown(id, time) {
+	if (! id) { return; }
 	// console.log(id,time);
 	var seconds =  time / 1000;
 	if (Math.abs(seconds) > 60) {
@@ -163,13 +164,13 @@ window.addEventListener('load', function() {
 	if (typeof slog['<?php echo $id;?>'] == "number") {
 		count = slog['<?php echo $id;?>'];
 	}
-	try { count = slog['<?php echo $id;?>'].count + 1; } catch(e) { console.log(e); }
+	try { count = slog['<?php echo $id;?>'].count + 1;
 	<?php if ($_GET["name"]) { ?>
 	slog['<?php echo $id;?>'] = { "name": "<?php echo $_GET["name"]; ?>", "x": "<?php echo $_GET["lat"]; ?>", "y": "<?php echo $_GET["lon"]; ?>", "count": count };
 <?php } else { ?>
 	slog['<?php echo $id;?>'].count = count;
-<?php } ?>
-	//console.debug(slog);
+<?php } ?> } catch(e) { console.log(e); }
+	console.debug(slog);
 	localStorage.setItem('history', JSON.stringify(slog));
 	//console.debug(localStorage['history']);
 
@@ -178,18 +179,18 @@ window.addEventListener('load', function() {
 		sortable.push([station, slog[station]])
 	}
 	sortable.sort(function(a, b) {return a[1] - b[1]})
-	//console.debug(sortable);
+	console.debug(sortable);
 	var ul = document.getElementById("stations");
 	for (var i = sortable.length - 1; i >= 0; i--) {
 		var key = sortable[i][0];
 		var value = sortable[i][1];
-		//console.log(key, value);
+		console.log(key, value);
 
 		var li = document.createElement("li");
 		var link = document.createElement('a');
 		if (value.name) {
 		link.setAttribute('href', '/?id=' + key + '&name=' + encodeURI(value.name));
-		link.appendChild(document.createTextNode(key + " " + value.name));
+		link.appendChild(document.createTextNode(key + " " + value.name + ' (' + value.count + ')'));
 		} else {
 		link.setAttribute('href', '/?id=' + key);
 		link.appendChild(document.createTextNode(key));
