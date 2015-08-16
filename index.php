@@ -55,7 +55,8 @@ usort($j["Services"], 'my_sort');
 <meta name=viewport content="width=device-width, initial-scale=1">
 <link rel='icon' href='data:;base64,iVBORw0KGgo='>
 <style>
-body { padding: 5px; }
+body { padding: 5px; font-size: 120%; }
+a { font-size: 110%; }
 ul,ol { padding-left: 0; }
 .buses li { list-style: none; }
 .buses li:before {
@@ -64,7 +65,7 @@ ul,ol { padding-left: 0; }
 }
 
 ol { padding-left: 0; list-style: none; }
-.stations li:before {
+#stations li:before {
   content: "🚏";
   padding-right: 8px;
 }
@@ -118,7 +119,7 @@ foreach ($j["Services"] as $service) {
 
 <p><a href=/close.html>Experimental: Closest stops</a></p>
 
-<ol class=stations></ol>
+<ol id=stations></ol>
 
 <p><a href=/map.html>Map of Singapore bus stops</a></p>
 
