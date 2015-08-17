@@ -29,6 +29,7 @@ if (empty($j)) {
 	die("<h1>No result from LTA API</h1>");
 }
 
+
 if (isset($j["odata.error"])) { die ($j["odata.error"]["message"]["value"]); }
 
 function my_sort($a, $b) {
@@ -128,11 +129,11 @@ foreach ($j["Services"] as $service) {
 <input type=submit>
 </form>
 
-<p><a href=/close.html>Experimental: Closest stops</a></p>
+<p><a href=/close.html>Closest stops</a>
+<a href=/map.html>Map of Singapore bus stops</a></p>
 
 <ol id=stations></ol>
 
-<p><a href=/map.html>Map of Singapore bus stops</a></p>
 
 <script>
 function countdown(id, time) {

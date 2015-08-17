@@ -17,7 +17,7 @@ if (empty($lon)) {
 $creds = parse_ini_file(".creds.ini");
 
 $url = 'https://www.googleapis.com/fusiontables/v2/query?sql=SELECT+*+FROM+1kJscQXsc0jVMvrn2x5J93-5PpPXwc5zowERJSv8w+ORDER+BY+ST_DISTANCE' .
-       '(geometry%2C+LATLNG(' . $lat . '%2C' . $lon . '))+LIMIT+3&key=' . $creds["fusionapikey"];
+       '(geometry%2C+LATLNG(' . $lat . '%2C' . $lon . '))+LIMIT+10&key=' . $creds["fusionapikey"];
 
 
 $ch = curl_init();
