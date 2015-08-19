@@ -172,12 +172,19 @@ window.addEventListener('load', function() {
 	try {
 		slog['<?php echo $id;?>'].count++;
 	} catch(e) { console.log(e); }
-	try {
+
 	<?php if ($_GET["name"]) { ?>
 	slog['<?php echo $id;?>'].name = "<?php echo $_GET["name"]; ?>";
-<?php } else { ?>
-	console.log(slog);
-<?php } ?> } catch(e) { console.log(e); }
+	<?php } ?>
+
+	<?php if ($_GET["lat"] && is_numeric($_GET["lat"])) { ?>
+	slog['<?php echo $id;?>'].x = "<?php echo $_GET["lat"]; ?>";
+	<?php } ?>
+
+	<?php if ($_GET["lon"] && is_numeric($_GET["lon"])) { ?>
+	slog['<?php echo $id;?>'].y = "<?php echo $_GET["lon"]; ?>";
+	<?php } ?>
+
 	console.debug(slog);
 	localStorage.setItem('history', JSON.stringify(slog));
 	console.debug(localStorage['history']);
