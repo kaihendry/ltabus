@@ -79,6 +79,8 @@ input[type=submit] {
     font-size: 1em;
 }
 </style>
+
+<!-- <script>console.debug(<?php // echo $result;?>)</script> -->
 </head>
 <body>
 <?php if($id) {?>
@@ -161,19 +163,25 @@ window.addEventListener('load', function() {
 
 
 	slog = (JSON.parse(localStorage.getItem("history")) || {});
-	var count = 1;
-	if (typeof slog['<?php echo $id;?>'] == "number") {
-		count = slog['<?php echo $id;?>'];
+
+<?php if (! empty($id)) { ?>
+	if (typeof slog['<?php echo $id;?>'] === "undefined") {
+		slog['<?php echo $id;?>'] = {};
+		slog['<?php echo $id;?>'].count = 0;
 	}
-	try { count = slog['<?php echo $id;?>'].count + 1;
+	try {
+		slog['<?php echo $id;?>'].count++;
+	} catch(e) { console.log(e); }
+	try {
 	<?php if ($_GET["name"]) { ?>
-	slog['<?php echo $id;?>'] = { "name": "<?php echo $_GET["name"]; ?>", "x": "<?php echo $_GET["lat"]; ?>", "y": "<?php echo $_GET["lon"]; ?>", "count": count };
+	slog['<?php echo $id;?>'].name = "<?php echo $_GET["name"]; ?>";
 <?php } else { ?>
-	slog['<?php echo $id;?>'].count = count;
+	console.log(slog);
 <?php } ?> } catch(e) { console.log(e); }
-	// console.debug(slog);
+	console.debug(slog);
 	localStorage.setItem('history', JSON.stringify(slog));
-	//console.debug(localStorage['history']);
+	console.debug(localStorage['history']);
+<?php } ?>
 
 	var sortable = [];
 	for (var station in slog) {
