@@ -21,10 +21,18 @@ curl_close($ch);
 
 $j = json_decode($result, true);
 
-if (empty($j)) {
+function notimings($j) {
+foreach ($j["Services"] as $service) {
+	if (!empty($service["NextBus"]["EstimatedArrival"])) { return false; }
+	return true;
+	}
+}
+
+if (empty($j) || notimings($j)) {
 	echo "<h1>ERROR</h1><pre>";
 	print_r($info);
 	print_r($errinfo);
+	echo json_encode($j, JSON_PRETTY_PRINT);
 	echo "</pre>";
 	die("<h1>No result from LTA API</h1>");
 }
