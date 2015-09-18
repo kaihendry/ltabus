@@ -29,12 +29,15 @@ foreach ($j["Services"] as $service) {
 }
 
 if (empty($j) || notimings($j)) {
-	echo "<h1>ERROR</h1><pre>";
-	print_r($info);
-	print_r($errinfo);
-	echo json_encode($j, JSON_PRETTY_PRINT);
-	echo "</pre>";
-	die("<h1>No result from LTA API</h1>");
+
+	$dir = 'fail/' . date("Y-m-d");
+	$fn = $dir . '/' . time() . ".txt";
+	mkdir($dir, 0777, true);
+
+	echo "<h1>No result from LTA API 😕</h1>";
+	echo "<p><a href=$fn>Error log</a></p>";
+	file_put_contents($fn, "[Curl info]\n" . print_r($info, true) . "\n[Curl Error]\n" . print_r($errinfo, true) . "\n[JSON]\n" . json_encode($j, JSON_PRETTY_PRINT));
+	die();
 }
 
 
