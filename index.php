@@ -24,8 +24,8 @@ $j = json_decode($result, true);
 function notimings($j) {
 foreach ($j["Services"] as $service) {
 	if (!empty($service["NextBus"]["EstimatedArrival"])) { return false; }
-	return true;
 	}
+	return true;
 }
 
 if (empty($j) || notimings($j)) {
