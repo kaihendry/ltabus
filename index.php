@@ -120,7 +120,13 @@ function tmark($s) {
 		break;
 	}
 
-	return '<time style="color: ' . $color . '" dateTime="' . $s["EstimatedArrival"] . '">' . $s["EstimatedArrival"] . '</time>';
+	// Monitored is true is it is tracked in real time. Otherwise it's just a schedule based prediction
+	$mcss = "";
+	if ((isset($s["Monitored"])) && ($s["Monitored"] == "False")) {
+		$mcss = "opacity: 0.5;";
+	}
+
+	return '<time style="' . $mcss . 'color: ' . $color . '" dateTime="' . $s["EstimatedArrival"] . '">' . $s["EstimatedArrival"] . '</time>';
 }
 
 foreach ($j["Services"] as $service) {
@@ -131,6 +137,9 @@ foreach ($j["Services"] as $service) {
 	if (isset($service["SubsequentBus"]["EstimatedArrival"])) {
 		echo tmark($service["SubsequentBus"]);
 	}
+	if (isset($service["SubsequentBus3"]["EstimatedArrival"])) {
+		echo ", " . tmark($service["SubsequentBus3"]);
+	}
 	echo "</li>\n";
 }
 ?>
@@ -140,7 +149,7 @@ foreach ($j["Services"] as $service) {
 <?php } ?>
 <form>
 <label for=id>Bus stop #</label>
-<input id=id required type=text pattern="[0-9]{5}" value="<?php echo $id;?>" name=id>
+<input id=id required type=number pattern="\d*" value="<?php echo $id;?>" name=id>
 <input type=submit>
 </form>
 
