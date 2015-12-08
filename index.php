@@ -54,7 +54,7 @@ function my_sort($a, $b) {
 }
 
 usort($j["Services"], 'my_sort');
-}
+} else { $id = ""; }
 
 ?>
 <!DOCTYPE html>
@@ -129,6 +129,7 @@ function tmark($s) {
 	return '<time style="' . $mcss . 'color: ' . $color . '" dateTime="' . $s["EstimatedArrival"] . '">' . $s["EstimatedArrival"] . '</time>';
 }
 
+if (isset($j)) {
 foreach ($j["Services"] as $service) {
 	if (empty($service["NextBus"]["EstimatedArrival"])) { continue; }
 	echo "<li>";
@@ -142,14 +143,15 @@ foreach ($j["Services"] as $service) {
 	}
 	echo "</li>\n";
 }
+}
 ?>
 </ul>
-<?php if($id) {?>
+<?php if(! empty($id)) {?>
 <h4>Last updated: <span id=lastupdated></span></h4>
 <?php } ?>
 <form>
 <label for=id>Bus stop #</label>
-<input id=id required type=number pattern="\d*" value="<?php echo $id;?>" name=id>
+<input id=id required type=text pattern="[0-9]{5}" value="<?php if(isset($id)) { echo $id; }?>" name=id>
 <input type=submit>
 </form>
 
@@ -199,11 +201,11 @@ window.addEventListener('load', function() {
 	slog['<?php echo $id;?>'].name = "<?php echo $_GET["name"]; ?>";
 	<?php } ?>
 
-	<?php if ($_GET["lat"] && is_numeric($_GET["lat"])) { ?>
+	<?php if (isset($_GET["lat"]) && is_numeric($_GET["lat"])) { ?>
 	slog['<?php echo $id;?>'].x = "<?php echo $_GET["lat"]; ?>";
 	<?php } ?>
 
-	<?php if ($_GET["lon"] && is_numeric($_GET["lon"])) { ?>
+	<?php if (isset($_GET["lon"]) && is_numeric($_GET["lon"])) { ?>
 	slog['<?php echo $id;?>'].y = "<?php echo $_GET["lon"]; ?>";
 	<?php } ?>
 
