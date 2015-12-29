@@ -135,10 +135,10 @@ foreach ($j["Services"] as $service) {
 	echo "<li>";
 	echo "<strong><a href='https://busrouter.sg/#/services/" . $service["ServiceNo"] . "'>" . $service["ServiceNo"] . "</a></strong> ";
 	echo tmark($service["NextBus"]) . ", ";
-	if (isset($service["SubsequentBus"]["EstimatedArrival"])) {
+	if (! empty($service["SubsequentBus"]["EstimatedArrival"])) {
 		echo tmark($service["SubsequentBus"]);
 	}
-	if (isset($service["SubsequentBus3"]["EstimatedArrival"])) {
+	if (! empty($service["SubsequentBus3"]["EstimatedArrival"])) {
 		echo ", " . tmark($service["SubsequentBus3"]);
 	}
 	echo "</li>\n";
