@@ -62,7 +62,6 @@ usort($j["Services"], 'my_sort');
 <head>
 <title>Singapore bus arrival times</title>
 <meta name=viewport content="width=device-width, initial-scale=1">
-<meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Stop <?=$id?>">
 <link rel='icon' href='data:;base64,iVBORw0KGgo='>
 <style>
@@ -241,6 +240,6 @@ window.addEventListener('load', function() {
 
 }, false);
 </script>
-<footer><a href=https://github.com/kaihendry/ltabus>Source code</a>&diam;<a href="mailto:hendry+bus@iki.fi">Please email feedback</a>&diam;<a href=///smrt.dabase.com/>Train map</a></footer>
+<footer><a href=https://github.com/kaihendry/ltabus>Source code</a>&diam;<a href="mailto:hendry+bus@iki.fi">Please email feedback</a>&diam;<a href=http://mrt.dabase.com/>Train map</a></footer>
 </body>
 </html>
