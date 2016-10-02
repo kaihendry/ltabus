@@ -58,12 +58,13 @@ usort($j["Services"], 'my_sort');
 
 ?>
 <!DOCTYPE html>
-<html>
+<html lang=en>
 <head>
 <title>Singapore bus arrival times</title>
 <meta name=viewport content="width=device-width, initial-scale=1">
 <meta name="apple-mobile-web-app-title" content="Stop <?=$id?>">
-<link rel='icon' href='data:;base64,iVBORw0KGgo='>
+<link rel='icon' href='http://bus.dabase.com:7777/?stop=<?=$id?>'>
+<link rel="apple-touch-icon" sizes="200x200" href="http://bus.dabase.com:7777/?stop=<?=$id?>">
 <style>
 body { padding: 5px; font-size: 120%; }
 a { font-size: 110%; }
