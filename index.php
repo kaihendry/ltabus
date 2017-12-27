@@ -2,7 +2,8 @@
 
 if (isset($_GET["id"]) && is_numeric($_GET["id"])) {
 $id = $_GET["id"];
-$url = "http://datamall2.mytransport.sg/ltaodataservice/BusArrival?BusStopID=$id";
+// $url = "http://datamall2.mytransport.sg/ltaodataservice/BusArrival?BusStopID=$id";
+$url = "http://datamall2.mytransport.sg/ltaodataservice/BusArrivalv2/?BusStopCode=$id";
 
 $creds = parse_ini_file(".creds.ini");
 
@@ -135,11 +136,11 @@ foreach ($j["Services"] as $service) {
 	echo "<li>";
 	echo "<strong><a href='https://busrouter.sg/#/services/" . $service["ServiceNo"] . "'>" . $service["ServiceNo"] . "</a></strong> ";
 	echo tmark($service["NextBus"]) . ", ";
-	if (! empty($service["SubsequentBus"]["EstimatedArrival"])) {
-		echo tmark($service["SubsequentBus"]);
+	if (! empty($service["NextBus2"]["EstimatedArrival"])) {
+		echo tmark($service["NextBus2"]);
 	}
-	if (! empty($service["SubsequentBus3"]["EstimatedArrival"])) {
-		echo ", " . tmark($service["SubsequentBus3"]);
+	if (! empty($service["NextBus3"]["EstimatedArrival"])) {
+		echo ", " . tmark($service["NextBus3"]);
 	}
 	echo "</li>\n";
 }
@@ -155,7 +156,6 @@ foreach ($j["Services"] as $service) {
 <input type=submit>
 </form>
 
-<p><a href=/close.html>Closest stops</a>
 <a href=/map.html>Map of Singapore bus stops</a></p>
 
 <ol id=stations></ol>
