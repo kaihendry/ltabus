@@ -1,11 +1,6 @@
-Request for API access from <http://www.mytransport.sg/content/mytransport/home/dataMall.html>
+Request for API access from <https://www.mytransport.sg/content/mytransport/home/dataMall/request-for-api.html>
 
-Create `.creds.ini` and populate the values for:
-
-	uniqueuserid=""
-	accountkey=""
-
-Make sure your Webserver does not serve dotfiles, e.g. <http://bus.dabase.com/.creds.ini> is 403 Forbidden.
+Assuming `export accountkey="SECRET"`
 
 # How to update Singapore bus stop information
 
@@ -16,6 +11,10 @@ Make sure your Webserver does not serve dotfiles, e.g. <http://bus.dabase.com/.c
 # License
 
 MIT
+
+# Icon generator
+
+Font is from https://dejavu-fonts.github.io/
 
 ## Related
 
