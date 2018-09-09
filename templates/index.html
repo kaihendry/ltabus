@@ -1,11 +1,8 @@
 <!DOCTYPE html>
 <html lang=en>
 <head>
-<title>V2 Singapore bus arrival times</title>
+<title>Serverless Singapore bus arrival times</title>
 <meta name=viewport content="width=device-width, initial-scale=1">
-<meta name="apple-mobile-web-app-title" content="Stop ">
-<link rel='icon' href='http://bus.dabase.com:7777/?stop='>
-<link rel="apple-touch-icon" sizes="200x200" href="http://bus.dabase.com:7777/?stop=">
 <style>
 body { padding: 5px; font-size: 120%; }
 a { font-size: 110%; }
@@ -33,10 +30,9 @@ input[type=submit] {
     font-size: 1em;
 }
 </style>
-
-<!-- <script>console.debug()</script> -->
 </head>
 <body>
+<h3>{{ .BusStopCode }}
 <ul class=buses>
 </ul>
 <form>

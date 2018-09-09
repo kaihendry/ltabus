@@ -86,9 +86,7 @@ func handleIndex(w http.ResponseWriter, r *http.Request) {
 	}
 	log.Infof("%+v", arriving)
 
-	t.Execute(w, map[string]interface{}{
-		"Stage": os.Getenv("UP_STAGE"),
-	})
+	t.Execute(w, arriving)
 
 }
 
