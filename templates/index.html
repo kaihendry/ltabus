@@ -38,9 +38,10 @@ input[type=submit] {
 <strong>
 <a href='https://busrouter.sg/#/services/{{ .ServiceNo }}'>{{ .ServiceNo }}</a>
 </strong>
-<time dateTime="{{ .NextBus.EstimatedArrival }}">{{ .NextBus.EstimatedArrival }}</time>
-<time dateTime="{{ .NextBus2.EstimatedArrival }}">{{ .NextBus2.EstimatedArrival }}</time>
-<time dateTime="{{ .NextBus3.EstimatedArrival }}">{{ .NextBus3.EstimatedArrival }}</time>
+
+{{ if .NextBus.EstimatedArrival }}<time dateTime="{{ .NextBus.EstimatedArrival }}">{{ .NextBus.EstimatedArrival }}</time>{{ end }}
+{{ if .NextBus2.EstimatedArrival }}<time dateTime="{{ .NextBus2.EstimatedArrival }}">{{ .NextBus2.EstimatedArrival }}</time>{{ end }}
+{{ if .NextBus3.EstimatedArrival }}<time dateTime="{{ .NextBus3.EstimatedArrival }}">{{ .NextBus3.EstimatedArrival }}</time>{{ end }}
 
 </li>
 {{ end }}
@@ -52,10 +53,7 @@ input[type=submit] {
 <input type=submit>
 </form>
 
-<a href=/map.html>Map of Singapore bus stops</a></p>
-
 <ol id=stations></ol>
-
 
 <script>
 function countdown(id, time) {
