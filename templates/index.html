@@ -84,6 +84,19 @@ window.addEventListener('load', function() {
 
 	slog = (JSON.parse(localStorage.getItem("history")) || {});
 
+{{ if .BusStopCode }}
+	if (typeof slog['{{ .BusStopCode }}'] === "undefined") {
+		slog['{{ .BusStopCode }}'] = {};
+		slog['{{ .BusStopCode }}'].count = 0;
+	}
+	try {
+		slog['{{ .BusStopCode }}'].count++;
+	} catch(e) { console.log(e); }
+
+	console.debug(slog);
+	localStorage.setItem('history', JSON.stringify(slog));
+	console.debug(localStorage['history']);
+{{ end }}
 
 	var sortable = [];
 	for (var station in slog) {
