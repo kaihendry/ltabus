@@ -1,0 +1,15 @@
+{
+  "name": "bus",
+  "profile": "mine",
+  "stages": {
+    "staging": {
+      "domain": "bus2.dabase.com"
+    }
+  },
+  "regions": [
+    "ap-southeast-1"
+  ],
+  "error_pages": {
+    "disable": true
+  }
+}

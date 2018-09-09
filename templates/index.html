@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+<title>V2 Singapore bus arrival times</title>
+<meta name=viewport content="width=device-width, initial-scale=1">
+<meta name="apple-mobile-web-app-title" content="Stop ">
+<link rel='icon' href='http://bus.dabase.com:7777/?stop='>
+<link rel="apple-touch-icon" sizes="200x200" href="http://bus.dabase.com:7777/?stop=">
+<style>
+body { padding: 5px; font-size: 120%; }
+a { font-size: 110%; }
+ul,ol { padding-left: 0; list-style: none; }
+.buses li:before {
+  content: "\1F68C";
+  padding-right: 8px;
+}
+
+#stations li:before {
+  content: "🚏";
+  padding-right: 8px;
+}
+
+#stations li { white-space: nowrap; }
+
+.busstopid { white-space: nowrap; display:inline-block; border-bottom: thin solid black; padding-bottom:2px; margin: 0 }
+
+input[type=text] {
+    font-size: 1em;
+    width: 4em;
+}
+
+input[type=submit] {
+    font-size: 1em;
+}
+</style>
+
+<!-- <script>console.debug()</script> -->
+</head>
+<body>
+<ul class=buses>
+</ul>
+<form>
+<label for=id>Bus stop #</label>
+<input id=id required type=text pattern="[0-9]{5}" value="" name=id>
+<input type=submit>
+</form>
+
+<a href=/map.html>Map of Singapore bus stops</a></p>
+
+<ol id=stations></ol>
+
+
+<script>
+function countdown(id, time) {
+	if (! id) { return; }
+	// console.log(id,time);
+	var seconds =  time / 1000;
+	if (Math.abs(seconds) > 60) {
+		id.innerHTML = parseInt(seconds / 60) + "m";
+	} else {
+		id.innerHTML = parseInt(seconds) + "s";
+	}
+	setTimeout(countdown,1000, id, time - 1000);
+}
+
+window.addEventListener('load', function() {
+	var timings = document.getElementsByTagName("time");
+	var now = new Date();
+	for (var i = 0; i < timings.length; i++) {
+		var arr = new Date(timings[i].getAttribute("datetime"));
+		var elapsed = arr.getTime() - now.getTime();
+		countdown(timings[i], elapsed);
+	}
+	var lastupdated = document.getElementById("lastupdated");
+	countdown(lastupdated, Date.now() - now);
+
+
+	slog = (JSON.parse(localStorage.getItem("history")) || {});
+
+
+	var sortable = [];
+	for (var station in slog) {
+		sortable.push([station, slog[station]])
+	}
+	sortable.sort(function(a, b) { return a[1].count - b[1].count })
+	// console.debug(sortable);
+	var ul = document.getElementById("stations");
+	for (var i = sortable.length - 1; i >= 0; i--) {
+		var key = sortable[i][0];
+		var value = sortable[i][1];
+		// console.log(key, value);
+
+		var li = document.createElement("li");
+		var link = document.createElement('a');
+		if (value.name) {
+		link.setAttribute('href', '/?id=' + key + '&name=' + encodeURI(value.name));
+		link.appendChild(document.createTextNode(key + " " + value.name + ' (' + value.count + ')'));
+		} else {
+		link.setAttribute('href', '/?id=' + key);
+		link.appendChild(document.createTextNode(key));
+		}
+		li.appendChild(link);
+		ul.appendChild(li);
+	}
+
+}, false);
+</script>
+<footer><a href=https://github.com/kaihendry/ltabus>Source code</a>&diam;<a href="mailto:hendry+bus@iki.fi">Please email feedback</a>&diam;<a href=http://mrt.dabase.com/>Train map</a></footer>
+</body>
+</html>
