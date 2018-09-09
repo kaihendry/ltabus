@@ -61,7 +61,7 @@ func handleIndex(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	arriving, err := busArrivals("03331")
+	arriving, err := busArrivals(r.URL.Query().Get("id"))
 	if err != nil {
 		log.WithError(err).Error("failed to retrieve bus timings")
 		http.Error(w, err.Error(), http.StatusInternalServerError)
