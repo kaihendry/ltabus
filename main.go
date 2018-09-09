@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"net/http"
 	"os"
-	"time"
 
 	"html/template"
 
@@ -13,45 +12,29 @@ import (
 	"github.com/gorilla/mux"
 )
 
+// NextBus describes when the bus is coming
+type NextBus struct {
+	OriginCode       string `json:"OriginCode"`
+	DestinationCode  string `json:"DestinationCode"`
+	EstimatedArrival string `json:"EstimatedArrival"`
+	Latitude         string `json:"Latitude"`
+	Longitude        string `json:"Longitude"`
+	VisitNumber      string `json:"VisitNumber"`
+	Load             string `json:"Load"`
+	Feature          string `json:"Feature"`
+	Type             string `json:"Type"`
+}
+
+// SGBusArrivals describes the response of from the datamall API
 type SGBusArrivals struct {
 	OdataMetadata string `json:"odata.metadata"`
 	BusStopCode   string `json:"BusStopCode"`
 	Services      []struct {
-		ServiceNo string `json:"ServiceNo"`
-		Operator  string `json:"Operator"`
-		NextBus   struct {
-			OriginCode       string    `json:"OriginCode"`
-			DestinationCode  string    `json:"DestinationCode"`
-			EstimatedArrival time.Time `json:"EstimatedArrival"`
-			Latitude         string    `json:"Latitude"`
-			Longitude        string    `json:"Longitude"`
-			VisitNumber      string    `json:"VisitNumber"`
-			Load             string    `json:"Load"`
-			Feature          string    `json:"Feature"`
-			Type             string    `json:"Type"`
-		} `json:"NextBus"`
-		NextBus2 struct {
-			OriginCode       string    `json:"OriginCode"`
-			DestinationCode  string    `json:"DestinationCode"`
-			EstimatedArrival time.Time `json:"EstimatedArrival"`
-			Latitude         string    `json:"Latitude"`
-			Longitude        string    `json:"Longitude"`
-			VisitNumber      string    `json:"VisitNumber"`
-			Load             string    `json:"Load"`
-			Feature          string    `json:"Feature"`
-			Type             string    `json:"Type"`
-		} `json:"NextBus2"`
-		NextBus3 struct {
-			OriginCode       string    `json:"OriginCode"`
-			DestinationCode  string    `json:"DestinationCode"`
-			EstimatedArrival time.Time `json:"EstimatedArrival"`
-			Latitude         string    `json:"Latitude"`
-			Longitude        string    `json:"Longitude"`
-			VisitNumber      string    `json:"VisitNumber"`
-			Load             string    `json:"Load"`
-			Feature          string    `json:"Feature"`
-			Type             string    `json:"Type"`
-		} `json:"NextBus3"`
+		ServiceNo string  `json:"ServiceNo"`
+		Operator  string  `json:"Operator"`
+		NextBus   NextBus `json:"NextBus"`
+		NextBus2  NextBus `json:"NextBus2"`
+		NextBus3  NextBus `json:"NextBus3"`
 	} `json:"Services"`
 }
 
