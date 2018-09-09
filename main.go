@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"sort"
 
 	"html/template"
 
@@ -99,6 +100,11 @@ func busArrivals(id string) (arrivals SGBusArrivals, err error) {
 		log.WithError(err).Error("failed to decode response")
 		return
 	}
+
+	// Sort by buses arriving first
+	sort.Slice(arrivals.Services, func(i, j int) bool {
+		return arrivals.Services[i].NextBus.EstimatedArrival < arrivals.Services[j].NextBus.EstimatedArrival
+	})
 
 	return
 }
