@@ -32,12 +32,23 @@ input[type=submit] {
 </style>
 </head>
 <body>
-<h3>{{ .BusStopCode }}
 <ul class=buses>
+{{ range .Services }}
+<li>
+<strong>
+<a href='https://busrouter.sg/#/services/{{ .ServiceNo }}'>{{ .ServiceNo }}</a>
+</strong>
+<time dateTime="{{ .NextBus.EstimatedArrival }}">{{ .NextBus.EstimatedArrival }}</time>
+<time dateTime="{{ .NextBus2.EstimatedArrival }}">{{ .NextBus2.EstimatedArrival }}</time>
+<time dateTime="{{ .NextBus3.EstimatedArrival }}">{{ .NextBus3.EstimatedArrival }}</time>
+
+</li>
+{{ end }}
 </ul>
+<h4>Last updated: <span id=lastupdated></span></h4>
 <form>
 <label for=id>Bus stop #</label>
-<input id=id required type=text pattern="[0-9]{5}" value="" name=id>
+<input id=id required type=text pattern="[0-9]{5}" value="{{ .BusStopCode }}" name=id>
 <input type=submit>
 </form>
 
