@@ -56,19 +56,17 @@ func handleIndex(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("X-Robots-Tag", "none")
 	}
 
-	t, err := template.New("").Funcs(template.FuncMap{
+	funcs := template.FuncMap{
 		"nameBusStopID": func(s string) string {
-
 			bs, err := loadBusJSON("all.json")
 			if err != nil {
 				log.WithError(err).Fatal("failed to load bus stops")
 			}
+			return bs.nameBusStopID(s)
+		}}
 
-			name := bs.nameBusStopID(s)
-			log.Info(name)
+	t, err := template.New("").Funcs(funcs).ParseFiles("templates/index.html")
 
-			return name
-		}}).ParseFiles("templates/index.html")
 	if err != nil {
 		log.WithError(err).Error("template failed to parse")
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -80,7 +78,8 @@ func handleIndex(w http.ResponseWriter, r *http.Request) {
 		log.WithError(err).Error("failed to retrieve bus timings")
 	}
 
-	t.Execute(w, arriving)
+	log.Infof("%+v", arriving)
+	t.ExecuteTemplate(w, "index.html", arriving)
 
 }
 
