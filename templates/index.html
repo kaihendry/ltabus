@@ -36,6 +36,9 @@ input[type=submit] {
 </style>
 </head>
 <body>
+
+<h1>{{ nameBusStopID .BusStopCode }}</h1>
+
 <ul class=buses>
 {{ range .Services }}
 <li>
