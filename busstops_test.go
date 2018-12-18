@@ -7,8 +7,6 @@ import (
 	"testing"
 )
 
-var bs BusStops
-
 func init() {
 	var err error
 	bs, err = loadBusJSON("all.json")

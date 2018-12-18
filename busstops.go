@@ -4,8 +4,6 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"math"
-
-	"github.com/apex/log"
 )
 
 // Point is a geo co-ordinate
@@ -58,7 +56,6 @@ func (BusStops BusStops) closest(location Point) (c BusStop) {
 }
 
 func (BusStops BusStops) nameBusStopID(busid string) (description string) {
-	log.Infof("Bus stop id:", busid)
 	for _, p := range BusStops {
 		if busid == p.BusStopCode {
 			return p.Description
