@@ -76,7 +76,7 @@ func handleIndex(w http.ResponseWriter, r *http.Request) {
 func busArrivals(id string) (arrivals SGBusArrivals, err error) {
 
 	log.Infof("Looking up %s", id)
-	url := fmt.Sprintf("http://datamall2.mytransport.sg/ltaodataservice/BusArrivalv2/?BusStopCode=%s", id)
+	url := fmt.Sprintf("https://api.mytransport.sg/ltaodataservice/BusArrivalv2/?BusStopCode=%s", id)
 
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
