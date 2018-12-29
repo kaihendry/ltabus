@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang=en>
 <head>
-<title>Serverless Singapore bus arrival times</title>
+<title>Singapore bus arrival times</title>
 <meta name=viewport content="width=device-width, initial-scale=1">
 {{ if .BusStopCode }}
 <link rel='icon' href='/icon?stop={{ .BusStopCode }}'>
@@ -138,6 +138,8 @@ if(navigator.geolocation) {
 
 }, false);
 </script>
-<footer><a href=https://github.com/kaihendry/ltabus>Source code</a>&diam;<a href="mailto:hendry+bus@iki.fi">Please email feedback</a>&diam;<a href=https://railrouter.sg/>Train map</a></footer>
+<footer><a href=https://github.com/kaihendry/ltabus>Source code</a>&diam;<a href="mailto:hendry+bus@iki.fi">Please email feedback</a>&diam;<a href=https://railrouter.sg/>Train map</a><br>
+Version: <a href="https://github.com/kaihendry/ltabus/commit/{{ getenv "UP_COMMIT" }}">{{ getenv "UP_COMMIT" }}</a>
+</footer>
 </body>
 </html>

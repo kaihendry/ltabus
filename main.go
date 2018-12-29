@@ -45,6 +45,7 @@ var bs BusStops
 func main() {
 
 	bs, _ = loadBusJSON("all.json")
+	log.Infof("Loaded %d bus stops", len(bs))
 
 	addr := ":" + os.Getenv("PORT")
 	app := mux.NewRouter()
@@ -80,8 +81,10 @@ func handleIndex(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("X-Robots-Tag", "none")
 	}
 
-	funcs := template.FuncMap{"nameBusStopID": func(s string) string { return bs.nameBusStopID(s) }}
-	// funcs := template.FuncMap{"nameBusStopID": bs.nameBusStopID }}
+	funcs := template.FuncMap{
+		"nameBusStopID": func(s string) string { return bs.nameBusStopID(s) },
+		"getenv":        os.Getenv,
+	}
 
 	t, err := template.New("").Funcs(funcs).ParseFiles("templates/index.html")
 
@@ -102,7 +105,6 @@ func handleIndex(w http.ResponseWriter, r *http.Request) {
 }
 
 func busArrivals(id string) (arrivals SGBusArrivals, err error) {
-
 	log.Infof("Looking up %s", id)
 	url := fmt.Sprintf("https://api.mytransport.sg/ltaodataservice/BusArrivalv2/?BusStopCode=%s", id)
 

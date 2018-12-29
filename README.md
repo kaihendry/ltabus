@@ -2,12 +2,6 @@ Request for API access from <https://www.mytransport.sg/content/mytransport/home
 
 Assuming `export accountkey="SECRET"`
 
-# How to update Singapore bus stop information
-
-	curl -X GET \
-	  http://datamall2.mytransport.sg/ltaodataservice/BusStops \
-	  -H 'AccountKey: SECRET'
-
 # License
 
 MIT
