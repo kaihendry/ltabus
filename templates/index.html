@@ -36,6 +36,9 @@ input[type=submit] {
 </style>
 </head>
 <body>
+
+<h1>{{ nameBusStopID .BusStopCode }}</h1>
+
 <ul class=buses>
 {{ range .Services }}
 <li>
@@ -98,6 +101,14 @@ window.addEventListener('load', function() {
 	console.debug(slog);
 	localStorage.setItem('history', JSON.stringify(slog));
 	console.debug(localStorage['history']);
+{{ else }}
+if(navigator.geolocation) {
+	navigator.geolocation.getCurrentPosition(function(position) {
+		var lat = position.coords.latitude
+		var lng = position.coords.longitude
+		window.location = '/closest?lat=' + lat + '&lng=' + lng;
+	});
+}
 {{ end }}
 
 	var sortable = [];
@@ -127,6 +138,6 @@ window.addEventListener('load', function() {
 
 }, false);
 </script>
-<footer><a href=https://github.com/kaihendry/ltabus>Source code</a>&diam;<a href="mailto:hendry+bus@iki.fi">Please email feedback</a>&diam;<a href=https://mrt.dabase.com/>Train map</a></footer>
+<footer><a href=https://github.com/kaihendry/ltabus>Source code</a>&diam;<a href="mailto:hendry+bus@iki.fi">Please email feedback</a>&diam;<a href=https://railrouter.sg/>Train map</a></footer>
 </body>
 </html>

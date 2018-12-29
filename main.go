@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"os"
 	"sort"
+	"strconv"
 
 	"html/template"
 
@@ -39,11 +40,17 @@ type SGBusArrivals struct {
 	} `json:"Services"`
 }
 
+var bs BusStops
+
 func main() {
+
+	bs, _ = loadBusJSON("all.json")
+
 	addr := ":" + os.Getenv("PORT")
 	app := mux.NewRouter()
 
 	app.HandleFunc("/", handleIndex).Methods("GET")
+	app.HandleFunc("/closest", handleClosest).Methods("GET")
 	app.HandleFunc("/icon", handleIcon).Methods("GET")
 
 	if err := http.ListenAndServe(addr, app); err != nil {
@@ -51,12 +58,33 @@ func main() {
 	}
 }
 
+func handleClosest(w http.ResponseWriter, r *http.Request) {
+	lat, err := strconv.ParseFloat(r.URL.Query().Get("lat"), 32)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	lng, err := strconv.ParseFloat(r.URL.Query().Get("lng"), 32)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	closest := bs.closest(Point{lat: lat, lng: lng})
+	// fmt.Fprintf(w, "%#v", closest)
+	http.Redirect(w, r, fmt.Sprintf("/?id=%s", closest.BusStopCode), 302)
+}
+
 func handleIndex(w http.ResponseWriter, r *http.Request) {
 	if os.Getenv("UP_STAGE") != "production" {
 		w.Header().Set("X-Robots-Tag", "none")
 	}
 
-	t, err := template.ParseFiles("templates/index.html")
+	funcs := template.FuncMap{"nameBusStopID": func(s string) string { return bs.nameBusStopID(s) }}
+	// funcs := template.FuncMap{"nameBusStopID": bs.nameBusStopID }}
+
+	t, err := template.New("").Funcs(funcs).ParseFiles("templates/index.html")
+
 	if err != nil {
 		log.WithError(err).Error("template failed to parse")
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -67,9 +95,9 @@ func handleIndex(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.WithError(err).Error("failed to retrieve bus timings")
 	}
-	// log.Infof("%+v", arriving)
 
-	t.Execute(w, arriving)
+	// log.Infof("%+v", arriving)
+	t.ExecuteTemplate(w, "index.html", arriving)
 
 }
 
