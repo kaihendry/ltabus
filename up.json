@@ -4,6 +4,9 @@
   "stages": {
     "staging": {
       "domain": "bus2.dabase.com"
+    },
+    "production": {
+      "domain": "bus.dabase.com"
     }
   },
   "regions": [
