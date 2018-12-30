@@ -47,14 +47,13 @@ func main() {
 	bs, _ = loadBusJSON("all.json")
 	log.Infof("Loaded %d bus stops", len(bs))
 
-	addr := ":" + os.Getenv("PORT")
 	app := mux.NewRouter()
 
 	app.HandleFunc("/", handleIndex).Methods("GET")
 	app.HandleFunc("/closest", handleClosest).Methods("GET")
 	app.HandleFunc("/icon", handleIcon).Methods("GET")
 
-	if err := http.ListenAndServe(addr, app); err != nil {
+	if err := http.ListenAndServe(":"+os.Getenv("PORT"), app); err != nil {
 		log.WithError(err).Fatal("error listening")
 	}
 }
@@ -105,6 +104,11 @@ func handleIndex(w http.ResponseWriter, r *http.Request) {
 }
 
 func busArrivals(id string) (arrivals SGBusArrivals, err error) {
+
+	if id == "" {
+		return
+	}
+
 	log.Infof("Looking up %s", id)
 	url := fmt.Sprintf("https://api.mytransport.sg/ltaodataservice/BusArrivalv2/?BusStopCode=%s", id)
 
