@@ -56,7 +56,7 @@ input[type=submit] {
 <h4>Last updated: <span id=lastupdated></span></h4>
 <form>
 <label for=id>Bus stop #</label>
-<input id=id required type=text pattern="[0-9]{5}" value="{{ .BusStopCode }}" name=id>
+<input autofocus id=id required type=text pattern="[0-9]{5}" value="{{ .BusStopCode }}" name=id>
 <input type=submit>
 </form>
 
