@@ -11,6 +11,8 @@ import (
 	"html/template"
 
 	"github.com/apex/log"
+	jsonloghandler "github.com/apex/log/handlers/json"
+	"github.com/apex/log/handlers/text"
 	"github.com/gorilla/mux"
 )
 
@@ -27,7 +29,7 @@ type NextBus struct {
 	Type             string `json:"Type"`
 }
 
-// SGBusArrivals describes the response of from the datamall API
+// SGBusArrivals describes the response from the datamall API
 type SGBusArrivals struct {
 	OdataMetadata string `json:"odata.metadata"`
 	BusStopCode   string `json:"BusStopCode"`
@@ -41,6 +43,14 @@ type SGBusArrivals struct {
 }
 
 var bs BusStops
+
+func init() {
+	if os.Getenv("UP_STAGE") != "" {
+		log.SetHandler(jsonloghandler.Default)
+	} else {
+		log.SetHandler(text.Default)
+	}
+}
 
 func main() {
 
