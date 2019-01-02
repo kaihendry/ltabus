@@ -33,6 +33,10 @@ func handleIcon(w http.ResponseWriter, r *http.Request) {
 	}
 
 	matched, err := regexp.MatchString(`\d\d\d\d\d`, stop)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 	if !matched {
 		http.Error(w, fmt.Sprintf("not 5 digits"), http.StatusBadRequest)
 		return
