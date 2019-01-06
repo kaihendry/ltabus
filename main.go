@@ -1,12 +1,16 @@
 package main
 
 import (
+	"context"
+	"crypto/rand"
+	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"net/http"
 	"os"
 	"sort"
 	"strconv"
+	"time"
 
 	"html/template"
 
@@ -14,6 +18,13 @@ import (
 	jsonloghandler "github.com/apex/log/handlers/json"
 	"github.com/apex/log/handlers/text"
 	"github.com/gorilla/mux"
+)
+
+type key int
+
+const (
+	logger key = iota
+	visitor
 )
 
 // NextBus describes when the bus is coming
@@ -62,6 +73,7 @@ func main() {
 	app.HandleFunc("/", handleIndex).Methods("GET")
 	app.HandleFunc("/closest", handleClosest).Methods("GET")
 	app.HandleFunc("/icon", handleIcon).Methods("GET")
+	app.Use(addContextMiddleware)
 
 	if err := http.ListenAndServe(":"+os.Getenv("PORT"), app); err != nil {
 		log.WithError(err).Fatal("error listening")
@@ -90,6 +102,12 @@ func handleIndex(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("X-Robots-Tag", "none")
 	}
 
+	log, ok := r.Context().Value(logger).(*log.Entry)
+	if !ok {
+		http.Error(w, "Unable to get logging context", http.StatusInternalServerError)
+		return
+	}
+
 	funcs := template.FuncMap{
 		"nameBusStopID": func(s string) string { return bs.nameBusStopID(s) },
 		"getenv":        os.Getenv,
@@ -103,12 +121,13 @@ func handleIndex(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	arriving, err := busArrivals(r.URL.Query().Get("id"))
+	id := r.URL.Query().Get("id")
+	log.Infof("Looking up %q", id)
+	arriving, err := busArrivals(id)
 	if err != nil {
 		log.WithError(err).Error("failed to retrieve bus timings")
 	}
 
-	// log.Infof("%+v", arriving)
 	t.ExecuteTemplate(w, "index.html", arriving)
 
 }
@@ -119,7 +138,6 @@ func busArrivals(id string) (arrivals SGBusArrivals, err error) {
 		return
 	}
 
-	log.Infof("Looking up %s", id)
 	url := fmt.Sprintf("https://api.mytransport.sg/ltaodataservice/BusArrivalv2/?BusStopCode=%s", id)
 
 	req, err := http.NewRequest("GET", url, nil)
@@ -153,4 +171,49 @@ func busArrivals(id string) (arrivals SGBusArrivals, err error) {
 	})
 
 	return
+}
+
+func addContextMiddleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		cookie, _ := r.Cookie("visitor")
+		if cookie != nil {
+			cvisitor := context.WithValue(r.Context(), visitor, cookie.Value)
+			logging := log.WithFields(
+				log.Fields{
+					"id":      r.Header.Get("X-Request-Id"),
+					"visitor": cookie.Value,
+				})
+			clog := context.WithValue(cvisitor, logger, logging)
+			next.ServeHTTP(w, r.WithContext(clog))
+		} else {
+			visitorID, _ := GenerateRandomString(24)
+			log.Infof("Generating vistor id: %s", visitorID)
+			expiration := time.Now().Add(365 * 24 * time.Hour)
+			setCookie := http.Cookie{Name: "visitor", Value: visitorID, Expires: expiration}
+			http.SetCookie(w, &setCookie)
+			cvisitor := context.WithValue(r.Context(), visitor, visitorID)
+			logging := log.WithFields(
+				log.Fields{
+					"id":      r.Header.Get("X-Request-Id"),
+					"visitor": visitorID,
+				})
+			clog := context.WithValue(cvisitor, logger, logging)
+			next.ServeHTTP(w, r.WithContext(clog))
+		}
+	})
+}
+
+func GenerateRandomBytes(n int) ([]byte, error) {
+	b := make([]byte, n)
+	_, err := rand.Read(b)
+	if err != nil {
+		return nil, err
+	}
+
+	return b, nil
+}
+
+func GenerateRandomString(s int) (string, error) {
+	b, err := GenerateRandomBytes(s)
+	return base64.URLEncoding.EncodeToString(b), err
 }

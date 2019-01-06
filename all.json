@@ -21084,6 +21084,20 @@
     "Longitude": 103.89589220748978
   },
   {
+    "BusStopCode": "64251",
+    "RoadName": "Hougang St 91",
+    "Description": "Hougang Sec Sch",
+    "Latitude": 1.37719,
+    "Longitude": 103.88271
+  },
+  {
+    "BusStopCode": "64259",
+    "RoadName": "Hougang St 91",
+    "Description": "Blk 925A",
+    "Latitude": 1.37706,
+    "Longitude": 103.88323
+  },
+  {
     "BusStopCode": "64301",
     "RoadName": "Hougang Ave 7",
     "Description": "Blk 325",
@@ -26838,6 +26852,13 @@
     "Longitude": 103.95673805301494
   },
   {
+    "BusStopCode": "78179",
+    "RoadName": "Pasir Ris St 11",
+    "Description": "Opp Blk 108",
+    "Latitude": 1.36767,
+    "Longitude": 103.95648
+  },
+  {
     "BusStopCode": "78181",
     "RoadName": "Pasir Ris St 11",
     "Description": "Bef Blk 187",
@@ -26845,11 +26866,25 @@
     "Longitude": 103.95905802330991
   },
   {
+    "BusStopCode": "78189",
+    "RoadName": "Pasir Ris St 11",
+    "Description": "Opp Opp Blk 187",
+    "Latitude": 1.3646,
+    "Longitude": 103.95896
+  },
+  {
     "BusStopCode": "78191",
     "RoadName": "Pasir Ris St 11",
     "Description": "Aft Blk 182",
     "Latitude": 1.36488943048941,
     "Longitude": 103.96176906896966
+  },
+  {
+    "BusStopCode": "78199",
+    "RoadName": "Pasir Ris St 11",
+    "Description": "Opp White Sands Pri Sch",
+    "Latitude": 1.36477,
+    "Longitude": 103.96189
   },
   {
     "BusStopCode": "78201",
