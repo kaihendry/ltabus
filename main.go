@@ -69,10 +69,9 @@ func main() {
 	log.Infof("Loaded %d bus stops", len(bs))
 
 	app := mux.NewRouter()
-
-	app.HandleFunc("/", handleIndex).Methods("GET")
-	app.HandleFunc("/closest", handleClosest).Methods("GET")
-	app.HandleFunc("/icon", handleIcon).Methods("GET")
+	app.HandleFunc("/", handleIndex)
+	app.HandleFunc("/closest", handleClosest)
+	app.HandleFunc("/icon", handleIcon)
 	app.Use(addContextMiddleware)
 
 	if err := http.ListenAndServe(":"+os.Getenv("PORT"), app); err != nil {
@@ -110,6 +109,7 @@ func handleIndex(w http.ResponseWriter, r *http.Request) {
 
 	funcs := template.FuncMap{
 		"nameBusStopID": func(s string) string { return bs.nameBusStopID(s) },
+		"totalstops":    func() int { return len(bs) },
 		"getenv":        os.Getenv,
 	}
 
@@ -122,10 +122,14 @@ func handleIndex(w http.ResponseWriter, r *http.Request) {
 	}
 
 	id := r.URL.Query().Get("id")
-	log.Infof("Looking up %q", id)
-	arriving, err := busArrivals(id)
-	if err != nil {
-		log.WithError(err).Error("failed to retrieve bus timings")
+	var arriving SGBusArrivals
+
+	if id != "" {
+		log.Infof("Looking up %q", id)
+		arriving, err = busArrivals(id)
+		if err != nil {
+			log.WithError(err).Error("failed to retrieve bus timings")
+		}
 	}
 
 	t.ExecuteTemplate(w, "index.html", arriving)
@@ -176,27 +180,25 @@ func busArrivals(id string) (arrivals SGBusArrivals, err error) {
 func addContextMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		cookie, _ := r.Cookie("visitor")
+		logging := log.WithFields(
+			log.Fields{
+				"id":      r.Header.Get("X-Request-Id"),
+				"country": r.Header.Get("Cloudfront-Viewer-Country"),
+				"UA":      r.UserAgent(),
+			})
 		if cookie != nil {
 			cvisitor := context.WithValue(r.Context(), visitor, cookie.Value)
-			logging := log.WithFields(
-				log.Fields{
-					"id":      r.Header.Get("X-Request-Id"),
-					"visitor": cookie.Value,
-				})
+			logging = logging.WithField("visitor", cookie.Value)
 			clog := context.WithValue(cvisitor, logger, logging)
 			next.ServeHTTP(w, r.WithContext(clog))
 		} else {
 			visitorID, _ := GenerateRandomString(24)
-			log.Infof("Generating vistor id: %s", visitorID)
+			// log.Infof("Generating vistor id: %s", visitorID)
 			expiration := time.Now().Add(365 * 24 * time.Hour)
 			setCookie := http.Cookie{Name: "visitor", Value: visitorID, Expires: expiration}
 			http.SetCookie(w, &setCookie)
 			cvisitor := context.WithValue(r.Context(), visitor, visitorID)
-			logging := log.WithFields(
-				log.Fields{
-					"id":      r.Header.Get("X-Request-Id"),
-					"visitor": visitorID,
-				})
+			logging = logging.WithField("visitor", visitorID)
 			clog := context.WithValue(cvisitor, logger, logging)
 			next.ServeHTTP(w, r.WithContext(clog))
 		}
