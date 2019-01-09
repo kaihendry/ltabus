@@ -18,6 +18,9 @@ import (
 	jsonloghandler "github.com/apex/log/handlers/json"
 	"github.com/apex/log/handlers/text"
 	"github.com/gorilla/mux"
+	"github.com/prometheus/client_golang/prometheus"
+	"github.com/prometheus/client_golang/prometheus/promauto"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
 type key int
@@ -63,6 +66,14 @@ func init() {
 	}
 }
 
+var (
+	ltaApiCalls = promauto.NewCounterVec(prometheus.CounterOpts{
+		Name: "lta_api_calls",
+		Help: "The total number of bus timing API calls made to LTA",
+	},
+		[]string{"code"})
+)
+
 func main() {
 
 	bs, _ = loadBusJSON("all.json")
@@ -72,6 +83,7 @@ func main() {
 	app.HandleFunc("/", handleIndex)
 	app.HandleFunc("/closest", handleClosest)
 	app.HandleFunc("/icon", handleIcon)
+	app.Handle("/metrics", promhttp.Handler()).Methods("GET")
 	app.Use(addContextMiddleware)
 
 	if err := http.ListenAndServe(":"+os.Getenv("PORT"), app); err != nil {
@@ -157,6 +169,8 @@ func busArrivals(id string) (arrivals SGBusArrivals, err error) {
 	}
 
 	defer res.Body.Close()
+
+	ltaApiCalls.WithLabelValues(fmt.Sprintf("%d", res.StatusCode)).Inc()
 
 	if res.StatusCode != http.StatusOK {
 		return arrivals, fmt.Errorf("Bad response: %d", res.StatusCode)
