@@ -72,6 +72,10 @@ var (
 		Help: "The total number of bus timing API calls made to LTA",
 	},
 		[]string{"code"})
+	uniqueVisitors = promauto.NewCounterVec(prometheus.CounterOpts{
+		Name: "unique_visitors",
+		Help: "The total number of cookies or visitor IDs issued",
+	}, []string{"ua"})
 )
 
 func main() {
@@ -213,6 +217,7 @@ func addContextMiddleware(next http.Handler) http.Handler {
 			http.SetCookie(w, &setCookie)
 			cvisitor := context.WithValue(r.Context(), visitor, visitorID)
 			logging = logging.WithField("visitor", visitorID)
+			uniqueVisitors.With(prometheus.Labels{"ua": r.UserAgent()}).Inc()
 			clog := context.WithValue(cvisitor, logger, logging)
 			next.ServeHTTP(w, r.WithContext(clog))
 		}
