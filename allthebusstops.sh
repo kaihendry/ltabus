@@ -4,7 +4,7 @@ test -f .env && source .env
 
 if ! test "$accountkey"
 then
-	echo env AccountKey is unset
+	echo env \"accountkey\" is unset
 	exit
 fi
 

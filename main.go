@@ -125,7 +125,7 @@ func handleIndex(w http.ResponseWriter, r *http.Request) {
 	var arriving SGBusArrivals
 
 	if id != "" {
-		log.Infof("Looking up %q", id)
+		log.WithField("stop", id).Info("calling LTA API")
 		arriving, err = busArrivals(id)
 		if err != nil {
 			log.WithError(err).Error("failed to retrieve bus timings")
@@ -184,7 +184,7 @@ func addContextMiddleware(next http.Handler) http.Handler {
 			log.Fields{
 				"id":      r.Header.Get("X-Request-Id"),
 				"country": r.Header.Get("Cloudfront-Viewer-Country"),
-				"UA":      r.UserAgent(),
+				"ua":      r.UserAgent(),
 			})
 		if cookie != nil {
 			cvisitor := context.WithValue(r.Context(), visitor, cookie.Value)
