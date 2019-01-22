@@ -13,28 +13,12 @@
 body { padding: 5px; font-size: 120%; }
 a { font-size: 110%; }
 ul,ol { padding-left: 0; list-style: none; }
-.buses li:before {
-  content: "\1F68C";
-  padding-right: 8px;
-}
-
-#stations li:before {
-  content: "🚏";
-  padding-right: 8px;
-}
-
+.buses li:before { content: "\1F68C"; padding-right: 8px; }
+#stations li:before { content: "🚏"; padding-right: 8px; }
 #stations li { white-space: nowrap; }
-
 .busstopid { white-space: nowrap; display:inline-block; border-bottom: thin solid black; padding-bottom:2px; margin: 0 }
-
-input[type=text] {
-    font-size: 1em;
-    width: 4em;
-}
-
-input[type=submit] {
-    font-size: 1em;
-}
+input[type=text] { font-size: 1em; width: 4em; }
+input[type=submit] { font-size: 1em; }
 </style>
 </head>
 <body>
@@ -88,21 +72,20 @@ window.addEventListener('load', function() {
 	var lastupdated = document.getElementById("lastupdated");
 	countdown(lastupdated, Date.now() - now);
 
-
 	slog = (JSON.parse(localStorage.getItem("history")) || {});
 
 {{ if .BusStopCode }}
 	if (typeof slog['{{ .BusStopCode }}'] === "undefined") {
 		slog['{{ .BusStopCode }}'] = {};
 		slog['{{ .BusStopCode }}'].count = 0;
+		slog['{{ .BusStopCode }}'].name = '{{ nameBusStopID .BusStopCode }}';
 	}
 	try {
 		slog['{{ .BusStopCode }}'].count++;
+		slog['{{ .BusStopCode }}'].name = '{{ nameBusStopID .BusStopCode }}';
 	} catch(e) { console.log(e); }
 
-	console.debug(slog);
 	localStorage.setItem('history', JSON.stringify(slog));
-	console.debug(localStorage['history']);
 {{ else }}
 if(navigator.geolocation) {
 	navigator.geolocation.getCurrentPosition(function(position) {

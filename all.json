@@ -6575,7 +6575,7 @@
   {
     "BusStopCode": "27251",
     "RoadName": "Nanyang Dr",
-    "Description": "Innovation Ctr",
+    "Description": "Yunnan Gdn",
     "Latitude": 1.34162269584125,
     "Longitude": 103.68420609962317
   },
@@ -8668,7 +8668,7 @@
   {
     "BusStopCode": "40079",
     "RoadName": "Dunearn Rd",
-    "Description": "Chinese Girls' Pr Sch",
+    "Description": "SCGS PR",
     "Latitude": 1.3197216415795,
     "Longitude": 103.8299145659947
   },
@@ -16347,14 +16347,14 @@
   {
     "BusStopCode": "54061",
     "RoadName": "Ang Mo Kio Ave 1",
-    "Description": "Blk 246",
+    "Description": "Blk 244",
     "Latitude": 1.36728801688172,
     "Longitude": 103.83404076959498
   },
   {
     "BusStopCode": "54069",
     "RoadName": "Ang Mo Kio Ave 1",
-    "Description": "Opp Blk 246",
+    "Description": "Opp Blk 244",
     "Latitude": 1.36691997150676,
     "Longitude": 103.83405562626137
   },
@@ -17670,14 +17670,14 @@
   {
     "BusStopCode": "56261",
     "RoadName": "Ang Mo Kio Ave 1",
-    "Description": "Blk 248",
+    "Description": "AFT Ang mo kio avenue 2",
     "Latitude": 1.36786219023986,
     "Longitude": 103.83172738576756
   },
   {
     "BusStopCode": "56269",
     "RoadName": "Ang Mo Kio Ave 1",
-    "Description": "Opp Blk 248",
+    "Description": "BEF Ang mo kio avenue 2",
     "Latitude": 1.36741835425889,
     "Longitude": 103.83233403239235
   },
@@ -24019,7 +24019,7 @@
   {
     "BusStopCode": "68149",
     "RoadName": "West Camp Rd",
-    "Description": "Seletar Airport",
+    "Description": "ST Aerospace",
     "Latitude": 1.41891604556531,
     "Longitude": 103.86279700000911
   },
