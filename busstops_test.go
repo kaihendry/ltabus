@@ -16,6 +16,12 @@ func init() {
 	}
 }
 
+func Benchmark_closest(b *testing.B) {
+	for n := 0; n < b.N; n++ {
+		bs.closest(Point{})
+	}
+}
+
 func TestBusStops_closest(t *testing.T) {
 	type args struct {
 		location Point
