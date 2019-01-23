@@ -16,6 +16,43 @@ func init() {
 	}
 }
 
+func Benchmark_closest(t *testing.B) {
+	type args struct {
+		location Point
+	}
+	tests := []struct {
+		name     string
+		BusStops BusStops
+		args     args
+		wantB    BusStop
+	}{
+		{
+			name:     "Middle Earth",
+			BusStops: bs,
+			args: args{
+				location: Point{
+					lat: 0.0,
+					lng: 0.0,
+				},
+			},
+			wantB: BusStop{
+				BusStopCode: "25751",
+				RoadName:    "Tuas Sth Ave 5",
+				Description: "BEF TUAS STH AVE 14",
+				Latitude:    1.27637,
+				Longitude:   103.621508,
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.B) {
+			if gotB := tt.BusStops.closest(tt.args.location); !reflect.DeepEqual(gotB, tt.wantB) {
+				t.Errorf("BusStops.closest() = %+v, want %+v", gotB, tt.wantB)
+			}
+		})
+	}
+}
+
 func TestBusStops_closest(t *testing.T) {
 	type args struct {
 		location Point
