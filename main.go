@@ -91,8 +91,8 @@ func handleClosest(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
+
 	closest := bs.closest(Point{lat: lat, lng: lng})
-	// fmt.Fprintf(w, "%#v", closest)
 	http.Redirect(w, r, fmt.Sprintf("/?id=%s", closest.BusStopCode), 302)
 }
 
@@ -114,7 +114,6 @@ func handleIndex(w http.ResponseWriter, r *http.Request) {
 	}
 
 	t, err := template.New("").Funcs(funcs).ParseFiles("templates/index.html")
-
 	if err != nil {
 		log.WithError(err).Error("template failed to parse")
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -125,24 +124,29 @@ func handleIndex(w http.ResponseWriter, r *http.Request) {
 	var arriving SGBusArrivals
 
 	if id != "" {
-		log.WithField("stop", id).Info("calling LTA API")
 		arriving, err = busArrivals(id)
 		if err != nil {
 			log.WithError(err).Error("failed to retrieve bus timings")
 		}
+		log.WithField("input", id).Info("serving")
 	}
 
 	t.ExecuteTemplate(w, "index.html", arriving)
 
 }
 
-func busArrivals(id string) (arrivals SGBusArrivals, err error) {
+func busArrivals(stopID string) (arrivals SGBusArrivals, err error) {
 
-	if id == "" {
+	if stopID == "" {
 		return
 	}
 
-	url := fmt.Sprintf("https://api.mytransport.sg/ltaodataservice/BusArrivalv2/?BusStopCode=%s", id)
+	ctx := log.WithFields(
+		log.Fields{
+			"stopID": stopID,
+		})
+
+	url := fmt.Sprintf("https://api.mytransport.sg/ltaodataservice/BusArrivalv2/?BusStopCode=%s", stopID)
 
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
@@ -151,10 +155,17 @@ func busArrivals(id string) (arrivals SGBusArrivals, err error) {
 
 	req.Header.Add("AccountKey", os.Getenv("accountkey"))
 
+	t1 := time.Now()
 	res, err := http.DefaultClient.Do(req)
 	if err != nil {
 		return
 	}
+
+	ctx.WithFields(
+		log.Fields{
+			"reqTime": time.Since(t1),
+			"status":  res.StatusCode,
+		}).Info("LTA API")
 
 	defer res.Body.Close()
 
@@ -192,7 +203,7 @@ func addContextMiddleware(next http.Handler) http.Handler {
 			clog := context.WithValue(cvisitor, logger, logging)
 			next.ServeHTTP(w, r.WithContext(clog))
 		} else {
-			visitorID, _ := GenerateRandomString(24)
+			visitorID, _ := generateRandomString(24)
 			// log.Infof("Generating vistor id: %s", visitorID)
 			expiration := time.Now().Add(365 * 24 * time.Hour)
 			setCookie := http.Cookie{Name: "visitor", Value: visitorID, Expires: expiration}
@@ -205,7 +216,7 @@ func addContextMiddleware(next http.Handler) http.Handler {
 	})
 }
 
-func GenerateRandomBytes(n int) ([]byte, error) {
+func generateRandomBytes(n int) ([]byte, error) {
 	b := make([]byte, n)
 	_, err := rand.Read(b)
 	if err != nil {
@@ -215,7 +226,7 @@ func GenerateRandomBytes(n int) ([]byte, error) {
 	return b, nil
 }
 
-func GenerateRandomString(s int) (string, error) {
-	b, err := GenerateRandomBytes(s)
+func generateRandomString(s int) (string, error) {
+	b, err := generateRandomBytes(s)
 	return base64.URLEncoding.EncodeToString(b), err
 }
