@@ -163,7 +163,7 @@ func busArrivals(stopID string) (arrivals SGBusArrivals, err error) {
 
 	ctx.WithFields(
 		log.Fields{
-			"reqTime": time.Since(t1),
+			"reqTime": time.Since(t1).String(),
 			"status":  res.StatusCode,
 		}).Info("LTA API")
 
