@@ -3,10 +3,12 @@ package main
 import (
 	"context"
 	"crypto/rand"
+	"crypto/tls"
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"net/http/httptrace"
 	"os"
 	"sort"
 	"strconv"
@@ -155,19 +157,43 @@ func busArrivals(stopID string) (arrivals SGBusArrivals, err error) {
 
 	req.Header.Add("AccountKey", os.Getenv("accountkey"))
 
-	t1 := time.Now()
+	var t0, t1, t2, t3, t4, t5, t6 time.Time
+
+	trace := &httptrace.ClientTrace{
+		DNSStart:             func(_ httptrace.DNSStartInfo) { t0 = time.Now() },
+		ConnectStart:         func(_, _ string) { t1 = time.Now() },
+		ConnectDone:          func(_, _ string, _ error) { t2 = time.Now() },
+		GotConn:              func(_ httptrace.GotConnInfo) { t3 = time.Now() },
+		GotFirstResponseByte: func() { t4 = time.Now() },
+		TLSHandshakeStart:    func() { t5 = time.Now() },
+		TLSHandshakeDone:     func(_ tls.ConnectionState, _ error) { t6 = time.Now() },
+	}
+	req = req.WithContext(httptrace.WithClientTrace(req.Context(), trace))
+
 	res, err := http.DefaultClient.Do(req)
 	if err != nil {
 		return
 	}
 
+	defer res.Body.Close()
+
+	t7 := time.Now() // after read body
+
+	// https://github.com/davecheney/httpstat/blob/master/main.go#L343
 	ctx.WithFields(
 		log.Fields{
-			"reqTime": time.Since(t1).String(),
-			"status":  res.StatusCode,
+			"dnslookup":         t1.Sub(t0),
+			"tcp connection":    t2.Sub(t1),
+			"tls handshake":     t6.Sub(t5),
+			"server processing": t4.Sub(t3),
+			"content transfer":  t7.Sub(t4),
+			"namelookup":        t1.Sub(t0),
+			"connect":           t2.Sub(t0),
+			"pretransfer":       t3.Sub(t0),
+			"starttransfer":     t4.Sub(t0),
+			"total":             t7.Sub(t0),
+			"status":            res.StatusCode,
 		}).Info("LTA API")
-
-	defer res.Body.Close()
 
 	if res.StatusCode != http.StatusOK {
 		return arrivals, fmt.Errorf("Bad response: %d", res.StatusCode)
