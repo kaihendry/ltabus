@@ -1,13 +1,16 @@
 <!DOCTYPE html>
 <html lang=en>
 <head>
-<title>Singapore bus arrival times</title>
 <meta name=viewport content="width=device-width, initial-scale=1">
 {{ if .BusStopCode }}
+<title>Singapore bus arrival times for bus stop {{ .BusStopCode }}</title>
 <link rel='icon' href='/icon?stop={{ .BusStopCode }}'>
 <link rel="apple-touch-icon" sizes="200x200" href="/icon?stop={{ .BusStopCode }}">
+<meta name="description" content="Bus arrival times for {{ .BusStopCode }} {{ nameBusStopID .BusStopCode }}"/>
 {{ else }}
+<title>Singapore bus arrival times 🇸🇬</title>
 <link rel="icon" href="data:;base64,iVBORw0KGgo=">
+<meta name="description" content="Bus arrival times based on your current location"/>
 {{ end }}
 <style>
 body { padding: 5px; font-size: 120%; }
