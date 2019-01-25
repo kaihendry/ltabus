@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"io/ioutil"
+	"math"
 )
 
 // Point is a geo co-ordinate
@@ -36,22 +37,25 @@ func loadBusJSON(jsonfile string) (bs BusStops, err error) {
 	return
 }
 
-func (BusStops BusStops) closest(location Point) (c BusStop) {
-	c = BusStops[0]
+func (BusStops BusStops) closest(location Point) BusStop {
+	c := -1
 	// fmt.Println(c)
-	closestSoFar := location.distance(Point{c.Latitude, c.Longitude})
+	closestSoFar := math.Inf(1)
+
 	// log.Println(c.Description, closestSoFar)
-	for _, p := range BusStops[1:] {
-		distance := location.distance(Point{p.Latitude, p.Longitude})
+	for i := range bs {
+		distance := location.distance(Point{bs[i].Latitude, bs[i].Longitude})
 		// log.Printf("'%s' %.1f\n", p.Description, distance)
 		if distance < closestSoFar {
 			// Set the return
-			c = p
+			c = i
 			// Record closest distance
 			closestSoFar = distance
 		}
 	}
-	return
+
+	return bs[c]
+
 }
 
 func (BusStops BusStops) nameBusStopID(busid string) (description string) {
