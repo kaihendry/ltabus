@@ -17,6 +17,7 @@ func init() {
 }
 
 func Benchmark_closest(b *testing.B) {
+	b.ResetTimer()
 	for n := 0; n < b.N; n++ {
 		bs.closest(Point{})
 	}

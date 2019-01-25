@@ -3,7 +3,6 @@ package main
 import (
 	"encoding/json"
 	"io/ioutil"
-	"math"
 )
 
 // Point is a geo co-ordinate
@@ -68,5 +67,5 @@ func (BusStops BusStops) nameBusStopID(busid string) (description string) {
 func (p Point) distance(p2 Point) float64 {
 	latd := p2.lat - p.lat
 	lngd := p2.lng - p.lng
-	return math.Sqrt(latd*latd + lngd*lngd)
+	return latd*latd + lngd*lngd
 }
