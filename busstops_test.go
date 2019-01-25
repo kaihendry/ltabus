@@ -16,10 +16,15 @@ func init() {
 	}
 }
 
+// We need to ensure compiler actually returns the value
+// A clever compiler might optimise it out, rendering our
+// benchmarking results incorrect
+var stop BusStop
+
 func Benchmark_closest(b *testing.B) {
 	b.ResetTimer()
 	for n := 0; n < b.N; n++ {
-		bs.closest(Point{})
+		stop = bs.closest(Point{}) // ensure the compiler returns a value
 	}
 }
 
