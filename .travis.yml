@@ -1,0 +1,24 @@
+sudo: required
+language: go
+go:
+  - tip
+before_install:
+  - curl -sf https://up.apex.sh/install | sudo sh
+  - sudo up upgrade
+
+deploy:
+  - provider: script
+    env: DEPLOY=deploy_to_beta
+    skip_cleanup: true
+    script:
+      - up deploy  # https://bus2.dabase.com
+      # https://web.dev/incorporate-performance-budgets-into-your-build-tools/
+      - npm run lh -- --perf=96 https://bus2.dabase.com
+    on:
+      branch: master
+  - provider: script
+    env: DEPLOY=deploy_production_on_tag
+    skip_cleanup: true
+    script: up deploy production  # https://bus.dabase.com/
+    on:
+      tags: true
