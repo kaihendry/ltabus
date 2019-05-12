@@ -12,8 +12,6 @@ deploy:
     skip_cleanup: true
     script:
       - up deploy  # https://bus2.dabase.com
-      # https://web.dev/incorporate-performance-budgets-into-your-build-tools/
-      - npm run lh -- --perf=96 https://bus2.dabase.com
     on:
       branch: master
   - provider: script
