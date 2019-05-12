@@ -72,5 +72,9 @@ func handleIcon(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Header().Set("Content-Type", "image/png")
-	png.Encode(w, img)
+	err = png.Encode(w, img)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 }

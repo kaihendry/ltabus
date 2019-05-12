@@ -133,7 +133,12 @@ func handleIndex(w http.ResponseWriter, r *http.Request) {
 		log.WithField("input", id).Info("serving")
 	}
 
-	t.ExecuteTemplate(w, "index.html", arriving)
+	err = t.ExecuteTemplate(w, "index.html", arriving)
+	if err != nil {
+		log.WithError(err).Error("template failed to execute")
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 
 }
 

@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"math"
+	"path/filepath"
 )
 
 // Point is a geo co-ordinate
@@ -25,7 +26,7 @@ type BusStop struct {
 type BusStops []BusStop
 
 func loadBusJSON(jsonfile string) (bs BusStops, err error) {
-	content, err := ioutil.ReadFile(jsonfile)
+	content, err := ioutil.ReadFile(filepath.Clean(jsonfile))
 	if err != nil {
 		return
 	}
