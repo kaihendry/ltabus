@@ -84,13 +84,13 @@ func main() {
 func handleClosest(w http.ResponseWriter, r *http.Request) {
 	lat, err := strconv.ParseFloat(r.URL.Query().Get("lat"), 32)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
 	lng, err := strconv.ParseFloat(r.URL.Query().Get("lng"), 32)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
