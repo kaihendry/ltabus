@@ -11,6 +11,7 @@ jobs:
         with:
           urls: |
             https://bus2.dabase.com
+            https://bus2.dabase.com/?id=83059
           budgetPath: ./budget.json
       - name: Save results
         uses: actions/upload-artifact@master
