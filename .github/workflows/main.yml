@@ -1,0 +1,19 @@
+# https://github.com/marketplace/actions/lighthouse-ci-action
+name: Lighthouse Audit
+on: push
+jobs:
+  lighthouse:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - name: Audit URLs using Lighthouse and ensure performance budget
+        uses: treosh/lighthouse-ci-action@v1
+        with:
+          urls: |
+            https://bus2.dabase.com
+          budgetPath: ./budget.json
+      - name: Save results
+        uses: actions/upload-artifact@master
+        with:
+          name: lighthouse-results
+          path: './results'
