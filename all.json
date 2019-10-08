@@ -3426,8 +3426,8 @@
     "BusStopCode": "13199",
     "RoadName": "Paterson Rd",
     "Description": "Aft Orchard Blvd",
-    "Latitude": 1.30229926867508,
-    "Longitude": 103.82999232505492
+    "Latitude": 1.302127,
+    "Longitude": 103.829875
   },
   {
     "BusStopCode": "13201",
@@ -14052,8 +14052,8 @@
     "BusStopCode": "47671",
     "RoadName": "Woodlands Cres",
     "Description": "Opp Admiralty Sec Sch",
-    "Latitude": 1.44634317378069,
-    "Longitude": 103.80365132611001
+    "Latitude": 1.446563,
+    "Longitude": 103.803336
   },
   {
     "BusStopCode": "47681",
@@ -15781,15 +15781,15 @@
     "BusStopCode": "53051",
     "RoadName": "Upp Thomson Rd",
     "Description": "Bef Thomson Plaza",
-    "Latitude": 1.35470733843442,
-    "Longitude": 103.83232115663711
+    "Latitude": 1.354995,
+    "Longitude": 103.8316003
   },
   {
     "BusStopCode": "53059",
     "RoadName": "Upp Thomson Rd",
     "Description": "Opp Thomson Plaza",
-    "Latitude": 1.35539998953236,
-    "Longitude": 103.8314804136155
+    "Latitude": 1.355471,
+    "Longitude": 103.8312231
   },
   {
     "BusStopCode": "53061",
@@ -18160,7 +18160,7 @@
   {
     "BusStopCode": "58241",
     "RoadName": "Sembawang Vista",
-    "Description": "Sembawang Int",
+    "Description": "Sembawang Int/Opp Blk 315",
     "Latitude": 1.44722064601498,
     "Longitude": 103.82018490260376
   },
@@ -18550,11 +18550,18 @@
     "Longitude": 103.832311
   },
   {
+    "BusStopCode": "58991",
+    "RoadName": "Yishun Ave 2",
+    "Description": "BLK 767",
+    "Latitude": 1.424583611,
+    "Longitude": 103.8350086
+  },
+  {
     "BusStopCode": "59009",
     "RoadName": "Yishun Ave 2",
-    "Description": "Yishun Temp Int",
-    "Latitude": 1.42997370944851,
-    "Longitude": 103.83743448975132
+    "Description": "Yishun Int",
+    "Latitude": 1.4284,
+    "Longitude": 103.8360975
   },
   {
     "BusStopCode": "59011",
@@ -18772,6 +18779,13 @@
     "Description": "Opp Blk 201",
     "Latitude": 1.43014843981169,
     "Longitude": 103.83793159453417
+  },
+  {
+    "BusStopCode": "59169",
+    "RoadName": "Yishun Ctrl",
+    "Description": "Bet Blks 201/202",
+    "Latitude": 1.4304570083984,
+    "Longitude": 103.83769416711105
   },
   {
     "BusStopCode": "59171",
@@ -19134,22 +19148,22 @@
     "BusStopCode": "59429",
     "RoadName": "Yishun Ring Rd",
     "Description": "Blk 846",
-    "Latitude": 1.4174261275063,
-    "Longitude": 103.83503056128593
+    "Latitude": 1.417434,
+    "Longitude": 103.835047
   },
   {
     "BusStopCode": "59431",
     "RoadName": "Yishun Ring Rd",
     "Description": "Blk 630",
-    "Latitude": 1.41778095290053,
-    "Longitude": 103.8376666508758
+    "Latitude": 1.417805,
+    "Longitude": 103.8376805
   },
   {
     "BusStopCode": "59439",
     "RoadName": "Yishun Ring Rd",
     "Description": "Blk 858",
-    "Latitude": 1.41781023946668,
-    "Longitude": 103.83835440290515
+    "Latitude": 1.417834,
+    "Longitude": 103.838374
   },
   {
     "BusStopCode": "59441",
@@ -19309,8 +19323,8 @@
     "BusStopCode": "59579",
     "RoadName": "Yishun Ring Rd",
     "Description": "Blk 456",
-    "Latitude": 1.42026429997499,
-    "Longitude": 103.84389849997935
+    "Latitude": 1.420294,
+    "Longitude": 103.843953
   },
   {
     "BusStopCode": "59581",
@@ -19425,34 +19439,6 @@
     "Longitude": 103.83784276257873
   },
   {
-    "BusStopCode": "59671",
-    "RoadName": "Yishun Ave 2",
-    "Description": "Bef Yishun Stn",
-    "Latitude": 1.42777620949098,
-    "Longitude": 103.83518718969762
-  },
-  {
-    "BusStopCode": "59689",
-    "RoadName": "Yishun Ctrl",
-    "Description": "Blk 203",
-    "Latitude": 1.43053187946013,
-    "Longitude": 103.83625638970271
-  },
-  {
-    "BusStopCode": "59691",
-    "RoadName": "Yishun Ctrl 1",
-    "Description": "Bef Blk 935",
-    "Latitude": 1.42486887947665,
-    "Longitude": 103.836065889713
-  },
-  {
-    "BusStopCode": "59699",
-    "RoadName": "Yishun Ctrl 1",
-    "Description": "Opp Blk 935",
-    "Latitude": 1.42465170948607,
-    "Longitude": 103.83604361024612
-  },
-  {
     "BusStopCode": "59701",
     "RoadName": "Yishun Ctrl",
     "Description": "Opp SAFRA Yishun",
@@ -19470,8 +19456,8 @@
     "BusStopCode": "59711",
     "RoadName": "Yishun Ring Rd",
     "Description": "Blk 672C",
-    "Latitude": 1.41817682642167,
-    "Longitude": 103.84279331124482
+    "Latitude": 1.418198,
+    "Longitude": 103.8427135
   },
   {
     "BusStopCode": "59719",
@@ -22148,6 +22134,20 @@
     "Longitude": 103.9191989
   },
   {
+    "BusStopCode": "65571",
+    "RoadName": "Punggol Field",
+    "Description": "BLK 218",
+    "Latitude": 1.403478611,
+    "Longitude": 103.895535
+  },
+  {
+    "BusStopCode": "65579",
+    "RoadName": "Punggol Field",
+    "Description": "BLK 258A",
+    "Latitude": 1.403556111,
+    "Longitude": 103.8960314
+  },
+  {
     "BusStopCode": "65611",
     "RoadName": "Punggol Way",
     "Description": "Nibong Stn Exit B",
@@ -22855,11 +22855,25 @@
     "Longitude": 103.882572
   },
   {
+    "BusStopCode": "66571",
+    "RoadName": "Buangkok Cres",
+    "Description": "Opp Blk 998B",
+    "Latitude": 1.384484444,
+    "Longitude": 103.8813056
+  },
+  {
     "BusStopCode": "66579",
     "RoadName": "Buangkok Cres",
     "Description": "BLK 998B",
     "Latitude": 1.38402973472559,
     "Longitude": 103.88070409002009
+  },
+  {
+    "BusStopCode": "66581",
+    "RoadName": "Buangkok Cres",
+    "Description": "Blk 986B",
+    "Latitude": 1.382511944,
+    "Longitude": 103.8797475
   },
   {
     "BusStopCode": "66589",
@@ -24064,6 +24078,20 @@
     "Description": "Aft Yishun Ave 8",
     "Latitude": 1.42698397142724,
     "Longitude": 103.85550329736579
+  },
+  {
+    "BusStopCode": "68201",
+    "RoadName": "Seletar Aerospace Dr",
+    "Description": "Aft Seletar Camp",
+    "Latitude": 1.409829,
+    "Longitude": 103.872581
+  },
+  {
+    "BusStopCode": "68209",
+    "RoadName": "Seletar Aerospace Dr",
+    "Description": "Opp Seletar Camp",
+    "Latitude": 1.4113435,
+    "Longitude": 103.873544
   },
   {
     "BusStopCode": "68239",
@@ -29557,8 +29585,8 @@
     "BusStopCode": "92169",
     "RoadName": "Tg Katong Rd",
     "Description": "Bef Katong PO",
-    "Latitude": 1.30446125380385,
-    "Longitude": 103.8965604644894
+    "Latitude": 1.303782,
+    "Longitude": 103.8967661
   },
   {
     "BusStopCode": "92171",
@@ -29641,8 +29669,8 @@
     "BusStopCode": "92229",
     "RoadName": "Marine Terr",
     "Description": "Blk 53",
-    "Latitude": 1.30515730682962,
-    "Longitude": 103.9162015914584
+    "Latitude": 1.304952,
+    "Longitude": 103.916022
   },
   {
     "BusStopCode": "92231",
