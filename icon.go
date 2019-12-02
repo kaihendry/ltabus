@@ -72,6 +72,7 @@ func handleIcon(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Header().Set("Content-Type", "image/png")
+	w.Header().Set("Cache-Control", "public, max-age=31536000")
 	err = png.Encode(w, img)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)

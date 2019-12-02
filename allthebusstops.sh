@@ -14,7 +14,7 @@ cd "$(mktemp -d)" || exit
 count=0
 while :
 do
-curl -s -f -X GET https://api.mytransport.sg/ltaodataservice/BusStops/?\$skip=$count -H "AccountKey: $accountkey" |
+	curl -s -f -X GET http://datamall2.mytransport.sg/ltaodataservice/BusStops?\$skip=$count -H "AccountKey: $accountkey" |
 	jq .value[] > $count.json
 	test -s "$count.json" || break
 	count=$((count+500))

@@ -16,8 +16,9 @@
 <style>
 body { padding: 5px; font-size: 120%; }
 a { font-size: 110%; }
+strong { font-size: 180%; }
 ul,ol { padding-left: 0; list-style: none; }
-.buses li:before { content: "\1F68C"; padding-right: 8px; }
+.buses li:before { content: "\1F68C"; padding-left: 20px; padding-right: 8px; }
 #stations li:before { content: "🚏"; padding-right: 8px; }
 #stations li { white-space: nowrap; }
 .busstopid { white-space: nowrap; display:inline-block; border-bottom: thin solid black; padding-bottom:2px; margin: 0 }
@@ -28,6 +29,12 @@ input[type=submit] { font-size: 1em; }
 <body>
 
 <h1><a href="/">📍</a>{{ nameBusStopID .BusStopCode }}</h1>
+<form>
+<label for=id>Bus stop #</label>
+<input autofocus id=id required type=text pattern="\d*" value="{{ .BusStopCode }}" name=id>
+<input value="Arrival times" type=submit>
+</form>
+
 
 <ul class=buses>
 {{ range .Services }}
@@ -44,11 +51,6 @@ input[type=submit] { font-size: 1em; }
 {{ end }}
 </ul>
 <h4>Last updated: <span id=lastupdated></span></h4>
-<form>
-<label for=id>Bus stop #</label>
-<input autofocus id=id required type=text pattern="[0-9]{5}" value="{{ .BusStopCode }}" name=id>
-<input type=submit>
-</form>
 
 <ol id=stations></ol>
 
