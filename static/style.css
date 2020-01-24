@@ -7,4 +7,14 @@ ul,ol { padding-left: 0; list-style: none; }
 #stations li { white-space: nowrap; }
 .busstopid { white-space: nowrap; display:inline-block; border-bottom: thin solid black; padding-bottom:2px; margin: 0 }
 input[type=text] { font-size: 1em; width: 4em; }
-input[type=submit] { font-size: 1em; display: inline!important; }
+
+label {
+  display: block;
+}
+input#id {
+  display: inline-block !important;
+}
+input[type=submit] {
+  font-size: 1em;
+  display: inline-block !important;
+}
