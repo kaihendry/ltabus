@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"crypto/rand"
-	"crypto/tls"
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
@@ -167,16 +166,12 @@ func busArrivals(stopID string) (arrivals SGBusArrivals, err error) {
 
 	req.Header.Add("AccountKey", os.Getenv("accountkey"))
 
-	var t0, t1, t2, t3, t4, t5, t6 time.Time
+	start := time.Now()
+	timings := log.Fields{}
 
 	trace := &httptrace.ClientTrace{
-		DNSStart:             func(_ httptrace.DNSStartInfo) { t0 = time.Now() },
-		ConnectStart:         func(_, _ string) { t1 = time.Now() },
-		ConnectDone:          func(_, _ string, _ error) { t2 = time.Now() },
-		GotConn:              func(_ httptrace.GotConnInfo) { t3 = time.Now() },
-		GotFirstResponseByte: func() { t4 = time.Now() },
-		TLSHandshakeStart:    func() { t5 = time.Now() },
-		TLSHandshakeDone:     func(_ tls.ConnectionState, _ error) { t6 = time.Now() },
+		DNSStart:             func(_ httptrace.DNSStartInfo) { timings["DNSStart"] = ms(time.Since(start)) },
+		GotFirstResponseByte: func() { timings["GotFirstResponseByte"] = ms(time.Since(start)) },
 	}
 	req = req.WithContext(httptrace.WithClientTrace(req.Context(), trace))
 
@@ -187,23 +182,9 @@ func busArrivals(stopID string) (arrivals SGBusArrivals, err error) {
 
 	defer res.Body.Close()
 
-	t7 := time.Now() // after read body
+	timings["Total"] = ms(time.Since(start))
 
-	// https://github.com/davecheney/httpstat/blob/master/main.go#L343
-	ctx.WithFields(
-		log.Fields{
-			"dnslookup":         t1.Sub(t0),
-			"tcp connection":    t2.Sub(t1),
-			"tls handshake":     t6.Sub(t5),
-			"server processing": t4.Sub(t3),
-			"content transfer":  t7.Sub(t4),
-			"namelookup":        t1.Sub(t0),
-			"connect":           t2.Sub(t0),
-			"pretransfer":       t3.Sub(t0),
-			"starttransfer":     t4.Sub(t0),
-			"total":             t7.Sub(t0),
-			"status":            res.StatusCode,
-		}).Info("LTA API")
+	ctx.WithFields(timings).Info("LTA API")
 
 	if res.StatusCode != http.StatusOK {
 		return arrivals, fmt.Errorf("Bad response: %d", res.StatusCode)
@@ -265,4 +246,8 @@ func generateRandomBytes(n int) ([]byte, error) {
 func generateRandomString(s int) (string, error) {
 	b, err := generateRandomBytes(s)
 	return base64.URLEncoding.EncodeToString(b), err
+}
+
+func ms(d time.Duration) int {
+	return int(d / time.Millisecond)
 }
