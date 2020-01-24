@@ -12,8 +12,4 @@ jobs:
           urls: |
             https://bus2.dabase.com
             https://bus2.dabase.com/?id=83059
-      - name: Save results
-        uses: actions/upload-artifact@master
-        with:
-          name: lighthouse-results
-          path: './results'
+        temporaryPublicStorage: true
