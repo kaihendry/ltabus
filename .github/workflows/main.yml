@@ -12,4 +12,4 @@ jobs:
           urls: |
             https://bus2.dabase.com
             https://bus2.dabase.com/?id=83059
-        temporaryPublicStorage: true
+          temporaryPublicStorage: true

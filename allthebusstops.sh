@@ -23,3 +23,5 @@ done
 jq . ./*.json | jq -s . > "$pwd/all.json"
 busstopcount=$(jq 'length' "$pwd/all.json")
 echo "Bus stop count: $busstopcount"
+
+sed -i "s,{{ totalStops }},$busstopcount," "$pwd/templates/index.html"
