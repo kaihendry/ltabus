@@ -86,7 +86,7 @@ func TestBusStops_nameBusStopID(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if gotDescription := tt.BusStops.nameBusStopID(tt.args.busid); gotDescription != tt.wantDescription {
+			if gotDescription := tt.BusStops.nameBusStop(tt.args.busid); gotDescription != tt.wantDescription {
 				t.Errorf("BusStops.nameBusStopID() = %v, want %v", gotDescription, tt.wantDescription)
 			}
 		})

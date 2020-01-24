@@ -42,7 +42,6 @@ func (BusStops BusStops) closest(location Point) BusStop {
 	c := -1
 	// fmt.Println(c)
 	closestSoFar := math.Inf(1)
-
 	// log.Println(c.Description, closestSoFar)
 	for i := range bs {
 		distance := location.distance(Point{bs[i].Latitude, bs[i].Longitude})
@@ -54,12 +53,10 @@ func (BusStops BusStops) closest(location Point) BusStop {
 			closestSoFar = distance
 		}
 	}
-
 	return bs[c]
-
 }
 
-func (BusStops BusStops) nameBusStopID(busid string) (description string) {
+func (BusStops BusStops) nameBusStop(busid string) (description string) {
 	for _, p := range BusStops {
 		if busid == p.BusStopCode {
 			return p.Description

@@ -30,7 +30,7 @@
   {
     "BusStopCode": "01039",
     "RoadName": "Nth Bridge Rd",
-    "Description": "Nth Bridge Commercial Cplx",
+    "Description": "Bugis Cube",
     "Latitude": 1.29820784139683,
     "Longitude": 103.85549139837407
   },
@@ -17543,7 +17543,7 @@
   },
   {
     "BusStopCode": "56011",
-    "RoadName": "Tampines Ave 6",
+    "RoadName": "Upp Thomson Rd",
     "Description": "Bef adana at thomson",
     "Latitude": 1.36865,
     "Longitude": 103.828321

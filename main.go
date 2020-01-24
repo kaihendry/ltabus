@@ -74,6 +74,12 @@ func main() {
 	app.HandleFunc("/", handleIndex)
 	app.HandleFunc("/closest", handleClosest)
 	app.HandleFunc("/icon", handleIcon)
+
+	STATIC_DIR := "/static/"
+	app.
+		PathPrefix(STATIC_DIR).
+		Handler(http.StripPrefix(STATIC_DIR, http.FileServer(http.Dir("."+STATIC_DIR))))
+
 	app.Use(addContextMiddleware)
 
 	if err := http.ListenAndServe(":"+os.Getenv("PORT"), app); err != nil {
@@ -110,9 +116,9 @@ func handleIndex(w http.ResponseWriter, r *http.Request) {
 	}
 
 	funcs := template.FuncMap{
-		"nameBusStopID": func(s string) string { return bs.nameBusStopID(s) },
-		"totalstops":    func() int { return len(bs) },
-		"getenv":        os.Getenv,
+		"nameBusStop": func(s string) string { return bs.nameBusStop(s) },
+		"totalstops":  func() int { return len(bs) },
+		"getenv":      os.Getenv,
 	}
 
 	t, err := template.New("").Funcs(funcs).ParseFiles("templates/index.html")
