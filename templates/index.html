@@ -3,6 +3,8 @@
 <head>
 <meta name=viewport content="width=device-width, initial-scale=1">
 <link rel='stylesheet' href='https://cdn.jsdelivr.net/gh/kognise/water.css@latest/dist/dark.min.css'>
+<script src="/static/main.js"></script>
+<link rel='stylesheet' href='/static/style.css'>
 {{ if .BusStopCode }}
 <title>Singapore bus arrival times for bus stop {{ .BusStopCode }}</title>
 <link rel='icon' href='/icon?stop={{ .BusStopCode }}'>
@@ -13,18 +15,6 @@
 <link rel="icon" href="data:;base64,iVBORw0KGgo=">
 <meta name="description" content="Bus arrival times based on your current location"/>
 {{ end }}
-<style>
-body { padding: 5px; font-size: 120%; }
-a { font-size: 110%; }
-strong { font-size: 180%; }
-ul,ol { padding-left: 0; list-style: none; }
-.buses li:before { content: "\1F68C"; padding-left: 20px; padding-right: 8px; }
-#stations li:before { content: "🚏"; padding-right: 8px; }
-#stations li { white-space: nowrap; }
-.busstopid { white-space: nowrap; display:inline-block; border-bottom: thin solid black; padding-bottom:2px; margin: 0 }
-input[type=text] { font-size: 1em; width: 4em; }
-input[type=submit] { font-size: 1em; display: inline!important; }
-</style>
 </head>
 <body>
 
@@ -50,11 +40,10 @@ input[type=submit] { font-size: 1em; display: inline!important; }
 </li>
 {{ end }}
 </ul>
+
 <h4>Last updated: <span id=lastupdated></span></h4>
 
 <ol id=stations></ol>
-
-<script src="/static/main.js"></script>
 
 <footer>
 <ul>
@@ -65,5 +54,6 @@ input[type=submit] { font-size: 1em; display: inline!important; }
 <li>There are {{ totalstops }} bus stops in Singapore</li>
 </ul>
 </footer>
+
 </body>
 </html>
