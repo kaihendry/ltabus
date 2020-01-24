@@ -21,4 +21,5 @@ do
 done
 
 jq . ./*.json | jq -s . > "$pwd/all.json"
-echo "Bus stop count $(jq 'length' "$pwd/all.json")"
+busstopcount=$(jq 'length' "$pwd/all.json")
+echo "Bus stop count: $busstopcount"

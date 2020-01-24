@@ -1,22 +1,21 @@
-sudo: required
 language: go
 go:
   - tip
 before_install:
   - travis_retry curl -sf https://up.apex.sh/install | sudo sh
-  - sudo up upgrade
+  - up upgrade
+  - ./allthebusstops.sh
+  - npx critical --inline templates/index.html > index.critical.html
+  - mv index.critical.html templates/index.html
 
 deploy:
   - provider: script
-    env: DEPLOY=deploy_to_beta
-    skip_cleanup: true
-    script:
-      - up deploy  # https://bus2.dabase.com
+    edge: true
+    script: up deploy  # https://bus2.dabase.com
     on:
       branch: master
   - provider: script
-    env: DEPLOY=deploy_production_on_tag
-    skip_cleanup: true
+    edge: true
     script: up deploy production  # https://bus.dabase.com/
     on:
       tags: true

@@ -76,8 +76,7 @@ func main() {
 	app.HandleFunc("/icon", handleIcon)
 
 	STATIC_DIR := "/static/"
-	app.
-		PathPrefix(STATIC_DIR).
+	app.PathPrefix(STATIC_DIR).
 		Handler(http.StripPrefix(STATIC_DIR, http.FileServer(http.Dir("."+STATIC_DIR))))
 
 	app.Use(addContextMiddleware)
@@ -117,8 +116,8 @@ func handleIndex(w http.ResponseWriter, r *http.Request) {
 
 	funcs := template.FuncMap{
 		"nameBusStop": func(s string) string { return bs.nameBusStop(s) },
-		"totalstops":  func() int { return len(bs) },
-		"getenv":      os.Getenv,
+		"totalStops":  func() int { return len(bs) },
+		"getEnv":      os.Getenv,
 	}
 
 	t, err := template.New("").Funcs(funcs).ParseFiles("templates/index.html")

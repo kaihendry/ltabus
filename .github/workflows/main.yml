@@ -7,7 +7,7 @@ jobs:
     steps:
       - uses: actions/checkout@v1
       - name: Audit URLs using Lighthouse and ensure performance budget
-        uses: treosh/lighthouse-ci-action@v1
+        uses: treosh/lighthouse-ci-action@v2
         with:
           urls: |
             https://bus2.dabase.com
