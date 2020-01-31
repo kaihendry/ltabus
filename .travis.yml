@@ -7,6 +7,7 @@ before_install:
   - ./allthebusstops.sh
   - npx critical --inline templates/index.html > index.critical.html
   - test -s index.critical.html && mv index.critical.html templates/index.html
+  - npm install -g @lhci/cli@0.3.x # install LHCI
 
 deploy:
   - provider: script
@@ -19,3 +20,7 @@ deploy:
     script: up deploy production  # https://bus.dabase.com/
     on:
       tags: true
+
+after_deploy:
+  - lhci collect --url=https://bus.dabase.com --upload.target=temporary-public-storage
+  - lhci upload
