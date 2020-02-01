@@ -1,26 +1,33 @@
 language: go
 go:
-  - tip
+  - 1.x
+
 before_install:
   - travis_retry curl -sf https://up.apex.sh/install | sudo sh
   - sudo up upgrade
   - ./allthebusstops.sh
   - npx critical --inline templates/index.html > index.critical.html
   - test -s index.critical.html && mv index.critical.html templates/index.html
-  - npm install -g @lhci/cli@0.3.x # install LHCI
 
-deploy:
-  - provider: script
-    edge: true
-    script: up deploy  # https://bus2.dabase.com
-    on:
-      branch: master
-  - provider: script
-    edge: true
-    script: up deploy production  # https://bus.dabase.com/
-    on:
-      tags: true
-
-after_deploy:
-  - lhci collect --url=https://bus.dabase.com --upload.target=temporary-public-storage
-  - lhci upload
+matrix:
+  include:
+    - if: branch = master
+      deploy:
+        provider: script
+        script: up deploy  # https://bus2.dabase.com
+        on:
+          branch: master
+    - if: tag IS present
+      deploy:
+        edge: true
+        script: up deploy production  # https://bus.dabase.com/
+        on:
+          tags: true
+    - language: node_js
+      node_js: 13
+      script:
+        - npm install -g @lhci/cli@0.3.x
+        - lhci collect --start-server-command="PORT=3000 go run ."
+          --url=http://localhost:3000/
+          --upload.target=temporary-public-storage
+        - lhci upload
