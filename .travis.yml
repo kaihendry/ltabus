@@ -19,11 +19,12 @@ matrix:
           branch: master
     - if: tag IS present
       deploy:
-        edge: true
+        provider: script
         script: up deploy production  # https://bus.dabase.com/
         on:
           tags: true
     - language: node_js
+      env: ISOLATED=false
       node_js: 13
       script:
         - npm install -g @lhci/cli@0.3.x
