@@ -56,15 +56,18 @@ type SGBusArrivals struct {
 
 var bs BusStops
 
-func init() {
+func main() {
+
+	if _, ok := os.LookupEnv("accountkey"); !ok {
+		log.Errorf("Missing accountKey")
+		os.Exit(1)
+	}
+
 	if os.Getenv("UP_STAGE") != "" {
 		log.SetHandler(jsonloghandler.Default)
 	} else {
 		log.SetHandler(text.Default)
 	}
-}
-
-func main() {
 
 	bs, _ = loadBusJSON("all.json")
 	log.Infof("Loaded %d bus stops", len(bs))
