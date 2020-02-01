@@ -6,6 +6,7 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
+	"net"
 	"net/http"
 	"net/http/httptrace"
 	"os"
@@ -83,9 +84,12 @@ func main() {
 
 	app.Use(addContextMiddleware)
 
-	if err := http.ListenAndServe(":"+os.Getenv("PORT"), app); err != nil {
-		log.WithError(err).Fatal("error listening")
+	listener, err := net.Listen("tcp", ":"+os.Getenv("PORT"))
+	if err != nil {
+		log.WithError(err).Fatal("unable to listen")
 	}
+	fmt.Println("Listening on port:", listener.Addr().(*net.TCPAddr).Port)
+	panic(http.Serve(listener, app))
 }
 
 func handleClosest(w http.ResponseWriter, r *http.Request) {

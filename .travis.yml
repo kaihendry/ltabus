@@ -8,6 +8,7 @@ before_install:
   - ./allthebusstops.sh
   - npx critical --inline templates/index.html > index.critical.html
   - test -s index.critical.html && mv index.critical.html templates/index.html
+  - go get
 
 matrix:
   include:
