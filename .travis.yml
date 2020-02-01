@@ -1,6 +1,6 @@
 language: go
 go:
-  - 1.x
+  - tip
 
 before_install:
   - travis_retry curl -sf https://up.apex.sh/install | sudo sh
