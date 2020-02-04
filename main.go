@@ -8,7 +8,6 @@ import (
 	"fmt"
 	"net"
 	"net/http"
-	"net/http/httptrace"
 	"os"
 	"sort"
 	"strconv"
@@ -19,7 +18,10 @@ import (
 	"github.com/apex/log"
 	jsonloghandler "github.com/apex/log/handlers/json"
 	"github.com/apex/log/handlers/text"
+	"github.com/aws/aws-xray-sdk-go/strategy/ctxmissing"
+	"github.com/aws/aws-xray-sdk-go/xray"
 	"github.com/gorilla/mux"
+	"golang.org/x/net/context/ctxhttp"
 )
 
 type key int
@@ -159,11 +161,6 @@ func busArrivals(stopID string) (arrivals SGBusArrivals, err error) {
 		return
 	}
 
-	ctx := log.WithFields(
-		log.Fields{
-			"stopID": stopID,
-		})
-
 	url := fmt.Sprintf("http://datamall2.mytransport.sg/ltaodataservice/BusArrivalv2?BusStopCode=%s", stopID)
 
 	req, err := http.NewRequest("GET", url, nil)
@@ -173,25 +170,18 @@ func busArrivals(stopID string) (arrivals SGBusArrivals, err error) {
 
 	req.Header.Add("AccountKey", os.Getenv("accountkey"))
 
-	start := time.Now()
-	timings := log.Fields{}
+	xray.Configure(xray.Config{
+		ContextMissingStrategy: ctxmissing.NewDefaultLogErrorStrategy(),
+	})
 
-	trace := &httptrace.ClientTrace{
-		DNSStart:             func(_ httptrace.DNSStartInfo) { timings["DNSStart"] = ms(time.Since(start)) },
-		GotFirstResponseByte: func() { timings["GotFirstResponseByte"] = ms(time.Since(start)) },
-	}
-	req = req.WithContext(httptrace.WithClientTrace(req.Context(), trace))
-
-	res, err := http.DefaultClient.Do(req)
+	xctx, seg := xray.BeginSubsegment(context.Background(), "datamall")
+	res, err := ctxhttp.Do(xctx, xray.Client(nil), req)
 	if err != nil {
 		return
 	}
+	seg.Close(nil)
 
 	defer res.Body.Close()
-
-	timings["Total"] = ms(time.Since(start))
-
-	ctx.WithFields(timings).Info("LTA API")
 
 	if res.StatusCode != http.StatusOK {
 		return arrivals, fmt.Errorf("Bad response: %d", res.StatusCode)
