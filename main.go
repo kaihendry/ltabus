@@ -18,7 +18,6 @@ import (
 	"github.com/apex/log"
 	jsonloghandler "github.com/apex/log/handlers/json"
 	"github.com/apex/log/handlers/text"
-	"github.com/aws/aws-xray-sdk-go/strategy/ctxmissing"
 	"github.com/aws/aws-xray-sdk-go/xray"
 	"github.com/gorilla/mux"
 	"golang.org/x/net/context/ctxhttp"
@@ -170,11 +169,7 @@ func busArrivals(stopID string) (arrivals SGBusArrivals, err error) {
 
 	req.Header.Add("AccountKey", os.Getenv("accountkey"))
 
-	xray.Configure(xray.Config{
-		ContextMissingStrategy: ctxmissing.NewDefaultLogErrorStrategy(),
-	})
-
-	xctx, seg := xray.BeginSubsegment(context.Background(), "datamall")
+	xctx, seg := xray.BeginSegment(context.Background(), "datamall")
 	res, err := ctxhttp.Do(xctx, xray.Client(nil), req)
 	if err != nil {
 		return
