@@ -27,6 +27,10 @@ matrix:
     - language: node_js
       env: ISOLATED=false
       node_js: 13
+      before_install:
+        - curl -sL -o ~/bin/gimme https://raw.githubusercontent.com/travis-ci/gimme/master/gimme
+        - chmod +x ~/bin/gimme
+        - eval "$(curl -sL https://raw.githubusercontent.com/travis-ci/gimme/master/gimme | GIMME_GO_VERSION=1.12 bash)"
       script:
         - npm install -g @lhci/cli@0.3.x
         - lhci collect --start-server-command="PORT=3000 go run ."
