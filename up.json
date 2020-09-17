@@ -9,6 +9,9 @@
       "domain": "bus.dabase.com"
     }
   },
+  "hooks": {
+    "build": "CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o server *.go"
+  },
   "regions": [
     "ap-southeast-1"
   ],
