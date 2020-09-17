@@ -4,9 +4,10 @@ Request for API access from <https://www.mytransport.sg/content/mytransport/home
 
 Assuming `export accountkey="SECRET"`
 
-# License
+# Local development
 
-MIT
+	eval "$(up env export)"
+	gin
 
 # Icon generator
 
