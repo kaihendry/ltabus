@@ -6,19 +6,18 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
-	"net"
+	"html/template"
+	"io/ioutil"
+	"math"
 	"net/http"
 	"net/http/httptrace"
 	"os"
+	"path/filepath"
 	"sort"
 	"strconv"
 	"time"
 
-	"html/template"
-
 	"github.com/apex/log"
-	jsonloghandler "github.com/apex/log/handlers/json"
-	"github.com/apex/log/handlers/text"
 	"github.com/gorilla/mux"
 )
 
@@ -55,7 +54,10 @@ type SGBusArrivals struct {
 	} `json:"Services"`
 }
 
-var bs BusStops
+type Server struct {
+	router   *mux.Router
+	busStops BusStops
+}
 
 func main() {
 
@@ -64,35 +66,49 @@ func main() {
 		os.Exit(1)
 	}
 
-	if os.Getenv("UP_STAGE") != "" {
-		log.SetHandler(jsonloghandler.Default)
-	} else {
-		log.SetHandler(text.Default)
-	}
-
-	bs, _ = loadBusJSON("all.json")
-	log.Infof("Loaded %d bus stops", len(bs))
-
-	app := mux.NewRouter()
-	app.HandleFunc("/", handleIndex)
-	app.HandleFunc("/closest", handleClosest)
-	app.HandleFunc("/icon", handleIcon)
-
-	STATIC_DIR := "/static/"
-	app.PathPrefix(STATIC_DIR).
-		Handler(http.StripPrefix(STATIC_DIR, http.FileServer(http.Dir("."+STATIC_DIR))))
-
-	app.Use(addContextMiddleware)
-
-	listener, err := net.Listen("tcp", ":"+os.Getenv("PORT"))
+	server, err := NewServer("all.json")
 	if err != nil {
-		log.WithError(err).Fatal("unable to listen")
+		log.Fatalf("failed to create server: %v", err)
 	}
-	fmt.Println("Listening on port:", listener.Addr().(*net.TCPAddr).Port)
-	panic(http.Serve(listener, app))
+
+	err = http.ListenAndServe(":"+os.Getenv("PORT"), server.router)
+	if err != nil {
+		log.Fatalf("failed to start server: %v", err)
+	}
+
 }
 
-func handleClosest(w http.ResponseWriter, r *http.Request) {
+func NewServer(busStopsPath string) (*Server, error) {
+
+	bs, err := loadBusJSON(busStopsPath)
+	if err != nil {
+		log.WithError(err).Fatal("unable to load bus stops")
+	}
+
+	srv := Server{
+		router:   mux.NewRouter(),
+		busStops: bs,
+	}
+
+	srv.routes()
+
+	return &srv, nil
+
+}
+
+func (s *Server) routes() {
+	s.router.HandleFunc("/", s.handleIndex)
+	s.router.HandleFunc("/closest", s.handleClosest)
+	s.router.HandleFunc("/icon", handleIcon)
+
+	staticDir := "/static/"
+	s.router.PathPrefix(staticDir).
+		Handler(http.StripPrefix(staticDir, http.FileServer(http.Dir("."+staticDir))))
+
+	s.router.Use(addContextMiddleware)
+}
+
+func (s *Server) handleClosest(w http.ResponseWriter, r *http.Request) {
 	lat, err := strconv.ParseFloat(r.URL.Query().Get("lat"), 32)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
@@ -105,11 +121,11 @@ func handleClosest(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	closest := bs.closest(Point{lat: lat, lng: lng})
+	closest := s.busStops.closest(Point{lat: lat, lng: lng})
 	http.Redirect(w, r, fmt.Sprintf("/?id=%s", closest.BusStopCode), 302)
 }
 
-func handleIndex(w http.ResponseWriter, r *http.Request) {
+func (s *Server) handleIndex(w http.ResponseWriter, r *http.Request) {
 	if os.Getenv("UP_STAGE") != "production" {
 		w.Header().Set("X-Robots-Tag", "none")
 	}
@@ -121,9 +137,8 @@ func handleIndex(w http.ResponseWriter, r *http.Request) {
 	}
 
 	funcs := template.FuncMap{
-		"nameBusStop": func(s string) string { return bs.nameBusStop(s) },
-		"totalStops":  func() int { return len(bs) },
-		"getEnv":      os.Getenv,
+		"totalStops": func() int { return len(s.busStops) },
+		"getEnv":     os.Getenv,
 	}
 
 	t, err := template.New("").Funcs(funcs).ParseFiles("templates/index.html")
@@ -146,9 +161,8 @@ func handleIndex(w http.ResponseWriter, r *http.Request) {
 
 	err = t.ExecuteTemplate(w, "index.html", arriving)
 	if err != nil {
-		log.WithError(err).Error("template failed to execute")
+		log.WithError(err).Error("template failed to parse")
 		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
 	}
 
 }
@@ -257,4 +271,66 @@ func generateRandomString(s int) (string, error) {
 
 func ms(d time.Duration) int {
 	return int(d / time.Millisecond)
+}
+
+// Point is a geo co-ordinate
+type Point struct {
+	lat float64
+	lng float64
+}
+
+// BusStop describes a Singaporean (LTA) bus stop
+type BusStop struct {
+	BusStopCode string  `json:"BusStopCode"`
+	RoadName    string  `json:"RoadName"`
+	Description string  `json:"Description"`
+	Latitude    float64 `json:"Latitude"`
+	Longitude   float64 `json:"Longitude"`
+}
+
+// BusStops are many bus stops
+type BusStops []BusStop
+
+func loadBusJSON(jsonfile string) (bs BusStops, err error) {
+	content, err := ioutil.ReadFile(filepath.Clean(jsonfile))
+	if err != nil {
+		return
+	}
+	err = json.Unmarshal(content, &bs)
+	if err != nil {
+		return
+	}
+
+	return
+}
+
+func (bs BusStops) closest(location Point) BusStop {
+	c := -1
+	closestSoFar := math.Inf(1)
+	for i := range bs {
+		distance := location.distance(Point{bs[i].Latitude, bs[i].Longitude})
+		if distance < closestSoFar {
+			// Set the return
+			c = i
+			// Record closest distance
+			closestSoFar = distance
+		}
+	}
+	return bs[c]
+}
+
+func (bs BusStops) nameBusStop(busid string) (description string) {
+	for _, p := range bs {
+		if busid == p.BusStopCode {
+			return p.Description
+		}
+	}
+	return ""
+}
+
+// distance calculates the distance between two points
+func (p Point) distance(p2 Point) float64 {
+	latd := p2.lat - p.lat
+	lngd := p2.lng - p.lng
+	return latd*latd + lngd*lngd
 }
