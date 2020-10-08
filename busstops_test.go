@@ -1,20 +1,9 @@
 package main
 
 import (
-	"fmt"
-	"log"
 	"reflect"
 	"testing"
 )
-
-func init() {
-	var err error
-	bs, err = loadBusJSON("all.json")
-	fmt.Println("Number of bus stops", len(bs))
-	if err != nil {
-		log.Fatal(err)
-	}
-}
 
 // We need to ensure compiler actually returns the value
 // A clever compiler might optimise it out, rendering our
@@ -22,6 +11,7 @@ func init() {
 var stop BusStop
 
 func Benchmark_closest(b *testing.B) {
+	bs, _ := loadBusJSON("all.json")
 	b.ResetTimer()
 	for n := 0; n < b.N; n++ {
 		stop = bs.closest(Point{}) // ensure the compiler returns a value
@@ -29,6 +19,7 @@ func Benchmark_closest(b *testing.B) {
 }
 
 func TestBusStops_closest(t *testing.T) {
+	bs, _ := loadBusJSON("all.json")
 	type args struct {
 		location Point
 	}
@@ -66,6 +57,7 @@ func TestBusStops_closest(t *testing.T) {
 }
 
 func TestBusStops_nameBusStopID(t *testing.T) {
+	bs, _ := loadBusJSON("all.json")
 	type args struct {
 		busid string
 	}
