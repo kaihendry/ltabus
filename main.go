@@ -138,6 +138,7 @@ func (s *Server) handleIndex(w http.ResponseWriter, r *http.Request) {
 
 	funcs := template.FuncMap{
 		"totalStops": func() int { return len(s.busStops) },
+		"nameBusStop": func(id string) string { return s.busStops.nameBusStop(id) },
 		"getEnv":     os.Getenv,
 	}
 

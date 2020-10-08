@@ -14,8 +14,8 @@ import (
 )
 
 const (
-	fontFile = "./DejaVuSans.ttf"
-	fontSize = 9
+	fontFile = "./image/font/gofont/ttfs/Go-Regular.ttf"
+	fontSize = 10
 	fontDPI  = 401
 )
 
