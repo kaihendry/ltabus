@@ -3202,8 +3202,8 @@
     "BusStopCode": "13011",
     "RoadName": "Napier Rd",
     "Description": "Opp S'pore Botanic Gdns",
-    "Latitude": 1.30634849184404,
-    "Longitude": 103.81983822614549
+    "Latitude": 1.306344,
+    "Longitude": 103.819831
   },
   {
     "BusStopCode": "13019",
@@ -13086,8 +13086,8 @@
     "BusStopCode": "46559",
     "RoadName": "Woodlands St 13",
     "Description": "Opp Blk 101",
-    "Latitude": 1.43550165535928,
-    "Longitude": 103.78127722609429
+    "Latitude": 1.435244,
+    "Longitude": 103.781503
   },
   {
     "BusStopCode": "46561",
@@ -13100,8 +13100,8 @@
     "BusStopCode": "46569",
     "RoadName": "Woodlands St 13",
     "Description": "Blk 178",
-    "Latitude": 1.43472154667119,
-    "Longitude": 103.77745880948639
+    "Latitude": 1.434395,
+    "Longitude": 103.777132
   },
   {
     "BusStopCode": "46571",
@@ -17314,8 +17314,8 @@
     "BusStopCode": "55249",
     "RoadName": "Lentor Ave",
     "Description": "Bef Yio Chu Kang Rd",
-    "Latitude": 1.38966405934167,
-    "Longitude": 103.84085200603315
+    "Latitude": 1.389369,
+    "Longitude": 103.841052
   },
   {
     "BusStopCode": "55251",
@@ -17328,8 +17328,8 @@
     "BusStopCode": "55259",
     "RoadName": "Lentor Ave",
     "Description": "Opp Countryside Est",
-    "Latitude": 1.39141346219733,
-    "Longitude": 103.83872874845498
+    "Latitude": 1.391294,
+    "Longitude": 103.838855
   },
   {
     "BusStopCode": "55261",
@@ -20933,8 +20933,8 @@
     "BusStopCode": "64139",
     "RoadName": "Tampines Rd",
     "Description": "Bef KPE",
-    "Latitude": 1.36324550037222,
-    "Longitude": 103.90677186074203
+    "Latitude": 1.363239,
+    "Longitude": 103.906656
   },
   {
     "BusStopCode": "64141",
@@ -25490,8 +25490,8 @@
     "BusStopCode": "75319",
     "RoadName": "Tampines Ave 10",
     "Description": "Opp Tampines Dormitory",
-    "Latitude": 1.36720805556001,
-    "Longitude": 103.93106194445039
+    "Latitude": 1.367593,
+    "Longitude": 103.931091
   },
   {
     "BusStopCode": "75329",
@@ -25660,6 +25660,34 @@
     "Description": "Opp Blk 614",
     "Latitude": 1.366074,
     "Longitude": 103.936768
+  },
+  {
+    "BusStopCode": "75501",
+    "RoadName": "Tampines Nth Dr 1",
+    "Description": "Blk 604A",
+    "Latitude": 1.361552,
+    "Longitude": 103.934734
+  },
+  {
+    "BusStopCode": "75509",
+    "RoadName": "Tampines Nth Dr 1",
+    "Description": "Opp Blk 604A",
+    "Latitude": 1.361373,
+    "Longitude": 103.934576
+  },
+  {
+    "BusStopCode": "75511",
+    "RoadName": "Tampines Nth Dr 1",
+    "Description": "Blk 610C",
+    "Latitude": 1.364262,
+    "Longitude": 103.934773
+  },
+  {
+    "BusStopCode": "75519",
+    "RoadName": "Tampines Nth Dr 1",
+    "Description": "Opp Blk 610C",
+    "Latitude": 1.364004,
+    "Longitude": 103.934527
   },
   {
     "BusStopCode": "76031",
@@ -26267,8 +26295,8 @@
     "BusStopCode": "76541",
     "RoadName": "Tampines Ave 9",
     "Description": "Citylife@ Tampines",
-    "Latitude": 1.36023180021367,
-    "Longitude": 103.94053134805151
+    "Latitude": 1.360247,
+    "Longitude": 103.940633
   },
   {
     "BusStopCode": "76549",
@@ -26428,8 +26456,8 @@
     "BusStopCode": "77101",
     "RoadName": "Elias Rd",
     "Description": "Bef Pasir Ris Rd",
-    "Latitude": 1.38073471255879,
-    "Longitude": 103.9482518388129
+    "Latitude": 1.380642,
+    "Longitude": 103.948183
   },
   {
     "BusStopCode": "77109",
@@ -26764,15 +26792,15 @@
     "BusStopCode": "77371",
     "RoadName": "Pasir Ris Dr 8",
     "Description": "Aft Pasir Ris Dr 3",
-    "Latitude": 1.37460778462857,
-    "Longitude": 103.94821000003118
+    "Latitude": 1.37466,
+    "Longitude": 103.948239
   },
   {
     "BusStopCode": "77379",
     "RoadName": "Pasir Ris Dr 8",
     "Description": "Bef Pasir Ris Dr 3",
-    "Latitude": 1.37468886777036,
-    "Longitude": 103.94801300636183
+    "Latitude": 1.374679,
+    "Longitude": 103.948026
   },
   {
     "BusStopCode": "78049",
@@ -34443,8 +34471,8 @@
     "BusStopCode": "21299",
     "RoadName": "Jurong Pier Rd",
     "Description": "Bef Jln Buroh",
-    "Latitude": 1.31587034933081,
-    "Longitude": 103.70994575591939
+    "Latitude": 1.316014,
+    "Longitude": 103.709922
   },
   {
     "BusStopCode": "21301",

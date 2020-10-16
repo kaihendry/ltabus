@@ -1,6 +1,10 @@
 # https://github.com/marketplace/actions/lighthouse-ci-action
 name: Lighthouse Audit
-on: push
+on:
+  workflow_run:
+    workflows: ["Deploy"]
+    types:
+      - completed
 jobs:
   lighthouse:
     runs-on: ubuntu-latest
