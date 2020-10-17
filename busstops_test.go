@@ -8,6 +8,7 @@ import (
 // We need to ensure compiler actually returns the value
 // A clever compiler might optimise it out, rendering our
 // benchmarking results incorrect
+
 var stop BusStop
 
 func Benchmark_closest(b *testing.B) {
@@ -48,6 +49,7 @@ func TestBusStops_closest(t *testing.T) {
 		},
 	}
 	for _, tt := range tests {
+		t.Parallel()
 		t.Run(tt.name, func(t *testing.T) {
 			if gotB := tt.BusStops.closest(tt.args.location); !reflect.DeepEqual(gotB, tt.wantB) {
 				t.Errorf("BusStops.closest() = %+v, want %+v", gotB, tt.wantB)
@@ -77,6 +79,7 @@ func TestBusStops_nameBusStopID(t *testing.T) {
 		},
 	}
 	for _, tt := range tests {
+		t.Parallel()
 		t.Run(tt.name, func(t *testing.T) {
 			if gotDescription := tt.BusStops.nameBusStop(tt.args.busid); gotDescription != tt.wantDescription {
 				t.Errorf("BusStops.nameBusStopID() = %v, want %v", gotDescription, tt.wantDescription)
