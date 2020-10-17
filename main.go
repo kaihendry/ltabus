@@ -137,9 +137,9 @@ func (s *Server) handleIndex(w http.ResponseWriter, r *http.Request) {
 	}
 
 	funcs := template.FuncMap{
-		"totalStops": func() int { return len(s.busStops) },
+		"totalStops":  func() int { return len(s.busStops) },
 		"nameBusStop": func(id string) string { return s.busStops.nameBusStop(id) },
-		"getEnv":     os.Getenv,
+		"getEnv":      os.Getenv,
 	}
 
 	t, err := template.New("").Funcs(funcs).ParseFiles("templates/index.html")
@@ -261,7 +261,6 @@ func generateRandomBytes(n int) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
-
 	return b, nil
 }
 
