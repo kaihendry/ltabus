@@ -9,15 +9,12 @@ jobs:
   lighthouse:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - name: Audit URLs using Lighthouse
-        uses: treosh/lighthouse-ci-action@v3
-        env:
-          LHCI_GITHUB_TOKEN: ${{ secrets.LHCI_GITHUB_TOKEN }}
+      - name: Audit live URL
+        uses: jakejarvis/lighthouse-action@master
         with:
-          urls: |
-            https://bus2.dabase.com
-            https://bus2.dabase.com/?id=83059
-          budgetPath: ./budget.json # test performance budgets
-          temporaryPublicStorage: true
-          uploadArtifacts: true
+          url: 'https://bus2.dabase.com/'
+      - name: Upload results as an artifact
+        uses: actions/upload-artifact@master
+        with:
+          name: report
+          path: './report'
