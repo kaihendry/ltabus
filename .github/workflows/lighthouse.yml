@@ -9,12 +9,11 @@ jobs:
   lighthouse:
     runs-on: ubuntu-latest
     steps:
-      - name: Audit live URL
-        uses: jakejarvis/lighthouse-action@master
+      - uses: actions/checkout@v1
+      - uses: rlespinasse/github-slug-action@v1.1.x
+      - name: Run Lighthouse and test budgets
+        uses: treosh/lighthouse-ci-action@v2
         with:
-          url: 'https://bus2.dabase.com/'
-      - name: Upload results as an artifact
-        uses: actions/upload-artifact@master
-        with:
-          name: report
-          path: './report'
+          urls: |
+            https://bus2.dabase.com/
+          temporaryPublicStorage: true
