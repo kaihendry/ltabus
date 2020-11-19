@@ -17,9 +17,9 @@ jobs:
       - name: Check out code into the Go module directory
         uses: actions/checkout@v2
       - name: Build
-        run: go build -o server *.go
+        run: CGO_ENABLED=0 go build -o server *.go
       - name: Test
-        run: go test -v .
+        run: CGO_ENABLED=0 go test -v .
       - name: Add font
         run: git clone --depth 1 https://go.googlesource.com/image
       - name: Deploy
