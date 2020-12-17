@@ -6876,9 +6876,9 @@
   {
     "BusStopCode": "28009",
     "RoadName": "Jurong Gateway Rd",
-    "Description": "Jurong East Temp Int",
-    "Latitude": 1.3334081875974,
-    "Longitude": 103.74154249246223
+    "Description": "Jurong East Int",
+    "Latitude": 1.33235,
+    "Longitude": 103.740664
   },
   {
     "BusStopCode": "28011",
@@ -7033,6 +7033,13 @@
     "Description": "Aft Toh Tuck Link",
     "Latitude": 1.32992124735954,
     "Longitude": 103.75850603827898
+  },
+  {
+    "BusStopCode": "28199",
+    "RoadName": "Jurong Gateway Rd",
+    "Description": "Opposite JEM",
+    "Latitude": 1.332679,
+    "Longitude": 103.743839
   },
   {
     "BusStopCode": "28201",
@@ -8811,6 +8818,13 @@
     "Description": "Millennia Institute",
     "Latitude": 1.35096917519706,
     "Longitude": 103.73961904709157
+  },
+  {
+    "BusStopCode": "40331",
+    "RoadName": "Bukit Batok West Avenue 9",
+    "Description": "Blk 460D",
+    "Latitude": 1.353303,
+    "Longitude": 103.740304
   },
   {
     "BusStopCode": "40339",
@@ -14605,8 +14619,8 @@
     "BusStopCode": "50031",
     "RoadName": "Thomson Rd",
     "Description": "Opp Novena Ch",
-    "Latitude": 1.32127307292791,
-    "Longitude": 103.84177172353408
+    "Latitude": 1.332229,
+    "Longitude": 103.83839
   },
   {
     "BusStopCode": "50037",
@@ -14619,8 +14633,8 @@
     "BusStopCode": "50038",
     "RoadName": "Thomson Rd",
     "Description": "Novena Stn",
-    "Latitude": 1.31962671001555,
-    "Longitude": 103.84343862536716
+    "Latitude": 1.32033749274601,
+    "Longitude": 103.842832976035
   },
   {
     "BusStopCode": "50041",
@@ -14950,13 +14964,6 @@
     "Description": "Opp S'pore Polo Club",
     "Latitude": 1.33165828742218,
     "Longitude": 103.83888866147537
-  },
-  {
-    "BusStopCode": "51041",
-    "RoadName": "Thomson Rd",
-    "Description": "Opp SLF Cplx",
-    "Latitude": 1.33343558724869,
-    "Longitude": 103.8379172613076
   },
   {
     "BusStopCode": "51049",
@@ -19273,14 +19280,14 @@
   {
     "BusStopCode": "59521",
     "RoadName": "Yishun Ave 2",
-    "Description": "Yishun Sapphire",
+    "Description": "Yishun emerald",
     "Latitude": 1.44003661278482,
     "Longitude": 103.83171080846517
   },
   {
     "BusStopCode": "59529",
     "RoadName": "Yishun Ave 2",
-    "Description": "Opp Yishun Sapphire",
+    "Description": "Opp Yishun emerald",
     "Latitude": 1.44035052900307,
     "Longitude": 103.8318142995419
   },

@@ -98,7 +98,7 @@ window.addEventListener('load', function () {
 
 <form>
 <label for=id>Bus stop #</label>
-<input autofocus id=id required type=text pattern="\d*" value="{{ .BusStopCode }}" name=id>
+<input autofocus id=id required type=text inputmode="numeric" pattern="\d{5}" value="{{ .BusStopCode }}" name=id>
 <input value="Bus due times" type=submit>
 </form>
 

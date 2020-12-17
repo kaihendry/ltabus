@@ -6,7 +6,7 @@ ul,ol { padding-left: 0; list-style: none; }
 #stations li:before { content: "🚏"; padding-right: 8px; }
 #stations li { white-space: nowrap; }
 .busstopid { white-space: nowrap; display:inline-block; border-bottom: thin solid black; padding-bottom:2px; margin: 0 }
-input[type=text] { font-size: 1em; width: 4em; }
+input[type=text] { font-size: 1em; width: 5em; }
 
 label {
   display: block;
