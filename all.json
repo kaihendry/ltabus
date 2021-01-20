@@ -6953,7 +6953,7 @@
   {
     "BusStopCode": "28061",
     "RoadName": "Boon Lay Way",
-    "Description": "Jurong East Stn/Int",
+    "Description": "J Gateway",
     "Latitude": 1.33596390763107,
     "Longitude": 103.74254813709638
   },
@@ -14485,7 +14485,7 @@
   {
     "BusStopCode": "49149",
     "RoadName": "Kranji Way",
-    "Description": "Bef Fishing Ground A",
+    "Description": "Aft Kranji Lk",
     "Latitude": 1.43841910254735,
     "Longitude": 103.74316251360837
   },
@@ -14499,16 +14499,9 @@
   {
     "BusStopCode": "49159",
     "RoadName": "Kranji Way",
-    "Description": "Econ Group",
+    "Description": "Aft Sg Kadut Dr",
     "Latitude": 1.43707187354398,
     "Longitude": 103.74581261172025
-  },
-  {
-    "BusStopCode": "49169",
-    "RoadName": "Kranji Way",
-    "Description": "Tong Seng Concrete Ltd",
-    "Latitude": 1.4356326647634,
-    "Longitude": 103.74855065686643
   },
   {
     "BusStopCode": "49171",
@@ -14619,8 +14612,8 @@
     "BusStopCode": "50031",
     "RoadName": "Thomson Rd",
     "Description": "Opp Novena Ch",
-    "Latitude": 1.332229,
-    "Longitude": 103.83839
+    "Latitude": 1.321378056,
+    "Longitude": 103.8417481
   },
   {
     "BusStopCode": "50037",
@@ -16137,14 +16130,14 @@
   {
     "BusStopCode": "53321",
     "RoadName": "Sin Ming Ave",
-    "Description": "CityCab",
+    "Description": "Opp Eunoia JC",
     "Latitude": 1.36135000000011,
     "Longitude": 103.84029472198131
   },
   {
     "BusStopCode": "53329",
     "RoadName": "Sin Ming Ave",
-    "Description": "Opp CityCab",
+    "Description": "Eunoia JC",
     "Latitude": 1.36153970079158,
     "Longitude": 103.84049549859829
   },
@@ -17103,14 +17096,14 @@
   {
     "BusStopCode": "55071",
     "RoadName": "Yio Chu Kang Rd",
-    "Description": "Bef KLC Intl Inst",
+    "Description": "Bef Econ Medicare Ctr",
     "Latitude": 1.39246274085167,
     "Longitude": 103.85261828242731
   },
   {
     "BusStopCode": "55079",
     "RoadName": "Yio Chu Kang Rd",
-    "Description": "Aft KLC Intl Inst",
+    "Description": "Aft Econ Medicare Ctr",
     "Latitude": 1.39195216697174,
     "Longitude": 103.85336802569404
   },
@@ -17876,6 +17869,20 @@
     "Description": "The Nautical",
     "Latitude": 1.44315919415772,
     "Longitude": 103.82398509211036
+  },
+  {
+    "BusStopCode": "58031",
+    "RoadName": "Sembawang Rd",
+    "Description": "Opp Canberra Dr",
+    "Latitude": 1.332679,
+    "Longitude": 103.743839
+  },
+  {
+    "BusStopCode": "58039",
+    "RoadName": "Sembawang Rd",
+    "Description": "Bef Canberra Dr",
+    "Latitude": 1.44627,
+    "Longitude": 103.82506
   },
   {
     "BusStopCode": "58041",
@@ -19280,14 +19287,14 @@
   {
     "BusStopCode": "59521",
     "RoadName": "Yishun Ave 2",
-    "Description": "Yishun emerald",
+    "Description": "Yishun Emerald",
     "Latitude": 1.44003661278482,
     "Longitude": 103.83171080846517
   },
   {
     "BusStopCode": "59529",
     "RoadName": "Yishun Ave 2",
-    "Description": "Opp Yishun emerald",
+    "Description": "Opp Yishun Emerald",
     "Latitude": 1.44035052900307,
     "Longitude": 103.8318142995419
   },
@@ -22162,6 +22169,20 @@
     "Longitude": 103.8960314
   },
   {
+    "BusStopCode": "65601",
+    "RoadName": "Punggol Ctrl",
+    "Description": "Sumang Stn Exit B",
+    "Latitude": 1.407698056,
+    "Longitude": 103.89849
+  },
+  {
+    "BusStopCode": "65609",
+    "RoadName": "Punggol Ctrl",
+    "Description": "Sumang Stn Exit A",
+    "Latitude": 1.407746111,
+    "Longitude": 103.8981261
+  },
+  {
     "BusStopCode": "65611",
     "RoadName": "Punggol Way",
     "Description": "Nibong Stn Exit B",
@@ -22202,6 +22223,27 @@
     "Description": "Bef Punggol Pt Stn",
     "Latitude": 1.41755237944481,
     "Longitude": 103.90530849057907
+  },
+  {
+    "BusStopCode": "65641",
+    "RoadName": "Northshore Dr",
+    "Description": "Marina Country Club (MCC)",
+    "Latitude": 1.415276389,
+    "Longitude": 103.8998269
+  },
+  {
+    "BusStopCode": "65651",
+    "RoadName": "Northshore Dr",
+    "Description": "Blk 413C",
+    "Latitude": 1.417311944,
+    "Longitude": 103.9013861
+  },
+  {
+    "BusStopCode": "65661",
+    "RoadName": "Northshore Dr",
+    "Description": "Blk 421C",
+    "Latitude": 1.418851944,
+    "Longitude": 103.9057239
   },
   {
     "BusStopCode": "65671",
@@ -23305,14 +23347,14 @@
   {
     "BusStopCode": "67291",
     "RoadName": "Sengkang East Ave",
-    "Description": "Blk 303B",
+    "Description": "Renjong Stn Exit B",
     "Latitude": 1.38717956363215,
     "Longitude": 103.88971793853818
   },
   {
     "BusStopCode": "67299",
     "RoadName": "Sengkang East Ave",
-    "Description": "Opp Blk 303B",
+    "Description": "Renjong Stn Exit A",
     "Latitude": 1.38683575602542,
     "Longitude": 103.88973216030708
   },
@@ -28681,14 +28723,14 @@
   {
     "BusStopCode": "84301",
     "RoadName": "Bedok Nth Ave 1",
-    "Description": "Opp Kg Chai Chee CC",
+    "Description": "Blk 41",
     "Latitude": 1.32782140214678,
     "Longitude": 103.92656628872025
   },
   {
     "BusStopCode": "84309",
     "RoadName": "Bedok Nth Ave 1",
-    "Description": "Kg Chai Chee CC",
+    "Description": "Blk 423",
     "Latitude": 1.32802803259661,
     "Longitude": 103.92687404688121
   },
@@ -32539,8 +32581,8 @@
     "BusStopCode": "16069",
     "RoadName": "Pasir Panjang Rd",
     "Description": "Heng Mui Keng Terr",
-    "Latitude": 1.29082972200391,
-    "Longitude": 103.7731166669843
+    "Latitude": 1.290648611,
+    "Longitude": 103.7736967
   },
   {
     "BusStopCode": "16071",
