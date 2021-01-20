@@ -2,7 +2,12 @@ name: Deploy
 
 on:
   push:
-    branches: [ master ]
+    branches: [master]
+  workflow_dispatch:
+    inputs:
+      stage:
+        description: 'Custom stage'
+        default: 'staging'
 
 jobs:
   build:
@@ -29,4 +34,4 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           UP_CONFIG: ${{ secrets.UP_CONFIG }}
         with:
-          stage: staging
+          stage: ${{ github.event.inputs.stage }}
