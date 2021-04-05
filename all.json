@@ -11690,6 +11690,13 @@
     "Longitude": 103.7730945
   },
   {
+    "BusStopCode": "44989",
+    "RoadName": "Jln Gali Batu",
+    "Description": "Gali Batu Ter",
+    "Latitude": 1.390822,
+    "Longitude": 103.756071
+  },
+  {
     "BusStopCode": "44999",
     "RoadName": "Woodlands Rd",
     "Description": "Bef Yew Tee Flyover",
@@ -14112,13 +14119,6 @@
     "Longitude": 103.80617388921056
   },
   {
-    "BusStopCode": "48009",
-    "RoadName": "Woodlands Rd",
-    "Description": "Bt Panjang Temp Bus Pk",
-    "Latitude": 1.38376399998384,
-    "Longitude": 103.75829999999559
-  },
-  {
     "BusStopCode": "48011",
     "RoadName": "Mandai Rd",
     "Description": "Opp Mandai Camp 2",
@@ -15326,15 +15326,15 @@
     "BusStopCode": "52211",
     "RoadName": "Toa Payoh Rise",
     "Description": "Lighthouse Sch",
-    "Latitude": 1.33832189895284,
-    "Longitude": 103.84081528160415
+    "Latitude": 1.338573,
+    "Longitude": 103.84164
   },
   {
     "BusStopCode": "52219",
     "RoadName": "Toa Payoh Rise",
     "Description": "Bef Caldecott Stn",
-    "Latitude": 1.33814528405956,
-    "Longitude": 103.84086885618204
+    "Latitude": 1.338366,
+    "Longitude": 103.841761
   },
   {
     "BusStopCode": "52221",
@@ -17649,7 +17649,7 @@
   {
     "BusStopCode": "56261",
     "RoadName": "Ang Mo Kio Ave 1",
-    "Description": "AFT Ang mo kio avenue 2",
+    "Description": "Aft Ang Mo Kio Ave 2",
     "Latitude": 1.36786219023986,
     "Longitude": 103.83172738576756
   },
@@ -17866,7 +17866,7 @@
   {
     "BusStopCode": "58029",
     "RoadName": "Sembawang Rd",
-    "Description": "The Nautical",
+    "Description": "After Canberra Road",
     "Latitude": 1.44315919415772,
     "Longitude": 103.82398509211036
   },
@@ -19948,6 +19948,20 @@
     "Description": "Blk 120",
     "Latitude": 1.33560138948489,
     "Longitude": 103.86370334032118
+  },
+  {
+    "BusStopCode": "61111",
+    "RoadName": "Bidadari Pk Dr",
+    "Description": "Blk 107A",
+    "Latitude": 1.3354995,
+    "Longitude": 103.872035
+  },
+  {
+    "BusStopCode": "61119",
+    "RoadName": "Bidadari Pk Dr",
+    "Description": "Blk 103B",
+    "Latitude": 1.335623,
+    "Longitude": 103.871938
   },
   {
     "BusStopCode": "62011",
@@ -23921,7 +23935,7 @@
   {
     "BusStopCode": "67741",
     "RoadName": "Fernvale Rd",
-    "Description": "THANGGAM STN",
+    "Description": "Thanggam Stn",
     "Latitude": 1.3971275,
     "Longitude": 103.875622
   },
@@ -24124,14 +24138,14 @@
   {
     "BusStopCode": "68151",
     "RoadName": "West Camp Rd",
-    "Description": "BEF SHELL AVIATION",
+    "Description": "Bef Shell Aviation",
     "Latitude": 1.42333311184046,
     "Longitude": 103.86619112165944
   },
   {
     "BusStopCode": "68159",
     "RoadName": "West Camp Rd",
-    "Description": "AFT SHELL AVIATION",
+    "Description": "Aft Shell Aviation",
     "Latitude": 1.42306890210566,
     "Longitude": 103.86626907370781
   },

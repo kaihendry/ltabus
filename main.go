@@ -18,6 +18,8 @@ import (
 	"time"
 
 	"github.com/apex/log"
+	jsonhandler "github.com/apex/log/handlers/json"
+	"github.com/apex/log/handlers/text"
 	"github.com/gorilla/mux"
 )
 
@@ -27,6 +29,14 @@ const (
 	logger key = iota
 	visitor
 )
+
+func init() {
+	if os.Getenv("UP_STAGE") == "" {
+		log.SetHandler(text.Default)
+	} else {
+		log.SetHandler(jsonhandler.Default)
+	}
+}
 
 // NextBus describes when the bus is coming
 type NextBus struct {
