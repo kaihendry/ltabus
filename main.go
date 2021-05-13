@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"crypto/md5"
 	"crypto/rand"
 	"encoding/base64"
 	"encoding/json"
@@ -147,9 +148,10 @@ func (s *Server) handleIndex(w http.ResponseWriter, r *http.Request) {
 	}
 
 	funcs := template.FuncMap{
-		"totalStops":  func() int { return len(s.busStops) },
-		"nameBusStop": func(id string) string { return s.busStops.nameBusStop(id) },
-		"getEnv":      os.Getenv,
+		"totalStops":   func() int { return len(s.busStops) },
+		"nameBusStop":  func(id string) string { return s.busStops.nameBusStop(id) },
+		"styleBusStop": func(id string) template.CSS { return styleBusStop(id) },
+		"getEnv":       os.Getenv,
 	}
 
 	t, err := template.New("").Funcs(funcs).ParseFiles("templates/index.html")
@@ -329,13 +331,19 @@ func (bs BusStops) closest(location Point) BusStop {
 	return bs[c]
 }
 
-func (bs BusStops) nameBusStop(busid string) (description string) {
+func (bs BusStops) nameBusStop(busStopID string) (description string) {
 	for _, p := range bs {
-		if busid == p.BusStopCode {
+		if busStopID == p.BusStopCode {
 			return p.Description
 		}
 	}
 	return ""
+}
+
+func styleBusStop(busStopID string) (style template.CSS) {
+	data := []byte(busStopID)
+	log.Infof("underline color #%.3x", md5.Sum(data))
+	return template.CSS(fmt.Sprintf("text-decoration: underline; text-decoration-color: #%.3x; text-decoration-style: double;", md5.Sum(data)))
 }
 
 // distance calculates the distance between two points

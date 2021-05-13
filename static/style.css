@@ -1,19 +1,57 @@
-body { padding: 5px; font-size: 120%; }
-a { font-size: 110%; }
-strong { font-size: 180%; }
-ul,ol { padding-left: 0; list-style: none; }
-.buses li:before { content: "\1F68C"; padding-left: 20px; padding-right: 8px; }
-#stations li:before { content: "🚏"; padding-right: 8px; }
-#stations li { white-space: nowrap; }
-.busstopid { white-space: nowrap; display:inline-block; border-bottom: thin solid black; padding-bottom:2px; margin: 0 }
-input[type=text] { font-size: 1em; width: 5em; }
+body {
+  padding: 5px;
+  font-size: 120%;
+}
+
+a {
+  font-size: 110%;
+}
+
+strong {
+  font-size: 180%;
+}
+
+ul, ol {
+  padding-left: 0;
+  list-style: none;
+}
+
+.buses li:before {
+  content: "\1F68C";
+  padding-left: 20px;
+  padding-right: 8px;
+}
+
+#stations li:before {
+  content: "🚏";
+  padding-right: 8px;
+}
+
+#stations li {
+  white-space: nowrap;
+}
+
+.busstopid {
+  white-space: nowrap;
+  display: inline-block;
+  border-bottom: thin solid black;
+  padding-bottom: 2px;
+  margin: 0
+}
+
+input[type=text] {
+  font-size: 1em;
+  width: 5em;
+}
 
 label {
   display: block;
 }
+
 input#id {
   display: inline-block !important;
 }
+
 input[type=submit] {
   font-size: 1em;
   display: inline-block !important;
