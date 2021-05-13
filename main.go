@@ -31,6 +31,44 @@ const (
 	visitor
 )
 
+type tracingRoundTripper struct {
+	next http.RoundTripper
+	dest *log.Logger
+}
+
+func (rt *tracingRoundTripper) RoundTrip(r *http.Request) (resp *http.Response, err error) {
+	var (
+		start     = time.Now()
+		dnsStart  time.Duration
+		firstByte time.Duration
+	)
+
+	defer func() {
+		f := log.Fields{
+			"dns_start_ms":  dnsStart.Milliseconds(),
+			"first_byte_ms": firstByte.Milliseconds(),
+			"total_ms":      time.Since(start).Milliseconds(),
+			"url":           r.URL.String(),
+		}
+		switch {
+		case err == nil:
+			f["response_code"] = resp.StatusCode
+		case err != nil:
+			f["error"] = err.Error()
+		}
+		rt.dest.WithFields(f).Trace("fetch")
+	}()
+
+	tr := &httptrace.ClientTrace{
+		DNSStart:             func(httptrace.DNSStartInfo) { dnsStart = time.Since(start) },
+		GotFirstResponseByte: func() { firstByte = time.Since(start) },
+	}
+
+	ctx := httptrace.WithClientTrace(r.Context(), tr)
+
+	return rt.next.RoundTrip(r.WithContext(ctx))
+}
+
 func init() {
 	if os.Getenv("UP_STAGE") == "" {
 		log.SetHandler(text.Default)
@@ -183,7 +221,7 @@ func (s *Server) handleIndex(w http.ResponseWriter, r *http.Request) {
 func busArrivals(stopID string) (arrivals SGBusArrivals, err error) {
 
 	if stopID == "" {
-		return
+		return arrivals, fmt.Errorf("invalid stop ID")
 	}
 
 	ctx := log.WithFields(
@@ -193,6 +231,13 @@ func busArrivals(stopID string) (arrivals SGBusArrivals, err error) {
 
 	url := fmt.Sprintf("http://datamall2.mytransport.sg/ltaodataservice/BusArrivalv2?BusStopCode=%s", stopID)
 
+	client := &http.Client{
+		Transport: &tracingRoundTripper{
+			next: http.DefaultTransport,
+			dest: ctx.Logger,
+		},
+	}
+
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		return
@@ -200,25 +245,12 @@ func busArrivals(stopID string) (arrivals SGBusArrivals, err error) {
 
 	req.Header.Add("AccountKey", os.Getenv("accountkey"))
 
-	start := time.Now()
-	timings := log.Fields{}
-
-	trace := &httptrace.ClientTrace{
-		DNSStart:             func(_ httptrace.DNSStartInfo) { timings["DNSStart"] = ms(time.Since(start)) },
-		GotFirstResponseByte: func() { timings["GotFirstResponseByte"] = ms(time.Since(start)) },
-	}
-	req = req.WithContext(httptrace.WithClientTrace(req.Context(), trace))
-
-	res, err := http.DefaultClient.Do(req)
+	res, err := client.Do(req)
 	if err != nil {
 		return
 	}
 
 	defer res.Body.Close()
-
-	timings["Total"] = ms(time.Since(start))
-
-	ctx.WithFields(timings).Info("LTA API")
 
 	if res.StatusCode != http.StatusOK {
 		return arrivals, fmt.Errorf("Bad response: %d", res.StatusCode)
