@@ -40,11 +40,11 @@ func TestBusStops_closest(t *testing.T) {
 				},
 			},
 			wantB: BusStop{
-				BusStopCode: "25751",
-				RoadName:    "Tuas Sth Ave 5",
-				Description: "BEF TUAS STH AVE 14",
-				Latitude:    1.27637,
-				Longitude:   103.621508,
+				BusStopCode: "25059",
+				RoadName:    "Tuas Sth Way",
+				Description: "After Tuas Sth Blvd",
+				Latitude:    1.270007,
+				Longitude:   103.61725,
 			},
 		},
 	}
