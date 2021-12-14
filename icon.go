@@ -1,12 +1,10 @@
 package main
 
 import (
-	"fmt"
 	"image"
 	"image/color"
 	"image/draw"
 	"image/png"
-	"io/ioutil"
 	"net/http"
 	"regexp"
 
@@ -14,7 +12,6 @@ import (
 )
 
 const (
-	fontFile = "./image/font/gofont/ttfs/Go-Regular.ttf"
 	fontSize = 10
 	fontDPI  = 401
 )
@@ -28,7 +25,7 @@ func handleIcon(w http.ResponseWriter, r *http.Request) {
 	// fmt.Println("GET params were:", r.URL.Query())
 	stop := r.URL.Query().Get("stop")
 	if stop == "" {
-		http.Error(w, fmt.Sprintf("stop paramenter missing"), http.StatusBadRequest)
+		http.Error(w, "stop parameter missing", http.StatusBadRequest)
 		return
 	}
 
@@ -38,12 +35,12 @@ func handleIcon(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if !matched {
-		http.Error(w, fmt.Sprintf("not 5 digits"), http.StatusBadRequest)
+		http.Error(w, "not 5 digits", http.StatusBadRequest)
 		return
 	}
 
 	img := image.NewNRGBA(image.Rect(0, 0, 200, 200))
-	fontBytes, err := ioutil.ReadFile(fontFile)
+	fontBytes, err := static.ReadFile("static/Go-Regular.ttf")
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return

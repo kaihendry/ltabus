@@ -4,20 +4,21 @@ import (
 	"context"
 	"crypto/md5"
 	"crypto/rand"
+	"embed"
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"html/template"
-	"io/ioutil"
+	"io/fs"
 	"math"
 	"net/http"
 	"net/http/httptrace"
 	"os"
-	"path/filepath"
 	"sort"
 	"strconv"
 	"time"
 
+	"github.com/apex/gateway/v2"
 	"github.com/apex/log"
 	jsonhandler "github.com/apex/log/handlers/json"
 	"github.com/apex/log/handlers/text"
@@ -25,6 +26,9 @@ import (
 )
 
 type key int
+
+//go:embed static
+var static embed.FS
 
 const (
 	logger key = iota
@@ -69,14 +73,6 @@ func (rt *tracingRoundTripper) RoundTrip(r *http.Request) (resp *http.Response, 
 	return rt.next.RoundTrip(r.WithContext(ctx))
 }
 
-func init() {
-	if os.Getenv("UP_STAGE") == "" {
-		log.SetHandler(text.Default)
-	} else {
-		log.SetHandler(jsonhandler.Default)
-	}
-}
-
 // NextBus describes when the bus is coming
 type NextBus struct {
 	OriginCode       string `json:"OriginCode"`
@@ -110,20 +106,19 @@ type Server struct {
 
 func main() {
 
-	if _, ok := os.LookupEnv("accountkey"); !ok {
-		log.Errorf("Missing accountKey")
-		os.Exit(1)
-	}
-
 	server, err := NewServer("all.json")
 	if err != nil {
 		log.Fatalf("failed to create server: %v", err)
 	}
 
-	err = http.ListenAndServe(":"+os.Getenv("PORT"), server.router)
-	if err != nil {
-		log.Fatalf("failed to start server: %v", err)
+	log.SetHandler(jsonhandler.Default)
+	if _, ok := os.LookupEnv("AWS_LAMBDA_FUNCTION_NAME"); ok {
+		err = gateway.ListenAndServe("", server.router)
+	} else {
+		log.SetHandler(text.Default)
+		err = http.ListenAndServe(fmt.Sprintf(":%s", os.Getenv("PORT")), server.router)
 	}
+	log.WithError(err).Fatal("error listening")
 
 }
 
@@ -146,13 +141,17 @@ func NewServer(busStopsPath string) (*Server, error) {
 }
 
 func (s *Server) routes() {
+
+	directory, err := fs.Sub(static, "static")
+	if err != nil {
+		log.WithError(err).Fatal("unable to load static files")
+	}
+	fileServer := http.FileServer(http.FS(directory))
+	s.router.PathPrefix("/static/").Handler(http.StripPrefix("/static/", fileServer))
+
 	s.router.HandleFunc("/", s.handleIndex)
 	s.router.HandleFunc("/closest", s.handleClosest)
 	s.router.HandleFunc("/icon", handleIcon)
-
-	staticDir := "/static/"
-	s.router.PathPrefix(staticDir).
-		Handler(http.StripPrefix(staticDir, http.FileServer(http.Dir("."+staticDir))))
 
 	s.router.Use(addContextMiddleware)
 }
@@ -171,14 +170,10 @@ func (s *Server) handleClosest(w http.ResponseWriter, r *http.Request) {
 	}
 
 	closest := s.busStops.closest(Point{lat: lat, lng: lng})
-	http.Redirect(w, r, fmt.Sprintf("/?id=%s", closest.BusStopCode), 302)
+	http.Redirect(w, r, fmt.Sprintf("/?id=%s", closest.BusStopCode), http.StatusFound)
 }
 
 func (s *Server) handleIndex(w http.ResponseWriter, r *http.Request) {
-	if os.Getenv("UP_STAGE") != "production" {
-		w.Header().Set("X-Robots-Tag", "none")
-	}
-
 	log, ok := r.Context().Value(logger).(*log.Entry)
 	if !ok {
 		http.Error(w, "Unable to get logging context", http.StatusInternalServerError)
@@ -192,7 +187,10 @@ func (s *Server) handleIndex(w http.ResponseWriter, r *http.Request) {
 		"getEnv":       os.Getenv,
 	}
 
-	t, err := template.New("").Funcs(funcs).ParseFiles("templates/index.html")
+	// set html content type
+	w.Header().Set("Content-Type", "text/html")
+
+	t, err := template.New("").Funcs(funcs).ParseFS(static, "static/index.html")
 	if err != nil {
 		log.WithError(err).Error("template failed to parse")
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -243,6 +241,7 @@ func busArrivals(stopID string) (arrivals SGBusArrivals, err error) {
 		return
 	}
 
+	// get accountkey from env
 	req.Header.Add("AccountKey", os.Getenv("accountkey"))
 
 	res, err := client.Do(req)
@@ -253,7 +252,7 @@ func busArrivals(stopID string) (arrivals SGBusArrivals, err error) {
 	defer res.Body.Close()
 
 	if res.StatusCode != http.StatusOK {
-		return arrivals, fmt.Errorf("Bad response: %d", res.StatusCode)
+		return arrivals, fmt.Errorf("bad response: %d", res.StatusCode)
 	}
 
 	decoder := json.NewDecoder(res.Body)
@@ -336,8 +335,9 @@ type BusStop struct {
 type BusStops []BusStop
 
 func loadBusJSON(jsonfile string) (bs BusStops, err error) {
-	content, err := ioutil.ReadFile(filepath.Clean(jsonfile))
+	content, err := static.ReadFile("static/all.json")
 	if err != nil {
+		log.Error("failed to read file")
 		return
 	}
 	err = json.Unmarshal(content, &bs)

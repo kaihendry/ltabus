@@ -18613,6 +18613,41 @@
     "Longitude": 103.813173
   },
   {
+    "BusStopCode": "58601",
+    "RoadName": "Canberra Wk",
+    "Description": "Blk 108A",
+    "Latitude": 1.448139,
+    "Longitude": 103.831129
+  },
+  {
+    "BusStopCode": "58609",
+    "RoadName": "Canberra Wk",
+    "Description": "Blk 109A",
+    "Latitude": 1.447964,
+    "Longitude": 103.830401
+  },
+  {
+    "BusStopCode": "58611",
+    "RoadName": "Canberra Cres",
+    "Description": "Blk 115C",
+    "Latitude": 1.446533,
+    "Longitude": 103.82993
+  },
+  {
+    "BusStopCode": "58619",
+    "RoadName": "Canberra Cres",
+    "Description": "Opp Blk 115C",
+    "Latitude": 1.44637,
+    "Longitude": 103.830152
+  },
+  {
+    "BusStopCode": "58621",
+    "RoadName": "Canberra st",
+    "Description": "Blk 126 Cp",
+    "Latitude": 1.445953,
+    "Longitude": 103.834031
+  },
+  {
     "BusStopCode": "58991",
     "RoadName": "Yishun Ave 2",
     "Description": "BLK 767",
@@ -24227,6 +24262,34 @@
     "Longitude": 103.85550329736579
   },
   {
+    "BusStopCode": "68181",
+    "RoadName": "Seletar Aerospace Link",
+    "Description": "Bef Jtc Aerospace",
+    "Latitude": 1.40407,
+    "Longitude": 103.858281
+  },
+  {
+    "BusStopCode": "68189",
+    "RoadName": "Seletar Aerospace Link",
+    "Description": "Aft Jtc Aerospace",
+    "Latitude": 1.403739,
+    "Longitude": 103.858254
+  },
+  {
+    "BusStopCode": "68191",
+    "RoadName": "Seletar Aerospace Crescent",
+    "Description": "Bef Seletar A'Space Lk",
+    "Latitude": 1.402289,
+    "Longitude": 103.85963
+  },
+  {
+    "BusStopCode": "68199",
+    "RoadName": "Seletar Aerospace Crescent",
+    "Description": "Aft Seletar A'Space Lk",
+    "Latitude": 1.402553,
+    "Longitude": 103.859906
+  },
+  {
     "BusStopCode": "68201",
     "RoadName": "Seletar Aerospace Dr",
     "Description": "Aft Seletar Camp",
@@ -29244,6 +29307,20 @@
     "Description": "Opp Blk 24",
     "Latitude": 1.32477805597156,
     "Longitude": 103.92314916696681
+  },
+  {
+    "BusStopCode": "84651",
+    "RoadName": "Bedok Nth St 1",
+    "Description": "Aft Heartbeat @ Bedok",
+    "Latitude": 1.327057,
+    "Longitude": 103.930691
+  },
+  {
+    "BusStopCode": "84659",
+    "RoadName": "Bedok Nth St 1",
+    "Description": "Bef Heartbeat @ Bedok",
+    "Latitude": 1.327201,
+    "Longitude": 103.93063
   },
   {
     "BusStopCode": "84661",
