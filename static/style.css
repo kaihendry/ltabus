@@ -11,7 +11,8 @@ strong {
   font-size: 180%;
 }
 
-ul, ol {
+ul,
+ol {
   padding-left: 0;
   list-style: none;
 }
@@ -27,6 +28,17 @@ ul, ol {
   padding-right: 8px;
 }
 
+.buses {
+  display: table;
+}
+.buses li {
+  display: table-row;
+}
+.buses time {
+  display: table-cell;
+  padding: 5px 10px;
+}
+
 #stations li {
   white-space: nowrap;
 }
@@ -36,10 +48,10 @@ ul, ol {
   display: inline-block;
   border-bottom: thin solid black;
   padding-bottom: 2px;
-  margin: 0
+  margin: 0;
 }
 
-input[type=text] {
+input[type="text"] {
   font-size: 1em;
   width: 5em;
 }
@@ -52,7 +64,7 @@ input#id {
   display: inline-block !important;
 }
 
-input[type=submit] {
+input[type="submit"] {
   font-size: 1em;
   display: inline-block !important;
 }
