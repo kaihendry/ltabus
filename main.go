@@ -378,7 +378,7 @@ func (bs BusStops) nameBusStop(busStopID string) (description string) {
 func styleBusStop(busStopID string) (style template.CSS) {
 	data := []byte(busStopID)
 	log.Infof("underline color #%.3x", md5.Sum(data))
-	return template.CSS(fmt.Sprintf("text-decoration: underline; text-decoration-color: #%.3x; text-decoration-style: double;", md5.Sum(data)))
+	return template.CSS(fmt.Sprintf("background-color: #%.3x; padding: 0.2em", md5.Sum(data)))
 }
 
 // distance calculates the distance between two points
