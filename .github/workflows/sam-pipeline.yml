@@ -1,7 +1,7 @@
 on:
   workflow_dispatch:
   push:
-    branches: [main]
+    branches: [master]
 permissions:
   id-token: write
   contents: read
@@ -13,6 +13,8 @@ jobs:
       - uses: actions/setup-go@v2
         with:
           go-version: "^1.18"
+      - name: Test
+        run: go test -v .
       - uses: aws-actions/setup-sam@v1
       - uses: aws-actions/configure-aws-credentials@v1
         with:
