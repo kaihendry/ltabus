@@ -1,0 +1,21 @@
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+permissions:
+  id-token: write
+  contents: read
+jobs:
+  build-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-go@v2
+        with:
+          go-version: "^1.18"
+      - uses: aws-actions/setup-sam@v1
+      - uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-to-assume: arn:aws:iam::407461997746:role/github-actions-Role-56IHHM969DKJ
+          aws-region: ap-southeast-1
+      - run: make deploy

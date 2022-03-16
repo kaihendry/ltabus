@@ -1,6 +1,8 @@
 package main
 
 import (
+	"crypto/md5"
+	"fmt"
 	"image"
 	"image/color"
 	"image/draw"
@@ -16,9 +18,23 @@ const (
 	fontDPI  = 401
 )
 
-var (
-	cyan color.Color = color.RGBA{22, 153, 226, 255}
-)
+func ParseHexColor(s string) (c color.RGBA, err error) {
+	c.A = 0xff
+	switch len(s) {
+	case 7:
+		_, err = fmt.Sscanf(s, "#%02x%02x%02x", &c.R, &c.G, &c.B)
+	case 4:
+		_, err = fmt.Sscanf(s, "#%1x%1x%1x", &c.R, &c.G, &c.B)
+		// Double the hex digits:
+		c.R *= 17
+		c.G *= 17
+		c.B *= 17
+	default:
+		err = fmt.Errorf("invalid length, must be 7 or 4")
+
+	}
+	return
+}
 
 func handleIcon(w http.ResponseWriter, r *http.Request) {
 
@@ -39,6 +55,13 @@ func handleIcon(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	data := []byte(stop)
+	bgColor, err := ParseHexColor(fmt.Sprintf("#%.3x", md5.Sum(data)))
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
 	img := image.NewNRGBA(image.Rect(0, 0, 200, 200))
 	fontBytes, err := static.ReadFile("static/Go-Regular.ttf")
 	if err != nil {
@@ -52,7 +75,7 @@ func handleIcon(w http.ResponseWriter, r *http.Request) {
 	}
 	left := img.Bounds()
 	left.Max = image.Pt(200, 200)
-	draw.Draw(img, left, &image.Uniform{cyan}, image.ZP, draw.Src)
+	draw.Draw(img, left, &image.Uniform{bgColor}, image.ZP, draw.Src)
 
 	c := freetype.NewContext()
 	c.SetDPI(fontDPI)

@@ -30,6 +30,8 @@ type key int
 //go:embed static
 var static embed.FS
 
+var Version string
+
 const (
 	logger key = iota
 	visitor
@@ -208,6 +210,7 @@ func (s *Server) handleIndex(w http.ResponseWriter, r *http.Request) {
 		log.WithField("input", id).Info("serving")
 	}
 
+	w.Header().Set("X-Version", Version)
 	err = t.ExecuteTemplate(w, "index.html", arriving)
 	if err != nil {
 		log.WithError(err).Error("template failed to parse")

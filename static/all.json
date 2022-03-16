@@ -288,10 +288,10 @@
   },
   {
     "BusStopCode": "02029",
-    "RoadName": "Connaught Dr",
-    "Description": "Opp S'pore Cricket Club",
-    "Latitude": 1.28879015142476,
-    "Longitude": 103.85293318066766
+    "RoadName": "Esplanade Dr",
+    "Description": "Aft Esplanade Stn Exit D",
+    "Latitude": 1.290106,
+    "Longitude": 103.85464
   },
   {
     "BusStopCode": "02049",
@@ -2033,8 +2033,8 @@
     "BusStopCode": "10349",
     "RoadName": "Henderson Rd",
     "Description": "Blk 116",
-    "Latitude": 1.2849833405097,
-    "Longitude": 103.82104149555396
+    "Latitude": 1.285191,
+    "Longitude": 103.82115
   },
   {
     "BusStopCode": "10351",
@@ -2558,8 +2558,8 @@
     "BusStopCode": "11221",
     "RoadName": "Holland Rd",
     "Description": "Lien Twrs",
-    "Latitude": 1.31002225322358,
-    "Longitude": 103.80544413357042
+    "Latitude": 1.310019,
+    "Longitude": 103.805506
   },
   {
     "BusStopCode": "11229",
@@ -3790,15 +3790,15 @@
     "BusStopCode": "22441",
     "RoadName": "Jurong West St 64",
     "Description": "Blk 669 CP",
-    "Latitude": 1.3426698715623,
-    "Longitude": 103.7036274900942
+    "Latitude": 1.342816,
+    "Longitude": 103.70358
   },
   {
     "BusStopCode": "22449",
     "RoadName": "Jurong West St 64",
     "Description": "Blk 685B",
-    "Latitude": 1.34276211470086,
-    "Longitude": 103.70380658858679
+    "Latitude": 1.343058,
+    "Longitude": 103.703812
   },
   {
     "BusStopCode": "22451",
@@ -3979,15 +3979,15 @@
     "BusStopCode": "22591",
     "RoadName": "Jurong West St 64",
     "Description": "Blk 670A",
-    "Latitude": 1.34425833334291,
-    "Longitude": 103.70329583335823
+    "Latitude": 1.3447589,
+    "Longitude": 103.70289
   },
   {
     "BusStopCode": "22599",
     "RoadName": "Jurong West St 64",
     "Description": "Blk 678D",
-    "Latitude": 1.34484038298879,
-    "Longitude": 103.70308100001235
+    "Latitude": 1.3443608,
+    "Longitude": 103.7034508
   },
   {
     "BusStopCode": "22609",
@@ -5916,7 +5916,7 @@
   },
   {
     "BusStopCode": "25801",
-    "RoadName": "Tuas Sth Ave 9",
+    "RoadName": "Tuas Sth Ave 10",
     "Description": "BEF TUAS STH AVE 7",
     "Latitude": 1.28451,
     "Longitude": 103.634186
@@ -6688,8 +6688,8 @@
     "BusStopCode": "27381",
     "RoadName": "Jurong West St 75",
     "Description": "Blk 749",
-    "Latitude": 1.3481478303518,
-    "Longitude": 103.69863834523142
+    "Latitude": 1.348143,
+    "Longitude": 103.698209
   },
   {
     "BusStopCode": "27389",
@@ -8662,8 +8662,8 @@
     "BusStopCode": "40181",
     "RoadName": "Scotts Rd",
     "Description": "Newton Stn Exit A",
-    "Latitude": 1.31243561231028,
-    "Longitude": 103.83798341278676
+    "Latitude": 1.312641,
+    "Longitude": 103.838298
   },
   {
     "BusStopCode": "40189",
@@ -8725,8 +8725,8 @@
     "BusStopCode": "40229",
     "RoadName": "Stevens Rd",
     "Description": "Aft Stevens Stn",
-    "Latitude": 1.31980673102836,
-    "Longitude": 103.82570665178494
+    "Latitude": 1.319241,
+    "Longitude": 103.825711
   },
   {
     "BusStopCode": "40231",
@@ -11224,8 +11224,8 @@
     "BusStopCode": "44511",
     "RoadName": "Choa Chu Kang Ave 3",
     "Description": "Blk 289",
-    "Latitude": 1.37948507121488,
-    "Longitude": 103.7405687719047
+    "Latitude": 1.379843,
+    "Longitude": 103.741069
   },
   {
     "BusStopCode": "44519",
@@ -11702,6 +11702,20 @@
     "Description": "Greenridge Sec Sch",
     "Latitude": 1.3827025,
     "Longitude": 103.7730945
+  },
+  {
+    "BusStopCode": "44941",
+    "RoadName": "KJE",
+    "Description": "OPP BLK 502",
+    "Latitude": 1.388198,
+    "Longitude": 103.744284
+  },
+  {
+    "BusStopCode": "44949",
+    "RoadName": "KJE",
+    "Description": "AFT BLK 503",
+    "Latitude": 1.388429,
+    "Longitude": 103.742903
   },
   {
     "BusStopCode": "44989",
@@ -14626,8 +14640,8 @@
     "BusStopCode": "50029",
     "RoadName": "Thomson Rd",
     "Description": "Opp United Sq",
-    "Latitude": 1.31647941614673,
-    "Longitude": 103.84484281963609
+    "Latitude": 1.316765,
+    "Longitude": 103.844753
   },
   {
     "BusStopCode": "50031",
@@ -14710,8 +14724,8 @@
     "BusStopCode": "50081",
     "RoadName": "Owen Rd",
     "Description": "Pek Kio Mkt",
-    "Latitude": 1.31663163574561,
-    "Longitude": 103.85024851239793
+    "Latitude": 1.31634,
+    "Longitude": 103.850484
   },
   {
     "BusStopCode": "50089",
@@ -15374,7 +15388,7 @@
   {
     "BusStopCode": "52231",
     "RoadName": "Toa Payoh Ctrl",
-    "Description": "Opp Blk 177",
+    "Description": "Blk 79C",
     "Latitude": 1.3343049899737,
     "Longitude": 103.8487842386021
   },
@@ -15921,22 +15935,22 @@
     "BusStopCode": "53151",
     "RoadName": "Marymount Rd",
     "Description": "Opp Blk 263A CP",
-    "Latitude": 1.3595063466985,
-    "Longitude": 103.84134061287276
+    "Latitude": 1.357995,
+    "Longitude": 103.841113
   },
   {
     "BusStopCode": "53159",
     "RoadName": "Marymount Rd",
     "Description": "Blk 260",
-    "Latitude": 1.35968664141033,
-    "Longitude": 103.84173532084301
+    "Latitude": 1.358612,
+    "Longitude": 103.841265
   },
   {
     "BusStopCode": "53161",
     "RoadName": "Marymount Rd",
     "Description": "Opp Blk 254",
-    "Latitude": 1.362227,
-    "Longitude": 103.84216
+    "Latitude": 1.362208,
+    "Longitude": 103.842055
   },
   {
     "BusStopCode": "53169",
@@ -15956,8 +15970,8 @@
     "BusStopCode": "53179",
     "RoadName": "Sin Ming Rd",
     "Description": "Sin Ming Plaza",
-    "Latitude": 1.3530396337334,
-    "Longitude": 103.83582310695057
+    "Latitude": 1.353043,
+    "Longitude": 103.835842
   },
   {
     "BusStopCode": "53181",
@@ -16600,8 +16614,8 @@
     "BusStopCode": "54289",
     "RoadName": "Ang Mo Kio Ave 3",
     "Description": "Blk 452",
-    "Latitude": 1.369199,
-    "Longitude": 103.855901
+    "Latitude": 1.369149,
+    "Longitude": 103.855987
   },
   {
     "BusStopCode": "54291",
@@ -17055,15 +17069,15 @@
     "BusStopCode": "55011",
     "RoadName": "Yio Chu Kang Rd",
     "Description": "Bef Lentor Stn Exit 5",
-    "Latitude": 1.38226165654508,
-    "Longitude": 103.8357043497683
+    "Latitude": 1.382262,
+    "Longitude": 103.835704
   },
   {
     "BusStopCode": "55019",
     "RoadName": "Yio Chu Kang Rd",
     "Description": "Aft Lentor Stn Exit 4",
-    "Latitude": 1.38228305598375,
-    "Longitude": 103.83616944399448
+    "Latitude": 1.382212,
+    "Longitude": 103.836047
   },
   {
     "BusStopCode": "55021",
@@ -17370,8 +17384,8 @@
     "BusStopCode": "55269",
     "RoadName": "Lentor Ave",
     "Description": "Opp Bullion Pk Condo",
-    "Latitude": 1.39252554978737,
-    "Longitude": 103.83691645885587
+    "Latitude": 1.392529,
+    "Longitude": 103.837048
   },
   {
     "BusStopCode": "55281",
@@ -17447,8 +17461,8 @@
     "BusStopCode": "55341",
     "RoadName": "Lentor Dr",
     "Description": "Lentor Stn Exit 3",
-    "Latitude": 1.38498581592741,
-    "Longitude": 103.83669949504181
+    "Latitude": 1.384975,
+    "Longitude": 103.836684
   },
   {
     "BusStopCode": "55349",
@@ -19469,7 +19483,7 @@
   {
     "BusStopCode": "59609",
     "RoadName": "Yishun Ave 6",
-    "Description": "Opp Blk 392",
+    "Description": "Opp Blk 391",
     "Latitude": 1.4289961111075,
     "Longitude": 103.8495613888577
   },
@@ -19668,6 +19682,20 @@
     "Description": "Blk 382C",
     "Latitude": 1.431669,
     "Longitude": 103.847891
+  },
+  {
+    "BusStopCode": "59811",
+    "RoadName": "Yishun St 42",
+    "Description": "Blk 477B",
+    "Latitude": 1.427487,
+    "Longitude": 103.852056
+  },
+  {
+    "BusStopCode": "59819",
+    "RoadName": "Yishun St 42",
+    "Description": "Blk 467C",
+    "Latitude": 1.42696,
+    "Longitude": 103.851955
   },
   {
     "BusStopCode": "60011",
@@ -20275,15 +20303,15 @@
     "BusStopCode": "62171",
     "RoadName": "S'goon Ctrl",
     "Description": "Blk 409",
-    "Latitude": 1.34826139600257,
-    "Longitude": 103.87462371780227
+    "Latitude": 1.348208,
+    "Longitude": 103.874638
   },
   {
     "BusStopCode": "62179",
     "RoadName": "S'goon Ctrl",
     "Description": "Blk 421",
-    "Latitude": 1.34864500235611,
-    "Longitude": 103.8748318800615
+    "Latitude": 1.348559,
+    "Longitude": 103.874826
   },
   {
     "BusStopCode": "62189",
@@ -20345,15 +20373,15 @@
     "BusStopCode": "62251",
     "RoadName": "Upp S'goon Cres",
     "Description": "Bef Blk 471B",
-    "Latitude": 1.37715900002191,
-    "Longitude": 103.9001277845729
+    "Latitude": 1.377463,
+    "Longitude": 103.900695
   },
   {
     "BusStopCode": "62261",
     "RoadName": "Upp Serangoon View",
     "Description": "Opp S'goon Sec Sch",
-    "Latitude": 1.37453805554564,
-    "Longitude": 103.90282372904291
+    "Latitude": 1.374585,
+    "Longitude": 103.902922
   },
   {
     "BusStopCode": "62271",
@@ -20611,15 +20639,15 @@
     "BusStopCode": "63211",
     "RoadName": "Yio Chu Kang Rd",
     "Description": "Blk 138",
-    "Latitude": 1.36814638231195,
-    "Longitude": 103.87573084011618
+    "Latitude": 1.36816,
+    "Longitude": 103.875784
   },
   {
     "BusStopCode": "63219",
     "RoadName": "Yio Chu Kang Rd",
     "Description": "Bef Yio Chu Kang Chapel",
-    "Latitude": 1.36856637012739,
-    "Longitude": 103.8762710483349
+    "Latitude": 1.368497,
+    "Longitude": 103.876166
   },
   {
     "BusStopCode": "63221",
@@ -21668,8 +21696,8 @@
     "BusStopCode": "65059",
     "RoadName": "Punggol Rd",
     "Description": "St. Anne's Ch",
-    "Latitude": 1.39308440832899,
-    "Longitude": 103.90129355204087
+    "Latitude": 1.39269,
+    "Longitude": 103.901269
   },
   {
     "BusStopCode": "65061",
@@ -21913,8 +21941,8 @@
     "BusStopCode": "65271",
     "RoadName": "Punggol Ctrl",
     "Description": "Opp Blk 188",
-    "Latitude": 1.39995544080394,
-    "Longitude": 103.91064287603247
+    "Latitude": 1.400166,
+    "Longitude": 103.910274
   },
   {
     "BusStopCode": "65279",
@@ -22298,8 +22326,8 @@
     "BusStopCode": "65621",
     "RoadName": "Punggol Way",
     "Description": "Samudera Stn Exit B",
-    "Latitude": 1.41608373162688,
-    "Longitude": 103.90248324948615
+    "Latitude": 1.416279,
+    "Longitude": 103.902739
   },
   {
     "BusStopCode": "65629",
@@ -23070,6 +23098,20 @@
     "Description": "KLA Tencor",
     "Latitude": 1.37284849802167,
     "Longitude": 103.868436813377
+  },
+  {
+    "BusStopCode": "66601",
+    "RoadName": "Buangkok Cres",
+    "Description": "Blk 991A",
+    "Latitude": 1.38486,
+    "Longitude": 103.882346
+  },
+  {
+    "BusStopCode": "66609",
+    "RoadName": "Buangkok Cres",
+    "Description": "Opp Blk 991A",
+    "Latitude": 1.385071,
+    "Longitude": 103.882087
   },
   {
     "BusStopCode": "67009",
@@ -25293,16 +25335,16 @@
   {
     "BusStopCode": "74031",
     "RoadName": "Tampines Rd",
-    "Description": "Aft Jln Sam Kong Si",
-    "Latitude": 1.36753470077913,
-    "Longitude": 103.92648611289407
+    "Description": "Bef Tampines Lk",
+    "Latitude": 1.367627,
+    "Longitude": 103.925697
   },
   {
     "BusStopCode": "74039",
     "RoadName": "Tampines Rd",
-    "Description": "Bef Jln Sam Kong Si",
-    "Latitude": 1.36735308717402,
-    "Longitude": 103.92618181390851
+    "Description": "Aft Tampines Ind Ave 2",
+    "Latitude": 1.367076,
+    "Longitude": 103.925908
   },
   {
     "BusStopCode": "74041",
@@ -25312,11 +25354,18 @@
     "Longitude": 103.92978611099927
   },
   {
-    "BusStopCode": "74049",
-    "RoadName": "Tampines Link",
-    "Description": "Golden Pagoda Tp",
-    "Latitude": 1.36851139242556,
-    "Longitude": 103.93012376046164
+    "BusStopCode": "74051",
+    "RoadName": "Tampines Rd",
+    "Description": "Tampines Dormitory",
+    "Latitude": 1.366363,
+    "Longitude": 103.929336
+  },
+  {
+    "BusStopCode": "74059",
+    "RoadName": "Tampines Rd",
+    "Description": "Opp Tampines Dormitory",
+    "Latitude": 1.366122,
+    "Longitude": 103.929222
   },
   {
     "BusStopCode": "75009",
@@ -25651,8 +25700,8 @@
     "BusStopCode": "75299",
     "RoadName": "Tampines Ave 10",
     "Description": "Bef Tampines Ave 9",
-    "Latitude": 1.36239101738996,
-    "Longitude": 103.93106617032824
+    "Latitude": 1.364115,
+    "Longitude": 103.931119
   },
   {
     "BusStopCode": "75311",
@@ -26441,9 +26490,9 @@
   {
     "BusStopCode": "76511",
     "RoadName": "Tampines Concourse",
-    "Description": "THE TAMPINES TRILLIANT",
-    "Latitude": 1.35940728864246,
-    "Longitude": 103.93942626783013
+    "Description": "The Tampines Trilliant",
+    "Latitude": 1.359138,
+    "Longitude": 103.939389
   },
   {
     "BusStopCode": "76519",
@@ -26463,8 +26512,8 @@
     "BusStopCode": "76529",
     "RoadName": "Tampines Concourse",
     "Description": "BLK 519A",
-    "Latitude": 1.357528889,
-    "Longitude": 103.9405089
+    "Latitude": 1.35741,
+    "Longitude": 103.940604
   },
   {
     "BusStopCode": "76541",
@@ -26736,8 +26785,8 @@
     "BusStopCode": "77199",
     "RoadName": "Pasir Ris Dr 3",
     "Description": "Opp Blk 500A",
-    "Latitude": 1.37707803132455,
-    "Longitude": 103.94566567184114
+    "Latitude": 1.376671,
+    "Longitude": 103.94637
   },
   {
     "BusStopCode": "77201",
@@ -27079,8 +27128,8 @@
     "BusStopCode": "78109",
     "RoadName": "Pasir Ris Dr 3",
     "Description": "Downtown East",
-    "Latitude": 1.37533322687905,
-    "Longitude": 103.95388142049359
+    "Latitude": 1.375403,
+    "Longitude": 103.954556
   },
   {
     "BusStopCode": "78111",
@@ -27093,8 +27142,8 @@
     "BusStopCode": "78119",
     "RoadName": "Pasir Ris Dr 3",
     "Description": "Opp Blk 479",
-    "Latitude": 1.37564,
-    "Longitude": 103.957524
+    "Latitude": 1.37568,
+    "Longitude": 103.957966
   },
   {
     "BusStopCode": "78121",
@@ -27107,8 +27156,8 @@
     "BusStopCode": "78129",
     "RoadName": "Pasir Ris Dr 3",
     "Description": "Opp Blk 233",
-    "Latitude": 1.37513135750693,
-    "Longitude": 103.9621203385503
+    "Latitude": 1.375132,
+    "Longitude": 103.962121
   },
   {
     "BusStopCode": "78131",
@@ -31122,6 +31171,13 @@
     "Longitude": 103.96219500000879
   },
   {
+    "BusStopCode": "96391",
+    "RoadName": "Changi Business Pk Vista",
+    "Description": "Aft Changi Biz Pk Cres",
+    "Latitude": 1.336856,
+    "Longitude": 103.967921
+  },
+  {
     "BusStopCode": "96401",
     "RoadName": "Changi Business Pk Ctrl 1",
     "Description": "Honeywell Bldg",
@@ -31132,15 +31188,15 @@
     "BusStopCode": "96411",
     "RoadName": "Changi Sth Ave 1",
     "Description": "OPP EIGHTRIUM",
-    "Latitude": 1.337761389,
-    "Longitude": 103.9637911
+    "Latitude": 1.338128,
+    "Longitude": 103.964
   },
   {
     "BusStopCode": "96419",
     "RoadName": "Changi Sth Ave 1",
     "Description": "EIGHTRIUM",
-    "Latitude": 1.337599444,
-    "Longitude": 103.9638356
+    "Latitude": 1.338026,
+    "Longitude": 103.964172
   },
   {
     "BusStopCode": "96421",
@@ -31167,8 +31223,8 @@
     "BusStopCode": "96439",
     "RoadName": "Tanah Merah Coast Rd",
     "Description": "CHANGI NAVAL BASE",
-    "Latitude": 1.318248056,
-    "Longitude": 104.0155981
+    "Latitude": 1.317708,
+    "Longitude": 104.015614
   },
   {
     "BusStopCode": "96441",
@@ -31183,6 +31239,20 @@
     "Description": "SUTD",
     "Latitude": 1.33980186622645,
     "Longitude": 103.96388189995498
+  },
+  {
+    "BusStopCode": "96471",
+    "RoadName": "Aviation Pk Rd",
+    "Description": "Bef Changi Coast Road",
+    "Latitude": 1.367866,
+    "Longitude": 104.009977
+  },
+  {
+    "BusStopCode": "96479",
+    "RoadName": "Aviation Pk Rd",
+    "Description": "Aft Changi Coast Rd",
+    "Latitude": 1.367858,
+    "Longitude": 104.010442
   },
   {
     "BusStopCode": "97009",
@@ -31594,8 +31664,8 @@
     "BusStopCode": "98109",
     "RoadName": "Pasir Ris Dr 3",
     "Description": "Opp Loyang Pt",
-    "Latitude": 1.36691496085079,
-    "Longitude": 103.96586134149551
+    "Latitude": 1.366943,
+    "Longitude": 103.965843
   },
   {
     "BusStopCode": "98111",
@@ -32259,8 +32329,8 @@
     "BusStopCode": "14319",
     "RoadName": "Telok Blangah Rise",
     "Description": "Blk 28",
-    "Latitude": 1.27340685178245,
-    "Longitude": 103.82071832142381
+    "Latitude": 1.273483,
+    "Longitude": 103.820637
   },
   {
     "BusStopCode": "14329",
@@ -32364,8 +32434,8 @@
     "BusStopCode": "14489",
     "RoadName": "Telok Blangah Rise",
     "Description": "Blk 36 Mkt/FC",
-    "Latitude": 1.2721852066614,
-    "Longitude": 103.82170108549552
+    "Latitude": 1.272377,
+    "Longitude": 103.82159
   },
   {
     "BusStopCode": "14491",
@@ -32770,8 +32840,8 @@
     "BusStopCode": "16091",
     "RoadName": "AYE",
     "Description": "Opp SIT Dover",
-    "Latitude": 1.299275,
-    "Longitude": 103.779369
+    "Latitude": 1.299478,
+    "Longitude": 103.779229
   },
   {
     "BusStopCode": "16099",
