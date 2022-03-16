@@ -17,13 +17,6 @@ Resources:
   Gateway:
     Type: AWS::Serverless::HttpApi
     Properties:
-      DefaultRouteSettings:
-        ThrottlingBurstLimit: 10
-        ThrottlingRateLimit: 10
-        DetailedMetricsEnabled: true
-      AccessLogSettings:
-        DestinationArn: !GetAtt AccessLogGroup.Arn
-        Format: '{"requestTime":"$context.requestTime","requestId":"$context.requestId","httpMethod":"$context.httpMethod","path":"$context.path","resourcePath":"$context.resourcePath","status":$context.status,"responseLatency":$context.responseLatency,"ip":"$context.identity.sourceIp","userAgent":"$context.identity.userAgent","integrationRequestId":"$context.integration.requestId","functionResponseStatus":"$context.integration.status","integrationLatency":"$context.integration.latency","integrationServiceStatus":"$context.integration.integrationStatus"}'
       Domain:
         DomainName: !Ref DomainName
         CertificateArn: !Ref ACMCertificateArn
@@ -45,7 +38,7 @@ Resources:
             Method: ANY
       Environment:
         Variables:
-          accountkey: '{{resolve:ssm:/ltabus/accountkey:1}}'
+          accountkey: "{{resolve:ssm:/ltabus/accountkey:1}}"
     Metadata:
       BuildMethod: makefile
 
