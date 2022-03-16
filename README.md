@@ -1,19 +1,12 @@
-[![Build Status](https://travis-ci.org/kaihendry/ltabus.svg?branch=master)](https://travis-ci.org/kaihendry/ltabus)
+# Singapore bus arrival Web application
+
+Proving that a Web application sucks less than a native App to get bus arrival time given a bus stop!
+
+# Accountkey
 
 Request for API access from <https://www.mytransport.sg/content/mytransport/home/dataMall/request-for-api.html>
 
-Assuming `export accountkey="SECRET"`
+# Related
 
-# Local development
-
-	eval "$(up env export)"
-	gin
-
-# Icon generator
-
-Font is from https://dejavu-fonts.github.io/
-
-## Related
-
-* <https://github.com/cheeaun/arrivelah>
-* <https://cheeaun.github.io/busrouter-sg/>
+- <https://github.com/cheeaun/arrivelah>
+- <https://cheeaun.github.io/busrouter-sg/>
