@@ -24,6 +24,7 @@ Resources:
   MainFunction:
     Type: AWS::Serverless::Function
     Properties:
+      FunctionName: ltabus
       Architectures:
         - arm64
       CodeUri: .
