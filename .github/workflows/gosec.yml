@@ -18,3 +18,5 @@ jobs:
         uses: securego/gosec@master
         with:
           args: -exclude=G401,G501 ./...
+      - name: semgrep-action
+        uses: returntocorp/semgrep-action@v1
