@@ -206,6 +206,8 @@ func (s *Server) handleIndex(w http.ResponseWriter, r *http.Request) {
 		arriving, err = busArrivals(id)
 		if err != nil {
 			log.WithError(err).Error("failed to retrieve bus timings")
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
 		}
 		log.WithField("input", id).Info("serving")
 	}
@@ -215,6 +217,7 @@ func (s *Server) handleIndex(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.WithError(err).Error("template failed to parse")
 		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
 	}
 
 }
