@@ -8,18 +8,45 @@ Parameters:
     Type: String
 
 Resources:
-  # Create log group for Access logs
-  AccessLogGroup:
-    Type: "AWS::Logs::LogGroup"
-    Properties:
-      LogGroupName: !Ref DomainName
-
   Gateway:
     Type: AWS::Serverless::HttpApi
     Properties:
       Domain:
         DomainName: !Ref DomainName
         CertificateArn: !Ref ACMCertificateArn
+
+  ErrorMetricFilter:
+    Type: AWS::Logs::MetricFilter
+    Properties:
+      LogGroupName: !Join ["/", ["/aws", "lambda", !Ref MainFunction]]
+      FilterPattern: '{$.level = "error"}'
+      MetricTransformations:
+        - MetricValue: "1"
+          MetricNamespace: !Sub ${AWS::StackName}
+          MetricName: ErrorMetricFilter
+
+  EmailSNSTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      Subscription:
+        - Protocol: email
+          Endpoint: kai.hendry+ltabus@gmail.com
+
+  LogAlarmResource:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName: ErrorLogs
+      ComparisonOperator: GreaterThanThreshold
+      EvaluationPeriods: 1
+      MetricName: ErrorMetricFilter
+      Namespace: !Sub ${AWS::StackName}
+      Threshold: 1
+      Period: 60
+      Statistic: Average
+      TreatMissingData: breaching
+      AlarmActions:
+        - !Ref EmailSNSTopic
+    DependsOn: EmailSNSTopic
 
   MainFunction:
     Type: AWS::Serverless::Function
