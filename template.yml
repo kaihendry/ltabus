@@ -36,14 +36,15 @@ Resources:
     Type: AWS::CloudWatch::Alarm
     Properties:
       AlarmName: ErrorLogs
+      AlarmDescription: Alarm when lambda errors
       ComparisonOperator: GreaterThanThreshold
       EvaluationPeriods: 1
       MetricName: ErrorMetricFilter
       Namespace: !Sub ${AWS::StackName}
-      Threshold: 1
+      Threshold: 0.0
       Period: 60
-      Statistic: Average
-      TreatMissingData: breaching
+      Statistic: Sum
+      TreatMissingData: notBreaching
       AlarmActions:
         - !Ref EmailSNSTopic
     DependsOn: EmailSNSTopic
