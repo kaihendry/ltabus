@@ -206,7 +206,7 @@ func (s *Server) handleIndex(w http.ResponseWriter, r *http.Request) {
 		arriving, err = busArrivals(id)
 		if err != nil {
 			log.WithError(err).Error("failed to retrieve bus timings")
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			http.Error(w, fmt.Sprintf("datamall API is returning, %s", err.Error()), http.StatusFailedDependency)
 			return
 		}
 		log.WithField("input", id).Info("serving")
@@ -236,6 +236,7 @@ func busArrivals(stopID string) (arrivals SGBusArrivals, err error) {
 	url := fmt.Sprintf("http://datamall2.mytransport.sg/ltaodataservice/BusArrivalv2?BusStopCode=%s", stopID)
 
 	client := &http.Client{
+		Timeout: 2 * time.Second,
 		Transport: &tracingRoundTripper{
 			next: http.DefaultTransport,
 			dest: ctx.Logger,
