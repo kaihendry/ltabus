@@ -99,7 +99,8 @@ type SGBusArrivals struct {
 		NextBus2  NextBus `json:"NextBus2"`
 		NextBus3  NextBus `json:"NextBus3"`
 	} `json:"Services"`
-	Style template.CSS
+	Style      template.CSS
+	Javascript template.JS
 }
 
 type Server struct {
@@ -215,12 +216,19 @@ func (s *Server) handleIndex(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("X-Version", Version)
 
-	style, err := os.ReadFile("./static/style.css")
+	style, err := static.ReadFile("static/style.css")
 	if err != nil {
 		log.WithError(err).Fatal("failed to read in style sheet")
 		return
 	}
 	arriving.Style = template.CSS(style)
+
+	javascript, err := static.ReadFile("static/main.js")
+	if err != nil {
+		log.WithError(err).Fatal("failed to read in javascript")
+		return
+	}
+	arriving.Javascript = template.JS(javascript)
 
 	err = t.ExecuteTemplate(w, "index.html", arriving)
 	if err != nil {

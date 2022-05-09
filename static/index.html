@@ -4,9 +4,11 @@
 <meta charset=utf-8>
 <meta name=viewport content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://newcss.net/lite.css">
-<script src="/static/main.js"></script>
+<script>
+{{.Javascript}}
+</script>
 <style>
-  {{.Style}}
+{{.Style}}
 </style>
 {{ if .BusStopCode }}
 <title>Singapore bus arrival times for stop {{ .BusStopCode }}</title>
