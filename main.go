@@ -99,6 +99,7 @@ type SGBusArrivals struct {
 		NextBus2  NextBus `json:"NextBus2"`
 		NextBus3  NextBus `json:"NextBus3"`
 	} `json:"Services"`
+	Style template.CSS
 }
 
 type Server struct {
@@ -213,6 +214,14 @@ func (s *Server) handleIndex(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Header().Set("X-Version", Version)
+
+	style, err := os.ReadFile("./static/style.css")
+	if err != nil {
+		log.WithError(err).Fatal("failed to read in style sheet")
+		return
+	}
+	arriving.Style = template.CSS(style)
+
 	err = t.ExecuteTemplate(w, "index.html", arriving)
 	if err != nil {
 		log.WithError(err).Error("template failed to parse")
@@ -381,7 +390,7 @@ func (bs BusStops) nameBusStop(busStopID string) (description string) {
 
 func styleBusStop(busStopID string) (style template.CSS) {
 	data := []byte(busStopID)
-	log.Infof("underline color #%.3x", md5.Sum(data))
+	log.Debugf("underline color #%.3x", md5.Sum(data))
 	return template.CSS(fmt.Sprintf("background-color: #%.3x; padding: 0.2em", md5.Sum(data)))
 }
 

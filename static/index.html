@@ -5,7 +5,9 @@
 <meta name=viewport content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://newcss.net/lite.css">
 <script src="/static/main.js"></script>
-<link rel='stylesheet' href='/static/style.css'>
+<style>
+  {{.Style}}
+</style>
 {{ if .BusStopCode }}
 <title>Singapore bus arrival times for stop {{ .BusStopCode }}</title>
 <meta name="apple-mobile-web-app-title" content="{{ nameBusStop .BusStopCode }}">

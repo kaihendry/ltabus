@@ -37,6 +37,7 @@ ol {
 .buses time {
   display: table-cell;
   padding: 5px 10px;
+  width: 2em;
 }
 
 #stations li {
