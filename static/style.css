@@ -21,6 +21,7 @@ ol {
   content: "\1F68C";
   padding-left: 20px;
   padding-right: 8px;
+  overflow: hidden;
 }
 
 #stations li:before {
@@ -36,8 +37,8 @@ ol {
 }
 .buses time {
   display: table-cell;
-  padding: 5px 10px;
-  width: 2em;
+  padding: 5px;
+  width: 3em;
 }
 
 #stations li {
