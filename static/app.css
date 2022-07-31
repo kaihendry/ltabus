@@ -1,3 +1,7 @@
+/* import lite.css */
+
+@import url("lite.css");
+
 body {
   padding: 5px;
   font-size: 120%;

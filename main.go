@@ -99,8 +99,6 @@ type SGBusArrivals struct {
 		NextBus2  NextBus `json:"NextBus2"`
 		NextBus3  NextBus `json:"NextBus3"`
 	} `json:"Services"`
-	Style      template.CSS
-	Javascript template.JS
 }
 
 type Server struct {
@@ -109,7 +107,6 @@ type Server struct {
 }
 
 func main() {
-
 	server, err := NewServer("all.json")
 	if err != nil {
 		log.Fatalf("failed to create server: %v", err)
@@ -123,11 +120,9 @@ func main() {
 		err = http.ListenAndServe(fmt.Sprintf(":%s", os.Getenv("PORT")), server.router)
 	}
 	log.WithError(err).Fatal("error listening")
-
 }
 
 func NewServer(busStopsPath string) (*Server, error) {
-
 	bs, err := loadBusJSON(busStopsPath)
 	if err != nil {
 		log.WithError(err).Fatal("unable to load bus stops")
@@ -141,11 +136,9 @@ func NewServer(busStopsPath string) (*Server, error) {
 	srv.routes()
 
 	return &srv, nil
-
 }
 
 func (s *Server) routes() {
-
 	directory, err := fs.Sub(static, "static")
 	if err != nil {
 		log.WithError(err).Fatal("unable to load static files")
@@ -216,32 +209,15 @@ func (s *Server) handleIndex(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("X-Version", Version)
 
-	style, err := static.ReadFile("static/style.css")
-	if err != nil {
-		log.WithError(err).Fatal("failed to read in style sheet")
-		return
-	}
-	arriving.Style = template.CSS(style)
-
-	javascript, err := static.ReadFile("static/main.js")
-	if err != nil {
-		log.WithError(err).Fatal("failed to read in javascript")
-		return
-	}
-	// #nosec G203
-	arriving.Javascript = template.JS(javascript)
-
 	err = t.ExecuteTemplate(w, "index.html", arriving)
 	if err != nil {
 		log.WithError(err).Error("template failed to parse")
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-
 }
 
 func busArrivals(stopID string) (arrivals SGBusArrivals, err error) {
-
 	if stopID == "" {
 		return arrivals, fmt.Errorf("invalid stop ID")
 	}

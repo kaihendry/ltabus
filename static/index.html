@@ -1,95 +1,96 @@
 <!DOCTYPE html>
 <html lang=en>
+
 <head>
-<meta charset=utf-8>
-<meta name=viewport content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="https://newcss.net/lite.css">
-<script>
-{{.Javascript}}
-</script>
-<style>
-{{.Style}}
-</style>
-{{ if .BusStopCode }}
-<title>Singapore bus arrival times for stop {{ .BusStopCode }}</title>
-<meta name="apple-mobile-web-app-title" content="{{ nameBusStop .BusStopCode }}">
-<link rel='icon' href='/icon?stop={{ .BusStopCode }}'>
-<link rel="apple-touch-icon" sizes="200x200" href="/icon?stop={{ .BusStopCode }}">
-<meta name="description" content="Bus arrival times for {{ .BusStopCode }} {{ nameBusStop .BusStopCode }}"/>
-{{ else }}
-<title>Singapore bus arrival times 🇸🇬</title>
-<link rel="icon" href="data:;base64,iVBORw0KGgo=">
-<meta name="description" content="Bus arrival times based on your current location"/>
-{{ end }}
+	<meta charset=utf-8>
+	<meta name=viewport content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="/static/main.css">
+	<script src="/static/main.js"></script>
+	{{ if .BusStopCode }}
+	<title>Singapore bus arrival times for stop {{ .BusStopCode }}</title>
+	<meta name="apple-mobile-web-app-title" content="{{ nameBusStop .BusStopCode }}">
+	<link rel='icon' href='/icon?stop={{ .BusStopCode }}'>
+	<link rel="apple-touch-icon" sizes="200x200" href="/icon?stop={{ .BusStopCode }}">
+	<meta name="description" content="Bus arrival times for {{ .BusStopCode }} {{ nameBusStop .BusStopCode }}" />
+	{{ else }}
+	<title>Singapore bus arrival times 🇸🇬</title>
+	<link rel="icon" href="data:;base64,iVBORw0KGgo=">
+	<meta name="description" content="Bus arrival times based on your current location" />
+	{{ end }}
 </head>
+
 <body>
 
-<h1><a style="text-decoration: none;" href="/">📍</a>
-<span style="{{ styleBusStop .BusStopCode }}"
-id="namedBusStop">{{ nameBusStop .BusStopCode }}</span>
-</h1>
+	<h1><a style="text-decoration: none;" href="/">📍</a>
+		<span style="{{ styleBusStop .BusStopCode }}" id="namedBusStop">{{ nameBusStop .BusStopCode }}</span>
+	</h1>
 
-<form>
-<label for=id>Bus stop #</label>
-<input autofocus id=id required type=text inputmode="numeric" pattern="\d{5}" value="{{ .BusStopCode }}" name=id>
-<input value="Bus due times" type=submit>
-</form>
+	<form>
+		<label for=id>Bus stop #</label>
+		<input autofocus id=id required type=text inputmode="numeric" pattern="\d{5}" value="{{ .BusStopCode }}"
+			name=id>
+		<input value="Bus due times" type=submit>
+	</form>
 
-<ul class=buses>
-{{ range .Services }}
-<li>
-<strong>
-<a href='https://busrouter.sg/#/services/{{ .ServiceNo }}'>{{ .ServiceNo }}</a>
-</strong>
+	<ul class=buses>
+		{{ range .Services }}
+		<li>
+			<strong>
+				<a href='https://busrouter.sg/#/services/{{ .ServiceNo }}'>{{ .ServiceNo }}</a>
+			</strong>
 
-{{ if .NextBus.EstimatedArrival }}<time dateTime="{{ .NextBus.EstimatedArrival }}">{{ .NextBus.EstimatedArrival }}</time>{{ end }}
-{{ if .NextBus2.EstimatedArrival }}<time dateTime="{{ .NextBus2.EstimatedArrival }}">{{ .NextBus2.EstimatedArrival }}</time>{{ end }}
-{{ if .NextBus3.EstimatedArrival }}<time dateTime="{{ .NextBus3.EstimatedArrival }}">{{ .NextBus3.EstimatedArrival }}</time>{{ end }}
+			{{ if .NextBus.EstimatedArrival }}<time dateTime="{{ .NextBus.EstimatedArrival }}">{{
+				.NextBus.EstimatedArrival }}</time>{{ end }}
+			{{ if .NextBus2.EstimatedArrival }}<time dateTime="{{ .NextBus2.EstimatedArrival }}">{{
+				.NextBus2.EstimatedArrival }}</time>{{ end }}
+			{{ if .NextBus3.EstimatedArrival }}<time dateTime="{{ .NextBus3.EstimatedArrival }}">{{
+				.NextBus3.EstimatedArrival }}</time>{{ end }}
 
-</li>
-{{ end }}
-</ul>
+		</li>
+		{{ end }}
+	</ul>
 
-<p>Hint: Tap <a style="text-decoration: none;" href="/">📍</a> to find closest bus stop</p>
+	<p>Hint: Tap <a style="text-decoration: none;" href="/">📍</a> to find closest bus stop</p>
 
-<h4>Last updated: <span id=lastupdated></span></h4>
+	<h4>Last updated: <span id=lastupdated></span></h4>
 
-<ol id=stations></ol>
+	<ol id=stations></ol>
 
-<footer>
-<ul>
-<li><a href=https://github.com/kaihendry/ltabus>Source code</a></li>
-<li><a href="mailto:hendry+bus@iki.fi">Please email feedback</a></li>
-<li><a href=https://railrouter.sg/>Train map</a></li>
-<li>There are 5043 bus stops in Singapore</li>
-</ul>
-</footer>
+	<footer>
+		<ul>
+			<li><a href=https://github.com/kaihendry/ltabus>Source code</a></li>
+			<li><a href="mailto:hendry+bus@iki.fi">Please email feedback</a></li>
+			<li><a href=https://railrouter.sg />Train map</a></li>
+			<li>There are 5043 bus stops in Singapore</li>
+		</ul>
+	</footer>
 
-    <p><button>Share this Web app!</button></p>
+	<p><button>Share this Web app!</button></p>
 
-    <p class="result"></p>
+	<p class="result"></p>
 
-    <script>
-      let shareData = {
-        title: '🇸🇬 Bus arrival times',
-        text: 'Bus arrrivals times, hit 📍 to find closest bus stop',
-        url: 'https://bus.dabase.com',
-      }
+	<script>
+		let shareData = {
+			title: '🇸🇬 Bus arrival times',
+			text: 'Bus arrrivals times, hit 📍 to find closest bus stop',
+			url: 'https://bus.dabase.com',
+		}
 
-      const btn = document.querySelector('button');
-      const resultPara = document.querySelector('.result');
+		const btn = document.querySelector('button');
+		const resultPara = document.querySelector('.result');
 
-      btn.addEventListener('click', () => {
-        navigator.share(shareData)
-          .then(() =>
-            resultPara.textContent = 'Sshared successfully'
-          )
-          .catch((e) =>
-            resultPara.textContent = 'Error: ' + e
-          )
-      });
-    </script>
+		btn.addEventListener('click', () => {
+			navigator.share(shareData)
+				.then(() =>
+					resultPara.textContent = 'Sshared successfully'
+				)
+				.catch((e) =>
+					resultPara.textContent = 'Error: ' + e
+				)
+		});
+	</script>
 
 
 </body>
+
 </html>
