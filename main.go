@@ -228,6 +228,7 @@ func (s *Server) handleIndex(w http.ResponseWriter, r *http.Request) {
 		log.WithError(err).Fatal("failed to read in javascript")
 		return
 	}
+	// #nosec G203
 	arriving.Javascript = template.JS(javascript)
 
 	err = t.ExecuteTemplate(w, "index.html", arriving)
