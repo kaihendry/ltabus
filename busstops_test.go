@@ -42,7 +42,7 @@ func TestBusStops_closest(t *testing.T) {
 			wantB: BusStop{
 				BusStopCode: "25059",
 				RoadName:    "Tuas Sth Way",
-				Description: "After Tuas Sth Blvd",
+				Description: "Aft Tuas Sth Blvd",
 				Latitude:    1.270007,
 				Longitude:   103.61725,
 			},
