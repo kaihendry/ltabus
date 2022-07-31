@@ -6,6 +6,8 @@ Parameters:
     Type: String
   ACMCertificateArn:
     Type: String
+  Version:
+    Type: String
 
 Resources:
   Gateway:
@@ -68,6 +70,7 @@ Resources:
       Environment:
         Variables:
           accountkey: "{{resolve:ssm:/ltabus/accountkey:1}}"
+          version: !Ref Version
     Metadata:
       BuildMethod: makefile
 
