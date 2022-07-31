@@ -10,7 +10,7 @@ require (
 )
 
 require (
-	github.com/aws/aws-lambda-go v1.31.1 // indirect
+	github.com/aws/aws-lambda-go v1.34.0 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
-	golang.org/x/image v0.0.0-20220413100746-70e8d0d3baa9 // indirect
+	golang.org/x/image v0.0.0-20220722155232-062f8c9fd539 // indirect
 )
