@@ -56,7 +56,6 @@ func handleIcon(w http.ResponseWriter, r *http.Request) {
 	const S = 200
 	maxWidth := float64(S) - 20
 	dc := gg.NewContext(S, S)
-	// set bgColor as background color
 	dc.SetColor(bgColor)
 	dc.Clear()
 	dc.SetRGB(1, 1, 1)

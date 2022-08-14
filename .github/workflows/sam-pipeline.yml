@@ -15,7 +15,7 @@ jobs:
           go-version: "^1.19"
       - name: Test
         run: go test -v .
-      - uses: aws-actions/setup-sam@v1
+      - uses: aws-actions/setup-sam@v2
       - uses: aws-actions/configure-aws-credentials@v1
         with:
           role-to-assume: arn:aws:iam::407461997746:role/github-actions-Role-56IHHM969DKJ
