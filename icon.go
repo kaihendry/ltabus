@@ -9,6 +9,8 @@ import (
 	"regexp"
 
 	"github.com/fogleman/gg"
+	"github.com/golang/freetype"
+	"github.com/golang/freetype/truetype"
 )
 
 func ParseHexColor(s string) (c color.RGBA, err error) {
@@ -59,10 +61,22 @@ func handleIcon(w http.ResponseWriter, r *http.Request) {
 	dc.SetColor(bgColor)
 	dc.Clear()
 	dc.SetRGB(1, 1, 1)
-	if err := dc.LoadFontFace("static/Go-Regular.ttf", 64); err != nil {
+
+	fontBytes, err := static.ReadFile("static/Go-Regular.ttf")
+	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
+	font, err := freetype.ParseFont(fontBytes)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	face := truetype.NewFace(font, &truetype.Options{
+		Size: 64,
+	})
+	dc.SetFontFace(face)
+
 	dc.DrawStringWrapped(stop, S/2, S/2, 0.5, 0.5, maxWidth, 1.5, gg.AlignCenter)
 
 	w.Header().Set("Content-Type", "image/png")
