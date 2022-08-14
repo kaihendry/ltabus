@@ -3,19 +3,12 @@ package main
 import (
 	"crypto/md5"
 	"fmt"
-	"image"
 	"image/color"
-	"image/draw"
 	"image/png"
 	"net/http"
 	"regexp"
 
-	"github.com/golang/freetype"
-)
-
-const (
-	fontSize = 10
-	fontDPI  = 401
+	"github.com/fogleman/gg"
 )
 
 func ParseHexColor(s string) (c color.RGBA, err error) {
@@ -37,8 +30,6 @@ func ParseHexColor(s string) (c color.RGBA, err error) {
 }
 
 func handleIcon(w http.ResponseWriter, r *http.Request) {
-
-	// fmt.Println("GET params were:", r.URL.Query())
 	stop := r.URL.Query().Get("stop")
 	if stop == "" {
 		http.Error(w, "stop parameter missing", http.StatusBadRequest)
@@ -50,49 +41,33 @@ func handleIcon(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
+
 	if !matched {
 		http.Error(w, "not 5 digits", http.StatusBadRequest)
 		return
 	}
 
-	data := []byte(stop)
-	bgColor, err := ParseHexColor(fmt.Sprintf("#%.3x", md5.Sum(data)))
+	bgColor, err := ParseHexColor(fmt.Sprintf("#%.3x", md5.Sum([]byte(stop))))
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	img := image.NewNRGBA(image.Rect(0, 0, 200, 200))
-	fontBytes, err := static.ReadFile("static/Go-Regular.ttf")
-	if err != nil {
+	const S = 200
+	maxWidth := float64(S) - 20
+	dc := gg.NewContext(S, S)
+	// set bgColor as background color
+	dc.SetColor(bgColor)
+	dc.Clear()
+	dc.SetRGB(1, 1, 1)
+	if err := dc.LoadFontFace("static/Go-Regular.ttf", 64); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	font, err := freetype.ParseFont(fontBytes)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-	left := img.Bounds()
-	left.Max = image.Pt(200, 200)
-	draw.Draw(img, left, &image.Uniform{bgColor}, image.ZP, draw.Src)
-
-	c := freetype.NewContext()
-	c.SetDPI(fontDPI)
-	c.SetFont(font)
-	c.SetFontSize(fontSize)
-	c.SetClip(img.Bounds())
-	c.SetDst(img)
-	c.SetSrc(image.White)
-	pt := freetype.Pt(20, 110)
-	_, err = c.DrawString(stop, pt)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
+	dc.DrawStringWrapped(stop, S/2, S/2, 0.5, 0.5, maxWidth, 1.5, gg.AlignCenter)
 
 	w.Header().Set("Content-Type", "image/png")
-	err = png.Encode(w, img)
+	err = png.Encode(w, dc.Image())
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
