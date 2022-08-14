@@ -8,7 +8,7 @@ ACMCERTIFICATEARN = arn:aws:acm:ap-southeast-1:407461997746:certificate/87b0fd84
 
 deploy:
 	sam build
-	SAM_CLI_TELEMETRY=0 sam deploy --resolve-s3 --stack-name $(STACK) \
+	SAM_CLI_TELEMETRY=0 sam deploy --no-progressbar --resolve-s3 --stack-name $(STACK) \
 	--parameter-overrides DomainName=$(DOMAINNAME) ACMCertificateArn=$(ACMCERTIFICATEARN) Version=$(VERSION) \
 	--no-confirm-changeset --no-fail-on-empty-changeset --capabilities CAPABILITY_IAM
 
