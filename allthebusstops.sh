@@ -2,9 +2,9 @@
 
 test -f .env && source .env
 
-if ! test "$accountkey"
+if ! test "$ACCOUNTKEY"
 then
-	echo env \"accountkey\" is unset
+	echo env \"ACCOUNTKEY\" is unset
 	exit
 fi
 
@@ -14,7 +14,7 @@ cd "$(mktemp -d)" || exit
 count=0
 while :
 do
-	curl -s -f -X GET http://datamall2.mytransport.sg/ltaodataservice/BusStops?\$skip=$count -H "AccountKey: $accountkey" |
+	curl -s -f -X GET http://datamall2.mytransport.sg/ltaodataservice/BusStops?\$skip=$count -H "accountkey: $ACCOUNTKEY" |
 	jq .value[] > $count.json
 	test -s "$count.json" || break
 	count=$((count+500))
