@@ -25,6 +25,10 @@ jobs:
       - run: make deploy
       - name: Get the lines of code.
         id: scc
-        uses: iryanbell/scc-docker-action@v1.0.2
+        uses: Adapt-API/scc-docker-action@master
         with:
-          args: ${{ env.workspace }}
+          args: ${{ env.workspace }} -i js,go,html,css
+      - name: Echo scc output
+        run: |
+          echo
+          echo -n "${{ steps.scc.outputs.scc }}"
