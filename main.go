@@ -1,7 +1,6 @@
 package main
 
 import (
-	"context"
 	"crypto/md5"
 	"crypto/rand"
 	"embed"
@@ -12,66 +11,20 @@ import (
 	"io/fs"
 	"math"
 	"net/http"
-	"net/http/httptrace"
 	"os"
 	"sort"
 	"strconv"
 	"time"
 
-	"github.com/apex/gateway/v2"
-	"github.com/apex/log"
-	jsonhandler "github.com/apex/log/handlers/json"
-	"github.com/apex/log/handlers/text"
-	"github.com/gorilla/mux"
-)
+	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/chi/v5/middleware"
 
-type key int
+	"github.com/apex/gateway/v2"
+	"golang.org/x/exp/slog"
+)
 
 //go:embed static
 var static embed.FS
-
-const (
-	logger key = iota
-	visitor
-)
-
-type tracingRoundTripper struct {
-	next http.RoundTripper
-	dest *log.Logger
-}
-
-func (rt *tracingRoundTripper) RoundTrip(r *http.Request) (resp *http.Response, err error) {
-	var (
-		start     = time.Now()
-		dnsStart  time.Duration
-		firstByte time.Duration
-	)
-
-	defer func() {
-		f := log.Fields{
-			"dns_start_ms":  dnsStart.Milliseconds(),
-			"first_byte_ms": firstByte.Milliseconds(),
-			"total_ms":      time.Since(start).Milliseconds(),
-			"url":           r.URL.String(),
-		}
-		switch {
-		case err == nil:
-			f["response_code"] = resp.StatusCode
-		case err != nil:
-			f["error"] = err.Error()
-		}
-		rt.dest.WithFields(f).Trace("fetch")
-	}()
-
-	tr := &httptrace.ClientTrace{
-		DNSStart:             func(httptrace.DNSStartInfo) { dnsStart = time.Since(start) },
-		GotFirstResponseByte: func() { firstByte = time.Since(start) },
-	}
-
-	ctx := httptrace.WithClientTrace(r.Context(), tr)
-
-	return rt.next.RoundTrip(r.WithContext(ctx))
-}
 
 // NextBus describes when the bus is coming
 type NextBus struct {
@@ -100,56 +53,57 @@ type SGBusArrivals struct {
 }
 
 type Server struct {
-	router   *mux.Router
+	router   *chi.Mux
 	busStops BusStops
 }
 
 func main() {
 	server, err := NewServer("all.json")
 	if err != nil {
-		log.Fatalf("failed to create server: %v", err)
+		slog.Error("failed to create server", err)
 	}
 
-	log.SetHandler(jsonhandler.Default)
 	if _, ok := os.LookupEnv("AWS_LAMBDA_FUNCTION_NAME"); ok {
 		err = gateway.ListenAndServe("", server.router)
 	} else {
-		log.SetHandler(text.Default)
 		err = http.ListenAndServe(fmt.Sprintf(":%s", os.Getenv("PORT")), server.router)
 	}
-	log.WithError(err).Fatal("error listening")
+	slog.Error("error listening", err)
 }
 
 func NewServer(busStopsPath string) (*Server, error) {
 	bs, err := loadBusJSON(busStopsPath)
 	if err != nil {
-		log.WithError(err).Fatal("unable to load bus stops")
+		slog.Error("unable to load bus stops", err)
 	}
 
+	slogJSONHandler := slog.HandlerOptions{}.NewJSONHandler(os.Stdout)
+
 	srv := Server{
-		router:   mux.NewRouter(),
+		router:   chi.NewRouter(),
 		busStops: bs,
 	}
 
-	srv.routes()
+	srv.router.Use(middleware.RequestID)
+	srv.router.Use(NewStructuredLogger(slogJSONHandler))
+	srv.router.Use(middleware.Recoverer)
+
+	srv.router.Get("/", srv.handleIndex)
+	srv.router.Get("/closest", srv.handleClosest)
+	srv.router.Get("/icon", handleIcon)
+
+	directory, err := fs.Sub(static, "static")
+	if err != nil {
+		slog.Error("unable to load static files", err)
+	}
+	fileServer := http.FileServer(http.FS(directory))
+	//srv.router.PathPrefix("/static/").Handler(http.StripPrefix("/static/", fileServer))
+	srv.router.Mount("/static", http.StripPrefix("/static", fileServer))
+
 
 	return &srv, nil
 }
 
-func (s *Server) routes() {
-	directory, err := fs.Sub(static, "static")
-	if err != nil {
-		log.WithError(err).Fatal("unable to load static files")
-	}
-	fileServer := http.FileServer(http.FS(directory))
-	s.router.PathPrefix("/static/").Handler(http.StripPrefix("/static/", fileServer))
-
-	s.router.HandleFunc("/", s.handleIndex)
-	s.router.HandleFunc("/closest", s.handleClosest)
-	s.router.HandleFunc("/icon", handleIcon)
-
-	s.router.Use(addContextMiddleware)
-}
 
 func (s *Server) handleClosest(w http.ResponseWriter, r *http.Request) {
 	lat, err := strconv.ParseFloat(r.URL.Query().Get("lat"), 32)
@@ -169,11 +123,6 @@ func (s *Server) handleClosest(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Server) handleIndex(w http.ResponseWriter, r *http.Request) {
-	log, ok := r.Context().Value(logger).(*log.Entry)
-	if !ok {
-		http.Error(w, "Unable to get logging context", http.StatusInternalServerError)
-		return
-	}
 
 	funcs := template.FuncMap{
 		"totalStops":   func() int { return len(s.busStops) },
@@ -187,7 +136,7 @@ func (s *Server) handleIndex(w http.ResponseWriter, r *http.Request) {
 
 	t, err := template.New("").Funcs(funcs).ParseFS(static, "static/index.html")
 	if err != nil {
-		log.WithError(err).Error("template failed to parse")
+		slog.Error("template failed to parse", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -198,18 +147,17 @@ func (s *Server) handleIndex(w http.ResponseWriter, r *http.Request) {
 	if id != "" {
 		arriving, err = busArrivals(id)
 		if err != nil {
-			log.WithError(err).Error("failed to retrieve bus timings")
+			slog.Error("failed to retrieve bus timings", err)
 			http.Error(w, fmt.Sprintf("datamall API is returning, %s", err.Error()), http.StatusFailedDependency)
 			return
 		}
-		log.WithField("input", id).Info("serving")
 	}
 
 	w.Header().Set("X-Version", os.Getenv("version"))
 
 	err = t.ExecuteTemplate(w, "index.html", arriving)
 	if err != nil {
-		log.WithError(err).Error("template failed to parse")
+		slog.Error("template failed to parse", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -220,19 +168,10 @@ func busArrivals(stopID string) (arrivals SGBusArrivals, err error) {
 		return arrivals, fmt.Errorf("invalid stop ID")
 	}
 
-	ctx := log.WithFields(
-		log.Fields{
-			"stopID": stopID,
-		})
-
 	url := fmt.Sprintf("http://datamall2.mytransport.sg/ltaodataservice/BusArrivalv2?BusStopCode=%s", stopID)
 
 	client := &http.Client{
 		Timeout: 2 * time.Second,
-		Transport: &tracingRoundTripper{
-			next: http.DefaultTransport,
-			dest: ctx.Logger,
-		},
 	}
 
 	req, err := http.NewRequest("GET", url, nil)
@@ -257,7 +196,7 @@ func busArrivals(stopID string) (arrivals SGBusArrivals, err error) {
 	decoder := json.NewDecoder(res.Body)
 	err = decoder.Decode(&arrivals)
 	if err != nil {
-		log.WithError(err).Error("failed to decode response")
+		slog.Error("failed to decode response", err)
 		return
 	}
 
@@ -267,34 +206,6 @@ func busArrivals(stopID string) (arrivals SGBusArrivals, err error) {
 	})
 
 	return
-}
-
-func addContextMiddleware(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		cookie, _ := r.Cookie("visitor")
-		logging := log.WithFields(
-			log.Fields{
-				"id":      r.Header.Get("X-Request-Id"),
-				"country": r.Header.Get("Cloudfront-Viewer-Country"),
-				"ua":      r.UserAgent(),
-			})
-		if cookie != nil {
-			cvisitor := context.WithValue(r.Context(), visitor, cookie.Value)
-			logging = logging.WithField("visitor", cookie.Value)
-			clog := context.WithValue(cvisitor, logger, logging)
-			next.ServeHTTP(w, r.WithContext(clog))
-		} else {
-			visitorID, _ := generateRandomString(24)
-			// log.Infof("Generating vistor id: %s", visitorID)
-			expiration := time.Now().Add(365 * 24 * time.Hour)
-			setCookie := http.Cookie{Name: "visitor", Value: visitorID, Expires: expiration}
-			http.SetCookie(w, &setCookie)
-			cvisitor := context.WithValue(r.Context(), visitor, visitorID)
-			logging = logging.WithField("visitor", visitorID)
-			clog := context.WithValue(cvisitor, logger, logging)
-			next.ServeHTTP(w, r.WithContext(clog))
-		}
-	})
 }
 
 func generateRandomBytes(n int) ([]byte, error) {
@@ -309,10 +220,6 @@ func generateRandomBytes(n int) ([]byte, error) {
 func generateRandomString(s int) (string, error) {
 	b, err := generateRandomBytes(s)
 	return base64.URLEncoding.EncodeToString(b), err
-}
-
-func ms(d time.Duration) int {
-	return int(d / time.Millisecond)
 }
 
 type Point struct {
@@ -334,7 +241,7 @@ type BusStops []BusStop
 func loadBusJSON(jsonfile string) (bs BusStops, err error) {
 	content, err := static.ReadFile("static/all.json")
 	if err != nil {
-		log.Error("failed to read file")
+		slog.Error("failed to read file", err)
 		return
 	}
 	err = json.Unmarshal(content, &bs)
@@ -371,7 +278,6 @@ func (bs BusStops) nameBusStop(busStopID string) (description string) {
 
 func styleBusStop(busStopID string) (style template.CSS) {
 	data := []byte(busStopID)
-	log.Debugf("underline color #%.3x", md5.Sum(data))
 	return template.CSS(fmt.Sprintf("background-color: #%.3x; padding: 0.2em", md5.Sum(data)))
 }
 
@@ -379,4 +285,78 @@ func (p Point) distance(p2 Point) float64 {
 	latd := p2.lat - p.lat
 	lngd := p2.lng - p.lng
 	return latd*latd + lngd*lngd
+}
+
+// from https://raw.githubusercontent.com/go-chi/chi/master/_examples/logging/main.go
+
+func NewStructuredLogger(handler slog.Handler) func(next http.Handler) http.Handler {
+	return middleware.RequestLogger(&StructuredLogger{Logger: handler})
+}
+
+type StructuredLogger struct {
+	Logger slog.Handler
+}
+
+func (l *StructuredLogger) NewLogEntry(r *http.Request) middleware.LogEntry {
+	var logFields []slog.Attr
+
+	if reqID := middleware.GetReqID(r.Context()); reqID != "" {
+		logFields = append(logFields, slog.String("req_id", reqID))
+	}
+
+	handler := l.Logger.WithAttrs(append(logFields,
+		slog.String("method", r.Method),
+		slog.String("ip", r.RemoteAddr),
+		slog.String("path", r.RequestURI)))
+
+	entry := StructuredLoggerEntry{Logger: slog.New(handler)}
+
+	entry.Logger.LogAttrs(slog.LevelInfo, "request")
+
+	return &entry
+}
+
+type StructuredLoggerEntry struct {
+	Logger *slog.Logger
+}
+
+func (l *StructuredLoggerEntry) Write(status, bytes int, header http.Header, elapsed time.Duration, extra interface{}) {
+	l.Logger.LogAttrs(slog.LevelInfo, "response",
+		slog.Int("status", status),
+		slog.Int("size", bytes),
+		slog.Int64("duration", elapsed.Milliseconds()),
+	)
+}
+
+func (l *StructuredLoggerEntry) Panic(v interface{}, stack []byte) {
+	l.Logger.LogAttrs(slog.LevelInfo, "",
+		slog.String("stack", string(stack)),
+		slog.String("panic", fmt.Sprintf("%+v", v)),
+	)
+}
+
+// Helper methods used by the application to get the request-scoped
+// logger entry and set additional fields between handlers.
+//
+// This is a useful pattern to use to set state on the entry as it
+// passes through the handler chain, which at any point can be logged
+// with a call to .Print(), .Info(), etc.
+
+func GetLogEntry(r *http.Request) *slog.Logger {
+	entry := middleware.GetLogEntry(r).(*StructuredLoggerEntry)
+	return entry.Logger
+}
+
+func LogEntrySetField(r *http.Request, key string, value interface{}) {
+	if entry, ok := r.Context().Value(middleware.LogEntryCtxKey).(*StructuredLoggerEntry); ok {
+		entry.Logger = entry.Logger.With(key, value)
+	}
+}
+
+func LogEntrySetFields(r *http.Request, fields map[string]interface{}) {
+	if entry, ok := r.Context().Value(middleware.LogEntryCtxKey).(*StructuredLoggerEntry); ok {
+		for k, v := range fields {
+			entry.Logger = entry.Logger.With(k, v)
+		}
+	}
 }
