@@ -315,7 +315,6 @@ func ms(d time.Duration) int {
 	return int(d / time.Millisecond)
 }
 
-// Point is a geo co-ordinate
 type Point struct {
 	lat float64
 	lng float64
@@ -330,7 +329,6 @@ type BusStop struct {
 	Longitude   float64 `json:"Longitude"`
 }
 
-// BusStops are many bus stops
 type BusStops []BusStop
 
 func loadBusJSON(jsonfile string) (bs BusStops, err error) {
@@ -377,7 +375,6 @@ func styleBusStop(busStopID string) (style template.CSS) {
 	return template.CSS(fmt.Sprintf("background-color: #%.3x; padding: 0.2em", md5.Sum(data)))
 }
 
-// distance calculates the distance between two points
 func (p Point) distance(p2 Point) float64 {
 	latd := p2.lat - p.lat
 	lngd := p2.lng - p.lng

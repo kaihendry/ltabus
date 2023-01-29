@@ -18,17 +18,26 @@ build-MainFunction: static/style.css static/main.js
 validate:
 	aws cloudformation validate-template --template-body file://template.yml
 
-static/style.css: static/app.css
-	npx esbuild --bundle static/app.css --minify --outfile=static/main.css
-
-static/main.js: static/app.js
-	npx esbuild --bundle static/app.js --minify --outfile=static/main.js
-
 destroy:
 	aws cloudformation delete-stack --stack-name $(STACK)
 
 sam-tail-logs:
 	sam logs --stack-name $(STACK) --tail
+
+awsclitail:
+	aws logs tail /aws/lambda/ltabus --follow
+
+static/style.css: static/app.css
+	    npx esbuild --bundle static/app.css --minify --outfile=static/main.css
+
+static/main.js: static/app.js
+	    npx esbuild --bundle static/app.js --minify --outfile=static/main.js
+
+installgin:
+	go install github.com/codegangsta/gin@latest
+
+localdev: installgin static/style.css static/main.js
+	gin
 
 clean:
 	rm -rf main gin-bin static/main.*
