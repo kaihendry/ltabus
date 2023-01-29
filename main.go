@@ -77,15 +77,7 @@ func NewServer(busStopsPath string) (*Server, error) {
 		slog.Error("unable to load bus stops", err)
 	}
 
-	slogJSONHandler := slog.HandlerOptions{
-		// Remove default time slog.Attr, we create our own later
-		ReplaceAttr: func(groups []string, a slog.Attr) slog.Attr {
-			if a.Key == slog.TimeKey {
-				return slog.Attr{}
-			}
-			return a
-		},
-	}.NewJSONHandler(os.Stdout)
+	slogJSONHandler := slog.HandlerOptions{}.NewJSONHandler(os.Stdout)
 
 	srv := Server{
 		router:   chi.NewRouter(),
@@ -307,24 +299,15 @@ type StructuredLogger struct {
 
 func (l *StructuredLogger) NewLogEntry(r *http.Request) middleware.LogEntry {
 	var logFields []slog.Attr
-	logFields = append(logFields, slog.String("ts", time.Now().UTC().Format(time.RFC1123)))
 
 	if reqID := middleware.GetReqID(r.Context()); reqID != "" {
 		logFields = append(logFields, slog.String("req_id", reqID))
 	}
 
-	scheme := "http"
-	if r.TLS != nil {
-		scheme = "https"
-	}
-
 	handler := l.Logger.WithAttrs(append(logFields,
-		slog.String("http_scheme", scheme),
-		slog.String("http_proto", r.Proto),
-		slog.String("http_method", r.Method),
-		slog.String("remote_addr", r.RemoteAddr),
-		slog.String("user_agent", r.UserAgent()),
-		slog.String("uri", fmt.Sprintf("%s://%s%s", scheme, r.Host, r.RequestURI))))
+		slog.String("method", r.Method),
+		slog.String("ip", r.RemoteAddr),
+		slog.String("path", r.RequestURI)))
 
 	entry := StructuredLoggerEntry{Logger: slog.New(handler)}
 
@@ -339,9 +322,9 @@ type StructuredLoggerEntry struct {
 
 func (l *StructuredLoggerEntry) Write(status, bytes int, header http.Header, elapsed time.Duration, extra interface{}) {
 	l.Logger.LogAttrs(slog.LevelInfo, "response",
-		slog.Int("resp_status", status),
-		slog.Int("resp_byte_length", bytes),
-		slog.Float64("resp_elapsed_ms", float64(elapsed.Nanoseconds())/1000000.0),
+		slog.Int("status", status),
+		slog.Int("size", bytes),
+		slog.Int64("duration", elapsed.Milliseconds()),
 	)
 }
 
