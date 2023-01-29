@@ -15,4 +15,5 @@ require (
 	github.com/aws/aws-lambda-go v1.37.0 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/stretchr/testify v1.8.1 // indirect
+	golang.org/x/exp v0.0.0-20230127193734-31bee513bff7 // indirect
 )
