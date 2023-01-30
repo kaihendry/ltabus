@@ -58,6 +58,10 @@ type Server struct {
 }
 
 func main() {
+
+	logger := slog.New(slog.NewJSONHandler(os.Stdout))
+	slog.SetDefault(logger)
+
 	server, err := NewServer("all.json")
 	if err != nil {
 		slog.Error("failed to create server", err)
@@ -77,15 +81,13 @@ func NewServer(busStopsPath string) (*Server, error) {
 		slog.Error("unable to load bus stops", err)
 	}
 
-	slogJSONHandler := slog.HandlerOptions{}.NewJSONHandler(os.Stdout)
-
 	srv := Server{
 		router:   chi.NewRouter(),
 		busStops: bs,
 	}
 
 	srv.router.Use(middleware.RequestID)
-	srv.router.Use(NewStructuredLogger(slogJSONHandler))
+	srv.router.Use(logRequest)
 	srv.router.Use(middleware.Recoverer)
 
 	srv.router.Get("/", srv.handleIndex)
@@ -287,76 +289,23 @@ func (p Point) distance(p2 Point) float64 {
 	return latd*latd + lngd*lngd
 }
 
-// from https://raw.githubusercontent.com/go-chi/chi/master/_examples/logging/main.go
+// Inspired by shttps://github.com/spotlightpa/almanack/blob/master/pkg/almlog/middleware.go
 
-func NewStructuredLogger(handler slog.Handler) func(next http.Handler) http.Handler {
-	return middleware.RequestLogger(&StructuredLogger{Logger: handler})
-}
-
-type StructuredLogger struct {
-	Logger slog.Handler
-}
-
-func (l *StructuredLogger) NewLogEntry(r *http.Request) middleware.LogEntry {
-	var logFields []slog.Attr
-
-	if reqID := middleware.GetReqID(r.Context()); reqID != "" {
-		logFields = append(logFields, slog.String("req_id", reqID))
-	}
-
-	handler := l.Logger.WithAttrs(append(logFields,
-		slog.String("method", r.Method),
-		slog.String("ip", r.RemoteAddr),
-		slog.String("path", r.RequestURI)))
-
-	entry := StructuredLoggerEntry{Logger: slog.New(handler)}
-
-	entry.Logger.LogAttrs(slog.LevelInfo, "request")
-
-	return &entry
-}
-
-type StructuredLoggerEntry struct {
-	Logger *slog.Logger
-}
-
-func (l *StructuredLoggerEntry) Write(status, bytes int, header http.Header, elapsed time.Duration, extra interface{}) {
-	l.Logger.LogAttrs(slog.LevelInfo, "response",
-		slog.Int("status", status),
-		slog.Int("size", bytes),
-		slog.Int64("duration", elapsed.Milliseconds()),
-	)
-}
-
-func (l *StructuredLoggerEntry) Panic(v interface{}, stack []byte) {
-	l.Logger.LogAttrs(slog.LevelInfo, "",
-		slog.String("stack", string(stack)),
-		slog.String("panic", fmt.Sprintf("%+v", v)),
-	)
-}
-
-// Helper methods used by the application to get the request-scoped
-// logger entry and set additional fields between handlers.
-//
-// This is a useful pattern to use to set state on the entry as it
-// passes through the handler chain, which at any point can be logged
-// with a call to .Print(), .Info(), etc.
-
-func GetLogEntry(r *http.Request) *slog.Logger {
-	entry := middleware.GetLogEntry(r).(*StructuredLoggerEntry)
-	return entry.Logger
-}
-
-func LogEntrySetField(r *http.Request, key string, value interface{}) {
-	if entry, ok := r.Context().Value(middleware.LogEntryCtxKey).(*StructuredLoggerEntry); ok {
-		entry.Logger = entry.Logger.With(key, value)
-	}
-}
-
-func LogEntrySetFields(r *http.Request, fields map[string]interface{}) {
-	if entry, ok := r.Context().Value(middleware.LogEntryCtxKey).(*StructuredLoggerEntry); ok {
-		for k, v := range fields {
-			entry.Logger = entry.Logger.With(k, v)
-		}
-	}
+func logRequest(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		start := time.Now()
+		ww := middleware.NewWrapResponseWriter(w, r.ProtoMajor)
+		defer func() {
+			slog.Info("response",
+				"req_method", r.Method,
+				"req_ip", r.RemoteAddr,
+				"req_path", r.RequestURI,
+				"res_status", ww.Status(),
+				"res_size", ww.BytesWritten(),
+				"res_content_type", ww.Header().Get("Content-Type"),
+				"duration", time.Since(start).Milliseconds(),
+			)
+		}()
+		next.ServeHTTP(ww, r)
+	})
 }
