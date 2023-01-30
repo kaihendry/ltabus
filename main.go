@@ -87,6 +87,7 @@ func NewServer(busStopsPath string) (*Server, error) {
 	}
 
 	srv.router.Use(middleware.RequestID)
+	srv.router.Use(uniqueVisitor)
 	srv.router.Use(logRequest)
 	srv.router.Use(middleware.Recoverer)
 
@@ -307,5 +308,26 @@ func logRequest(next http.Handler) http.Handler {
 			)
 		}()
 		next.ServeHTTP(ww, r)
+	})
+}
+
+
+func uniqueVisitor(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		cookie, _ := r.Cookie("visitor")
+		// logging := log.WithFields(
+		// 	log.Fields{
+		// 		"id":      r.Header.Get("X-Request-Id"),
+		// 		"country": r.Header.Get("Cloudfront-Viewer-Country"),
+		// 		"ua":      r.UserAgent(),
+		// 	})
+		if cookie != nil {
+			slog.Info("return visitor", "unique", cookie.Value)
+		} else {
+			setCookie := http.Cookie{Name: "visitor", Value: fmt.Sprint("visitor-", time.Now().UnixMilli()), Expires: time.Now().Add(365 * 24 * time.Hour)}
+			http.SetCookie(w, &setCookie)
+		}
+		next.ServeHTTP(w, r)
+
 	})
 }
