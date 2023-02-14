@@ -22,7 +22,9 @@
 <body>
 
 	<h1><a style="text-decoration: none;" href="/">🚏</a>
+		{{ if .BusStopCode }}
 		<span style="{{ styleBusStop .BusStopCode }}" id="namedBusStop">{{ nameBusStop .BusStopCode }}</span>
+		{{ end }}
 	</h1>
 
 	<form>

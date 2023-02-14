@@ -28,7 +28,7 @@ window.addEventListener(
     var slog = JSON.parse(window.localStorage.getItem("history")) || {};
 
     var busstopcode = document.getElementById("id").value;
-    var busstopname = document.getElementById("namedBusStop").innerHTML;
+    var busstopname = document.getElementById("namedBusStop")?.innerHTML || "";
 
     console.log("DEBUG", busstopcode, busstopname);
 
