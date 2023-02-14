@@ -18,6 +18,7 @@ import (
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
+	"github.com/kaihendry/slogd"
 
 	"github.com/apex/gateway/v2"
 	"golang.org/x/exp/slog"
@@ -58,18 +59,18 @@ type Server struct {
 }
 
 func main() {
-
-	logger := slog.New(slog.NewJSONHandler(os.Stdout))
-	slog.SetDefault(logger)
-
 	server, err := NewServer("all.json")
 	if err != nil {
 		slog.Error("failed to create server", err)
 	}
 
 	if _, ok := os.LookupEnv("AWS_LAMBDA_FUNCTION_NAME"); ok {
+		logger := slog.New(slog.NewJSONHandler(os.Stdout))
+		slog.SetDefault(logger)
 		err = gateway.ListenAndServe("", server.router)
 	} else {
+		logger := slog.New(slog.NewTextHandler(os.Stdout))
+		slog.SetDefault(logger)
 		err = http.ListenAndServe(fmt.Sprintf(":%s", os.Getenv("PORT")), server.router)
 	}
 	slog.Error("error listening", err)
@@ -174,6 +175,8 @@ func busArrivals(stopID string) (arrivals SGBusArrivals, err error) {
 	client := &http.Client{
 		Timeout: 2 * time.Second,
 	}
+
+	defer slogd.New("fetching", "url", url).Stop(&err)
 
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
