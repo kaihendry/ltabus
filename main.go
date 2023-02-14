@@ -103,10 +103,8 @@ func NewServer(busStopsPath string) (*Server, error) {
 	//srv.router.PathPrefix("/static/").Handler(http.StripPrefix("/static/", fileServer))
 	srv.router.Mount("/static", http.StripPrefix("/static", fileServer))
 
-
 	return &srv, nil
 }
-
 
 func (s *Server) handleClosest(w http.ResponseWriter, r *http.Request) {
 	lat, err := strconv.ParseFloat(r.URL.Query().Get("lat"), 32)
@@ -182,7 +180,6 @@ func busArrivals(stopID string) (arrivals SGBusArrivals, err error) {
 		return
 	}
 
-	// get accountkey from env
 	req.Header.Add("AccountKey", os.Getenv("accountkey"))
 
 	res, err := client.Do(req)
@@ -190,7 +187,11 @@ func busArrivals(stopID string) (arrivals SGBusArrivals, err error) {
 		return
 	}
 
-	defer res.Body.Close()
+	defer func() {
+		if err := res.Body.Close(); err != nil {
+			slog.Error("failed to close response body", err)
+		}
+	}()
 
 	if res.StatusCode != http.StatusOK {
 		return arrivals, fmt.Errorf("bad response: %d", res.StatusCode)
@@ -310,7 +311,6 @@ func logRequest(next http.Handler) http.Handler {
 		next.ServeHTTP(ww, r)
 	})
 }
-
 
 func uniqueVisitor(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
