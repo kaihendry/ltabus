@@ -9,7 +9,7 @@ require (
 	github.com/golang/freetype v0.0.0-20170609003504-e2365dfdc4a0
 	github.com/kaihendry/slogd v0.0.0-20230210131720-619cf7cb885d
 	golang.org/x/exp v0.0.0-20230213192124-5e25df0256eb
-	golang.org/x/image v0.4.0
+	golang.org/x/image v0.5.0
 )
 
 require (
