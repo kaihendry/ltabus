@@ -18,7 +18,6 @@ import (
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
-	"github.com/kaihendry/slogd"
 
 	"log/slog"
 
@@ -174,8 +173,6 @@ func busArrivals(stopID string) (arrivals SGBusArrivals, err error) {
 	client := &http.Client{
 		Timeout: 2 * time.Second,
 	}
-
-	defer slogd.New("fetching", "url", url).Stop(&err)
 
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
