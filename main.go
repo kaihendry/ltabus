@@ -20,8 +20,9 @@ import (
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/kaihendry/slogd"
 
+	"log/slog"
+
 	"github.com/apex/gateway/v2"
-	"golang.org/x/exp/slog"
 )
 
 //go:embed static
@@ -65,12 +66,10 @@ func main() {
 	}
 
 	if _, ok := os.LookupEnv("AWS_LAMBDA_FUNCTION_NAME"); ok {
-		logger := slog.New(slog.NewJSONHandler(os.Stdout))
-		slog.SetDefault(logger)
+		slog.SetDefault(slog.New(slog.NewJSONHandler(os.Stdout, nil)))
 		err = gateway.ListenAndServe("", server.router)
 	} else {
-		logger := slog.New(slog.NewTextHandler(os.Stdout))
-		slog.SetDefault(logger)
+		slog.SetDefault(slog.New(slog.NewTextHandler(os.Stdout, nil)))
 		err = http.ListenAndServe(fmt.Sprintf(":%s", os.Getenv("PORT")), server.router)
 	}
 	slog.Error("error listening", err)
