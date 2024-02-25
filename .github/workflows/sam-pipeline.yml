@@ -11,6 +11,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-go@v5
+        with:
+          check-latest: true
       - uses: golangci/golangci-lint-action@v4
       - name: Test
         run: go test -v .
