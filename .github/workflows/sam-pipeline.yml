@@ -13,6 +13,7 @@ jobs:
       - uses: actions/setup-go@v5
         with:
           check-latest: true
+          go-version: 'stable'
       - uses: golangci/golangci-lint-action@v4
       - name: Test
         run: go test -v .
