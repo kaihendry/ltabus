@@ -56,19 +56,41 @@ type Server struct {
 	busStops BusStops
 }
 
+func getLogger(logLevel string) *slog.Logger {
+	levelVar := slog.LevelVar{}
+
+	if logLevel != "" {
+		if err := levelVar.UnmarshalText([]byte(logLevel)); err != nil {
+			panic(fmt.Sprintf("Invalid log level %s: %v", logLevel, err))
+		}
+	}
+	if _, ok := os.LookupEnv("AWS_LAMBDA_FUNCTION_NAME"); ok {
+		return slog.New(slog.NewJSONHandler(os.Stderr, &slog.HandlerOptions{
+			Level: levelVar.Level(),
+		}))
+	}
+
+	return slog.New(slog.NewTextHandler(os.Stderr, &slog.HandlerOptions{
+		Level: levelVar.Level(),
+	}))
+}
+
 func main() {
 	server, err := NewServer("all.json")
 	if err != nil {
 		slog.Error("failed to create server", err)
 	}
 
+	slog.SetDefault(getLogger(os.Getenv("LOGLEVEL")))
+
 	if _, ok := os.LookupEnv("AWS_LAMBDA_FUNCTION_NAME"); ok {
-		slog.SetDefault(slog.New(slog.NewJSONHandler(os.Stdout, nil)))
+		slog.Info("starting server", "version", os.Getenv("VERSION"))
 		err = gateway.ListenAndServe("", server.router)
 	} else {
-		slog.SetDefault(slog.New(slog.NewTextHandler(os.Stdout, nil)))
+		slog.Info("starting local server", "version", os.Getenv("VERSION"), "port", os.Getenv("PORT"))
 		err = http.ListenAndServe(fmt.Sprintf(":%s", os.Getenv("PORT")), server.router)
 	}
+
 	slog.Error("error listening", err)
 }
 
@@ -275,12 +297,18 @@ func (p Point) distance(p2 Point) float64 {
 }
 
 // Inspired by shttps://github.com/spotlightpa/almanack/blob/master/pkg/almlog/middleware.go
-
 func logRequest(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		start := time.Now()
 		ww := middleware.NewWrapResponseWriter(w, r.ProtoMajor)
 		defer func() {
+			// Log response headers here
+			for name, values := range ww.Header() {
+				for _, value := range values {
+					slog.Debug("response header", "name", name, "value", value)
+				}
+			}
+
 			slog.Info("response",
 				"req_method", r.Method,
 				"req_ip", r.RemoteAddr,
