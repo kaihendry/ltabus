@@ -2,9 +2,7 @@ package main
 
 import (
 	"crypto/md5"
-	"crypto/rand"
 	"embed"
-	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"html/template"
@@ -153,7 +151,7 @@ func (s *Server) handleIndex(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	w.Header().Set("X-Version", os.Getenv("version"))
+	w.Header().Set("X-Version", os.Getenv("VERSION"))
 
 	err = t.ExecuteTemplate(w, "index.html", arriving)
 	if err != nil {
@@ -179,7 +177,7 @@ func busArrivals(stopID string) (arrivals SGBusArrivals, err error) {
 		return
 	}
 
-	req.Header.Add("AccountKey", os.Getenv("accountkey"))
+	req.Header.Add("AccountKey", os.Getenv("ACCOUNTKEY"))
 
 	res, err := client.Do(req)
 	if err != nil {
@@ -209,20 +207,6 @@ func busArrivals(stopID string) (arrivals SGBusArrivals, err error) {
 	})
 
 	return
-}
-
-func generateRandomBytes(n int) ([]byte, error) {
-	b := make([]byte, n)
-	_, err := rand.Read(b)
-	if err != nil {
-		return nil, err
-	}
-	return b, nil
-}
-
-func generateRandomString(s int) (string, error) {
-	b, err := generateRandomBytes(s)
-	return base64.URLEncoding.EncodeToString(b), err
 }
 
 type Point struct {

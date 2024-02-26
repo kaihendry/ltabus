@@ -69,8 +69,8 @@ Resources:
             Method: ANY
       Environment:
         Variables:
-          accountkey: "{{resolve:ssm:/ltabus/accountkey:1}}"
-          version: !Ref Version
+          ACCOUNTKEY: "{{resolve:ssm:/ltabus/accountkey:1}}"
+          VERSION: !Ref Version
     Metadata:
       BuildMethod: makefile
 
