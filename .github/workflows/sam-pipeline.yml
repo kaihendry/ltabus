@@ -28,6 +28,7 @@ jobs:
         run: ./allthebusstops.sh
         env:
           ACCOUNTKEY: ${{ secrets.ACCOUNTKEY }}
+      - run: git status
       - run: make deploy
       - name: Get the lines of code.
         id: scc
