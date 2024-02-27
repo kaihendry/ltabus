@@ -71,7 +71,6 @@ Resources:
         Variables:
           ACCOUNTKEY: "{{resolve:ssm:/ltabus/accountkey:1}}"
           VERSION: !Ref Version
-          LOGLEVEL: "debug"
     Metadata:
       BuildMethod: makefile
 
