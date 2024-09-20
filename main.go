@@ -78,7 +78,7 @@ func getLogger(logLevel string) *slog.Logger {
 func main() {
 	server, err := NewServer("all.json")
 	if err != nil {
-		slog.Error("failed to create server", err)
+		slog.Error("failed to create server", "error", err)
 	}
 
 	slog.SetDefault(getLogger(os.Getenv("LOGLEVEL")))
@@ -91,13 +91,13 @@ func main() {
 		err = http.ListenAndServe(fmt.Sprintf(":%s", os.Getenv("PORT")), server.router)
 	}
 
-	slog.Error("error listening", err)
+	slog.Error("error listening", "error", err)
 }
 
 func NewServer(busStopsPath string) (*Server, error) {
 	bs, err := loadBusJSON(busStopsPath)
 	if err != nil {
-		slog.Error("unable to load bus stops", err)
+		slog.Error("unable to load bus stops", "error", err)
 	}
 
 	srv := Server{
@@ -116,7 +116,7 @@ func NewServer(busStopsPath string) (*Server, error) {
 
 	directory, err := fs.Sub(static, "static")
 	if err != nil {
-		slog.Error("unable to load static files", err)
+		slog.Error("unable to load static files", "error", err)
 	}
 	fileServer := http.FileServer(http.FS(directory))
 	//srv.router.PathPrefix("/static/").Handler(http.StripPrefix("/static/", fileServer))
@@ -156,7 +156,7 @@ func (s *Server) handleIndex(w http.ResponseWriter, r *http.Request) {
 
 	t, err := template.New("").Funcs(funcs).ParseFS(static, "static/index.html")
 	if err != nil {
-		slog.Error("template failed to parse", err)
+		slog.Error("template failed to parse", "error", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -167,7 +167,7 @@ func (s *Server) handleIndex(w http.ResponseWriter, r *http.Request) {
 	if id != "" {
 		arriving, err = busArrivals(id)
 		if err != nil {
-			slog.Error("failed to retrieve bus timings", err)
+			slog.Error("failed to retrieve bus timings", "error", err)
 			http.Error(w, fmt.Sprintf("datamall API is returning, %s", err.Error()), http.StatusFailedDependency)
 			return
 		}
@@ -177,7 +177,7 @@ func (s *Server) handleIndex(w http.ResponseWriter, r *http.Request) {
 
 	err = t.ExecuteTemplate(w, "index.html", arriving)
 	if err != nil {
-		slog.Error("template failed to parse", err)
+		slog.Error("template failed to parse", "error", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -208,7 +208,7 @@ func busArrivals(stopID string) (arrivals SGBusArrivals, err error) {
 
 	defer func() {
 		if err := res.Body.Close(); err != nil {
-			slog.Error("failed to close response body", err)
+			slog.Error("failed to close response body", "error", err)
 		}
 	}()
 
@@ -219,7 +219,7 @@ func busArrivals(stopID string) (arrivals SGBusArrivals, err error) {
 	decoder := json.NewDecoder(res.Body)
 	err = decoder.Decode(&arrivals)
 	if err != nil {
-		slog.Error("failed to decode response", err)
+		slog.Error("failed to decode response", "error", err)
 		return
 	}
 
@@ -248,9 +248,9 @@ type BusStop struct {
 type BusStops []BusStop
 
 func loadBusJSON(jsonfile string) (bs BusStops, err error) {
-	content, err := static.ReadFile("static/all.json")
+	content, err := static.ReadFile(jsonfile)
 	if err != nil {
-		slog.Error("failed to read file", err)
+		slog.Error("failed to read file", "error", err)
 		return
 	}
 	err = json.Unmarshal(content, &bs)
