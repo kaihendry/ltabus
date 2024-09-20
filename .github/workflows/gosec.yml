@@ -16,3 +16,5 @@ jobs:
         uses: securego/gosec@master
         with:
           args: -exclude=G401,G501,G114 ./...
+      - id: govulncheck
+        uses: golang/govulncheck-action@v1
