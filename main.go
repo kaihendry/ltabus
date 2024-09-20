@@ -296,7 +296,6 @@ func (p Point) distance(p2 Point) float64 {
 	return latd*latd + lngd*lngd
 }
 
-// Inspired by shttps://github.com/spotlightpa/almanack/blob/master/pkg/almlog/middleware.go
 func logRequest(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		start := time.Now()

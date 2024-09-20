@@ -1,11 +1,11 @@
-name: Run Gosec
+name: Run security checks
 on:
   push:
     branches:
-      - master
+      - main
   pull_request:
     branches:
-      - master
+      - main
 jobs:
   tests:
     runs-on: ubuntu-latest

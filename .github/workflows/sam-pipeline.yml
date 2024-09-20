@@ -1,7 +1,7 @@
 on:
   workflow_dispatch:
   push:
-    branches: [master]
+    branches: [main]
 permissions:
   id-token: write
   contents: read
@@ -15,8 +15,7 @@ jobs:
           check-latest: true
           go-version: 'stable'
       - uses: golangci/golangci-lint-action@v4
-      - name: Test
-        run: go test -v .
+      - run: go test -v .
       - uses: aws-actions/setup-sam@v2
         with:
           use-installer: true
@@ -30,12 +29,3 @@ jobs:
           ACCOUNTKEY: ${{ secrets.ACCOUNTKEY }}
       - run: git status
       - run: make deploy
-      - name: Get the lines of code.
-        id: scc
-        uses: Adapt-API/scc-docker-action@master
-        with:
-          args: ${{ env.workspace }} -i js,go,html,css
-      - name: Echo scc output
-        run: |
-          echo
-          echo -n "${{ steps.scc.outputs.scc }}"
