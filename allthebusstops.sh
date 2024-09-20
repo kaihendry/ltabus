@@ -19,9 +19,9 @@ while :; do
 done
 
 jq . ./*.json | jq -s . >"$pwd/all.json"
-busstopcount=$(jq 'length' "$pwd/all.json")
-echo "Bus stop count: $busstopcount"
+newBusCount=$(jq 'length' "$pwd/all.json")
+echo "Bus stop count: $newBusCount"
 
 mv $pwd/all.json $pwd/static/
 
-sed -i "s,{{ totalStops }},$busstopcount," "$pwd/static/index.html"
+sed -i -E "s/(are )\S+ bus/\1bus $newBusCount/" $pwd/static/index.html
