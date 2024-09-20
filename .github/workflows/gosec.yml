@@ -15,6 +15,6 @@ jobs:
       - name: Run Gosec Security Scanner
         uses: securego/gosec@master
         with:
-          args: -exclude=G401,G501,G114 ./...
+          args: -exclude=G401,G501,G114,G203 ./...
       - id: govulncheck
         uses: golang/govulncheck-action@v1

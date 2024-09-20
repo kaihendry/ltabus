@@ -76,7 +76,7 @@ func getLogger(logLevel string) *slog.Logger {
 }
 
 func main() {
-	server, err := NewServer("all.json")
+	server, err := NewServer("static/all.json")
 	if err != nil {
 		slog.Error("failed to create server", "error", err)
 	}
