@@ -12,7 +12,7 @@ import (
 var stop BusStop
 
 func Benchmark_closest(b *testing.B) {
-	bs, _ := loadBusJSON("all.json")
+	bs, _ := loadBusJSON("static/all.json")
 	b.ResetTimer()
 	for n := 0; n < b.N; n++ {
 		stop = bs.closest(Point{}) // ensure the compiler returns a value
@@ -20,7 +20,7 @@ func Benchmark_closest(b *testing.B) {
 }
 
 func TestBusStops_closest(t *testing.T) {
-	bs, _ := loadBusJSON("all.json")
+	bs, _ := loadBusJSON("static/all.json")
 	type args struct {
 		location Point
 	}
@@ -59,7 +59,7 @@ func TestBusStops_closest(t *testing.T) {
 }
 
 func TestBusStops_nameBusStopID(t *testing.T) {
-	bs, _ := loadBusJSON("all.json")
+	bs, _ := loadBusJSON("static/all.json")
 	type args struct {
 		busid string
 	}
