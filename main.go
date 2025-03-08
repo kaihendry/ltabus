@@ -7,17 +7,13 @@ import (
 	"fmt"
 	"html/template"
 	"io/fs"
+	"log/slog"
 	"math"
 	"net/http"
 	"os"
 	"sort"
 	"strconv"
 	"time"
-
-	"github.com/go-chi/chi/v5"
-	"github.com/go-chi/chi/v5/middleware"
-
-	"log/slog"
 
 	"github.com/apex/gateway/v2"
 )
@@ -52,8 +48,40 @@ type SGBusArrivals struct {
 }
 
 type Server struct {
-	router   *chi.Mux
+	mux      *http.ServeMux
 	busStops BusStops
+}
+
+type responseWriter struct {
+	http.ResponseWriter
+	status      int
+	wroteHeader bool
+	bytes       int
+}
+
+func (rw *responseWriter) WriteHeader(code int) {
+	if !rw.wroteHeader {
+		rw.status = code
+		rw.wroteHeader = true
+		rw.ResponseWriter.WriteHeader(code)
+	}
+}
+
+func (rw *responseWriter) Write(b []byte) (int, error) {
+	if !rw.wroteHeader {
+		rw.WriteHeader(http.StatusOK)
+	}
+	n, err := rw.ResponseWriter.Write(b)
+	rw.bytes += n
+	return n, err
+}
+
+func (rw *responseWriter) Status() int {
+	return rw.status
+}
+
+func (rw *responseWriter) BytesWritten() int {
+	return rw.bytes
 }
 
 func getLogger(logLevel string) *slog.Logger {
@@ -83,12 +111,14 @@ func main() {
 
 	slog.SetDefault(getLogger(os.Getenv("LOGLEVEL")))
 
+	handler := server.middlewareChain(server.mux)
+
 	if _, ok := os.LookupEnv("AWS_LAMBDA_FUNCTION_NAME"); ok {
 		slog.Info("starting server", "version", os.Getenv("VERSION"))
-		err = gateway.ListenAndServe("", server.router)
+		err = gateway.ListenAndServe("", handler)
 	} else {
 		slog.Info("starting local server", "version", os.Getenv("VERSION"), "port", os.Getenv("PORT"))
-		err = http.ListenAndServe(fmt.Sprintf(":%s", os.Getenv("PORT")), server.router)
+		err = http.ListenAndServe(fmt.Sprintf(":%s", os.Getenv("PORT")), handler)
 	}
 
 	slog.Error("error listening", "error", err)
@@ -101,28 +131,43 @@ func NewServer(busStopsPath string) (*Server, error) {
 	}
 
 	srv := Server{
-		router:   chi.NewRouter(),
+		mux:      http.NewServeMux(),
 		busStops: bs,
 	}
 
-	srv.router.Use(middleware.RequestID)
-	srv.router.Use(uniqueVisitor)
-	srv.router.Use(logRequest)
-	srv.router.Use(middleware.Recoverer)
+	srv.routes()
 
-	srv.router.Get("/", srv.handleIndex)
-	srv.router.Get("/closest", srv.handleClosest)
-	srv.router.Get("/icon", handleIcon)
+	return &srv, nil
+}
+
+func (s *Server) routes() {
+	s.mux.HandleFunc("/", s.handleIndex)
+	s.mux.HandleFunc("/closest", s.handleClosest)
+	s.mux.HandleFunc("/icon", handleIcon)
 
 	directory, err := fs.Sub(static, "static")
 	if err != nil {
 		slog.Error("unable to load static files", "error", err)
+		return
 	}
 	fileServer := http.FileServer(http.FS(directory))
-	//srv.router.PathPrefix("/static/").Handler(http.StripPrefix("/static/", fileServer))
-	srv.router.Mount("/static", http.StripPrefix("/static", fileServer))
+	s.mux.Handle("/static/", http.StripPrefix("/static/", fileServer))
+}
 
-	return &srv, nil
+func (s *Server) middlewareChain(handler http.Handler) http.Handler {
+	return logRequest(uniqueVisitor(recoverPanic(handler)))
+}
+
+func recoverPanic(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		defer func() {
+			if err := recover(); err != nil {
+				slog.Error("recovered from panic", "error", err)
+				http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+			}
+		}()
+		next.ServeHTTP(w, r)
+	})
 }
 
 func (s *Server) handleClosest(w http.ResponseWriter, r *http.Request) {
@@ -299,10 +344,14 @@ func (p Point) distance(p2 Point) float64 {
 func logRequest(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		start := time.Now()
-		ww := middleware.NewWrapResponseWriter(w, r.ProtoMajor)
+		rw := &responseWriter{
+			ResponseWriter: w,
+			status:         http.StatusOK,
+		}
+
 		defer func() {
-			// Log response headers here
-			for name, values := range ww.Header() {
+			// Log response headers
+			for name, values := range rw.Header() {
 				for _, value := range values {
 					slog.Debug("response header", "name", name, "value", value)
 				}
@@ -312,13 +361,13 @@ func logRequest(next http.Handler) http.Handler {
 				"req_method", r.Method,
 				"req_ip", r.RemoteAddr,
 				"req_path", r.RequestURI,
-				"res_status", ww.Status(),
-				"res_size", ww.BytesWritten(),
-				"res_content_type", ww.Header().Get("Content-Type"),
+				"res_status", rw.Status(),
+				"res_size", rw.BytesWritten(),
+				"res_content_type", rw.Header().Get("Content-Type"),
 				"duration", time.Since(start).Milliseconds(),
 			)
 		}()
-		next.ServeHTTP(ww, r)
+		next.ServeHTTP(rw, r)
 	})
 }
 
