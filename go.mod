@@ -1,13 +1,13 @@
 module github.com/kaihendry/ltabus
 
-go 1.23
+go 1.24
 
 require (
 	github.com/apex/gateway/v2 v2.0.0
 	github.com/fogleman/gg v1.3.0
-	github.com/go-chi/chi/v5 v5.2.0
+	github.com/go-chi/chi/v5 v5.2.1
 	github.com/golang/freetype v0.0.0-20170609003504-e2365dfdc4a0
-	golang.org/x/image v0.23.0
+	golang.org/x/image v0.25.0
 )
 
 require (
