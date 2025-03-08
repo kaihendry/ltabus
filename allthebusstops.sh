@@ -1,7 +1,5 @@
 #!/bin/bash
 
-test -f .env && source .env
-
 if ! test "$ACCOUNTKEY"; then
 	echo env \"ACCOUNTKEY\" is unset
 	exit
@@ -12,7 +10,7 @@ cd "$(mktemp -d)" || exit
 
 count=0
 while :; do
-	curl -s -f -X GET http://datamall2.mytransport.sg/ltaodataservice/BusStops?\$skip=$count -H "accountkey: $ACCOUNTKEY" |
+	curl -s -f -X GET https://datamall2.mytransport.sg/ltaodataservice/BusStops?\$skip=$count -H "accountkey: $ACCOUNTKEY" |
 		jq .value[] >$count.json
 	test -s "$count.json" || break
 	count=$((count + 500))
@@ -24,4 +22,8 @@ echo "Bus stop count: $newBusCount"
 
 mv $pwd/all.json $pwd/static/
 
-sed -i -E "s/(are )\S+ bus/\1bus $newBusCount/" $pwd/static/index.html
+if hash gsed 2>/dev/null; then
+	gsed -i -E "s/(are )\S+ bus/\1bus $newBusCount/" $pwd/static/index.html
+else
+	sed -i -E "s/(are )\S+ bus/\1bus $newBusCount/" $pwd/static/index.html
+fi

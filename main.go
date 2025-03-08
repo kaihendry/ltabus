@@ -188,7 +188,7 @@ func busArrivals(stopID string) (arrivals SGBusArrivals, err error) {
 		return arrivals, fmt.Errorf("invalid stop ID")
 	}
 
-	url := fmt.Sprintf("http://datamall2.mytransport.sg/ltaodataservice/BusArrivalv2?BusStopCode=%s", stopID)
+	url := fmt.Sprintf("https://datamall2.mytransport.sg/ltaodataservice/v3/BusArrival?BusStopCode=%s", stopID)
 
 	client := &http.Client{
 		Timeout: 2 * time.Second,
