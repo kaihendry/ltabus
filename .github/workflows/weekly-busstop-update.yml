@@ -1,0 +1,28 @@
+name: Weekly Bus Stop Update
+
+on:
+  schedule:
+    - cron: '0 0 * * 0'  # Runs at 00:00 every Sunday
+  workflow_dispatch:      # Also allows manual triggering
+
+permissions:
+  contents: write        # Needed for pushing changes
+  id-token: write
+
+jobs:
+  update-stops:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: true
+      - name: Update bus stops
+        run: ./allthebusstops.sh
+        env:
+          ACCOUNTKEY: ${{ secrets.ACCOUNTKEY }}
+      - name: Commit and push if changes exist
+        run: |
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
+          git add static/all.json
+          git diff --staged --quiet || (git commit -m "Weekly bus stop update" && git push) 

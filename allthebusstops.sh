@@ -21,9 +21,3 @@ newBusCount=$(jq 'length' "$pwd/all.json")
 echo "Bus stop count: $newBusCount"
 
 mv $pwd/all.json $pwd/static/
-
-if hash gsed 2>/dev/null; then
-	gsed -i -E "s/(are )\S+ bus/\1bus $newBusCount/" $pwd/static/index.html
-else
-	sed -i -E "s/(are )\S+ bus/\1bus $newBusCount/" $pwd/static/index.html
-fi
