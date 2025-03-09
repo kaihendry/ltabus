@@ -77,6 +77,6 @@ Resources:
 Outputs:
   GatewayEndPoint:
     Value: !Sub "https://${Gateway}.execute-api.${AWS::Region}.amazonaws.com/"
-  ApiGatewayDomainName:
-    Description: "API Gateway Domain Name"
-    Value: !GetAtt Gateway.DomainName
+  #ApiGatewayDomainName:
+  #  Description: "API Gateway Domain Name for CNAME configuration"
+  #  Value: !GetAtt Gateway.ApiEndpoint
