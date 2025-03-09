@@ -33,4 +33,4 @@ jobs:
       - run: git status
       - run: make deploy
       - run: curl -is https://bus.dabase.com/?id=25269 | grep -i x-version
-
+      - run: 'echo github-sha1: ${{ github.sha }}'
