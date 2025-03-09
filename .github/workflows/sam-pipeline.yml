@@ -13,9 +13,6 @@ jobs:
         with:
           lfs: true
       - uses: actions/setup-go@v5
-        with:
-          check-latest: true
-          go-version: 'stable'
       - uses: golangci/golangci-lint-action@v6
       - uses: golang/govulncheck-action@v1
       - run: go test -v .
@@ -30,7 +27,11 @@ jobs:
         run: ./allthebusstops.sh
         env:
           ACCOUNTKEY: ${{ secrets.ACCOUNTKEY }}
-      - run: git status
       - run: make deploy
-      - run: curl -is https://bus.dabase.com/?id=25269 | grep -i x-version
-      - run: 'echo github-sha1: ${{ github.sha }}'
+      - name: Check deployed version
+        run: curl -is https://bus.dabase.com/?id=25269 | grep -i x-version | grep ${GITHUB_SHA::7}
+      - name: Audit URLs using Lighthouse
+        uses: treosh/lighthouse-ci-action@v12
+        with:
+          urls: |
+            https://bus.dabase.com/?id=25269
