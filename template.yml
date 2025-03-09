@@ -21,7 +21,7 @@ Resources:
     Type: AWS::Logs::MetricFilter
     Properties:
       LogGroupName: !Join ["/", ["/aws", "lambda", !Ref MainFunction]]
-      FilterPattern: '{$.level = "error"}'
+      FilterPattern: '{$.level = "ERROR"}'
       MetricTransformations:
         - MetricValue: "1"
           MetricNamespace: !Sub ${AWS::StackName}
