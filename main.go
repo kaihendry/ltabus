@@ -212,7 +212,7 @@ func (s *Server) handleIndex(w http.ResponseWriter, r *http.Request) {
 	if id != "" {
 		arriving, err = busArrivals(id)
 		if err != nil {
-			slog.Error("failed to retrieve bus timings", "error", err)
+			slog.Warn("failed to retrieve bus timings", "error", err)
 			http.Error(w, fmt.Sprintf("datamall API is returning, %s", err.Error()), http.StatusFailedDependency)
 			return
 		}
