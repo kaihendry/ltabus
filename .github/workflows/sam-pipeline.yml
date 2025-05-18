@@ -13,7 +13,7 @@ jobs:
         with:
           lfs: true
       - uses: actions/setup-go@v5
-      - uses: golangci/golangci-lint-action@v7
+      - uses: golangci/golangci-lint-action@v8
       - uses: golang/govulncheck-action@v1
       - run: go test -v .
       - uses: aws-actions/setup-sam@v2
