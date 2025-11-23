@@ -13,15 +13,18 @@ jobs:
   update-stops:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v5
         with:
           lfs: true
-      - run: jq 'length' static/all.json
+      - name: Check current bus stop count
+        run: jq 'length' static/all.json
       - name: Update bus stops
         run: ./allthebusstops.sh
         env:
           ACCOUNTKEY: ${{ secrets.ACCOUNTKEY }}
-      - run: jq 'length' static/all.json
+      - name: Check updated bus stop count
+        run: jq 'length' static/all.json
       - name: Commit and push if changes exist
         run: |
           git config --global user.email "github-actions[bot]@users.noreply.github.com"

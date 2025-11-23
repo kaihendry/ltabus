@@ -1,35 +1,98 @@
+name: Build and Deploy SAM Application
+
 on:
   workflow_dispatch:
   push:
     branches: [main]
+
+# Cancel in-progress runs for the same branch
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 permissions:
   id-token: write
   contents: read
+
 jobs:
-  build-deploy:
+  lint:
+    name: Lint
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v5
         with:
           lfs: true
-      - uses: actions/setup-go@v5
-      - uses: golangci/golangci-lint-action@v8
-      - uses: golang/govulncheck-action@v1
-      - run: go test -v .
-      - uses: aws-actions/setup-sam@v2
+
+      - name: Set up Go
+        uses: actions/setup-go@v6
+        with:
+          go-version-file: 'go.mod'
+          cache: true
+
+      - name: Run golangci-lint
+        uses: golangci/golangci-lint-action@v9
+        with:
+          version: latest
+
+      - name: Run vulnerability check
+        uses: golang/govulncheck-action@v1
+
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          lfs: true
+
+      - name: Set up Go
+        uses: actions/setup-go@v6
+        with:
+          go-version-file: 'go.mod'
+          cache: true
+
+      - name: Run tests
+        run: go test -v ./...
+
+  deploy:
+    name: Deploy
+    needs: [lint, test]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          lfs: true
+
+      - name: Set up Go
+        uses: actions/setup-go@v6
+        with:
+          go-version-file: 'go.mod'
+          cache: true
+
+      - name: Set up SAM CLI
+        uses: aws-actions/setup-sam@v2
         with:
           use-installer: true
-      - uses: aws-actions/configure-aws-credentials@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: arn:aws:iam::407461997746:role/github-actions-Role-56IHHM969DKJ
           aws-region: ap-southeast-1
-      - run: make deploy
+
+      - name: Deploy to AWS
+        run: make deploy
+
       - name: Check deployed version
         run: curl -is https://bus.dabase.com/?id=25269 | grep -i x-version | grep ${GITHUB_SHA::7}
+
       - name: Audit URLs using Lighthouse
         uses: treosh/lighthouse-ci-action@v12
         with:
           urls: |
             https://bus.dabase.com/?id=25269
-          uploadArtifacts: true # save results as an action artifacts
-          temporaryPublicStorage: true # upload lighthouse report to the temporary storage
+          uploadArtifacts: true
+          temporaryPublicStorage: true
