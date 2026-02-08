@@ -44,6 +44,16 @@ ol {
   padding: 5px;
   width: 3em;
 }
+.buses time.load-standing {
+  text-decoration: underline;
+  text-decoration-color: #e6a817;
+  text-underline-offset: 3px;
+}
+.buses time.load-full {
+  text-decoration: underline;
+  text-decoration-color: #dc3545;
+  text-underline-offset: 3px;
+}
 
 #stations li {
   white-space: nowrap;

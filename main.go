@@ -151,7 +151,10 @@ func (s *Server) routes() {
 		return
 	}
 	fileServer := http.FileServer(http.FS(directory))
-	s.mux.Handle("/static/", http.StripPrefix("/static/", fileServer))
+	s.mux.Handle("/static/", http.StripPrefix("/static/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Cache-Control", "public, max-age=86400")
+		fileServer.ServeHTTP(w, r)
+	})))
 }
 
 func (s *Server) middlewareChain(handler http.Handler) http.Handler {
@@ -194,6 +197,7 @@ func (s *Server) handleIndex(w http.ResponseWriter, r *http.Request) {
 		"nameBusStop":  func(id string) string { return s.busStops.nameBusStop(id) },
 		"styleBusStop": func(id string) template.CSS { return styleBusStop(id) },
 		"getEnv":       os.Getenv,
+		"loadClass": loadClass,
 	}
 
 	// set html content type
@@ -333,6 +337,19 @@ func (bs BusStops) nameBusStop(busStopID string) (description string) {
 func styleBusStop(busStopID string) (style template.CSS) {
 	data := []byte(busStopID)
 	return template.CSS(fmt.Sprintf("background-color: #%.3x; padding: 0.2em", md5.Sum(data)))
+}
+
+func loadClass(load string) string {
+	switch load {
+	case "SEA":
+		return "load-seats"
+	case "SDA":
+		return "load-standing"
+	case "LSD":
+		return "load-full"
+	default:
+		return ""
+	}
 }
 
 func (p Point) distance(p2 Point) float64 {

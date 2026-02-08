@@ -5,17 +5,26 @@
 	<meta charset=utf-8>
 	<meta name=viewport content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="/static/main.css">
+	<link rel="manifest" href="/static/manifest.json">
 	<script src="/static/main.js"></script>
 	{{ if .BusStopCode }}
+	<meta http-equiv="refresh" content="20">
 	<title>Singapore bus arrival times for stop {{ .BusStopCode }}</title>
 	<meta name="apple-mobile-web-app-title" content="{{ nameBusStop .BusStopCode }}">
 	<link rel='icon' href='/icon?stop={{ .BusStopCode }}'>
 	<link rel="apple-touch-icon" sizes="200x200" href="/icon?stop={{ .BusStopCode }}">
 	<meta name="description" content="Bus arrival times for {{ .BusStopCode }} {{ nameBusStop .BusStopCode }}" />
+	<meta property="og:title" content="Bus {{ .BusStopCode }} {{ nameBusStop .BusStopCode }}" />
+	<meta property="og:description" content="Live bus arrival times for stop {{ .BusStopCode }}" />
+	<meta property="og:url" content="https://bus.dabase.com/?id={{ .BusStopCode }}" />
+	<meta property="og:image" content="https://bus.dabase.com/icon?stop={{ .BusStopCode }}" />
 	{{ else }}
 	<title>Singapore bus arrival times 🇸🇬</title>
 	<link rel="icon" href="data:;base64,iVBORw0KGgo=">
 	<meta name="description" content="Bus arrival times based on your current location" />
+	<meta property="og:title" content="Singapore bus arrival times" />
+	<meta property="og:description" content="Live bus arrival times based on your current location" />
+	<meta property="og:url" content="https://bus.dabase.com/" />
 	{{ end }}
 </head>
 
@@ -41,18 +50,20 @@
 				<a href='https://busrouter.sg/#/services/{{ .ServiceNo }}'>{{ .ServiceNo }}</a>
 			</strong>
 
-			{{ if .NextBus.EstimatedArrival }}<time dateTime="{{ .NextBus.EstimatedArrival }}">{{
+			{{ if .NextBus.EstimatedArrival }}<time class="{{ loadClass .NextBus.Load }}" dateTime="{{ .NextBus.EstimatedArrival }}">{{
 				.NextBus.EstimatedArrival }}</time>{{ end }}
-			{{ if .NextBus2.EstimatedArrival }}<time dateTime="{{ .NextBus2.EstimatedArrival }}">{{
+			{{ if .NextBus2.EstimatedArrival }}<time class="{{ loadClass .NextBus2.Load }}" dateTime="{{ .NextBus2.EstimatedArrival }}">{{
 				.NextBus2.EstimatedArrival }}</time>{{ end }}
-			{{ if .NextBus3.EstimatedArrival }}<time dateTime="{{ .NextBus3.EstimatedArrival }}">{{
+			{{ if .NextBus3.EstimatedArrival }}<time class="{{ loadClass .NextBus3.Load }}" dateTime="{{ .NextBus3.EstimatedArrival }}">{{
 				.NextBus3.EstimatedArrival }}</time>{{ end }}
 
 		</li>
 		{{ end }}
 	</ul>
 
+	{{ if not .BusStopCode }}
 	<p>Hint: Tap <a style="text-decoration: none;" href="/">🚏</a> to find closest bus stop</p>
+	{{ end }}
 
 	<h4>Last updated: <span id=lastupdated></span></h4>
 
@@ -62,7 +73,7 @@
 		<ul>
 			<li><a href=https://github.com/kaihendry/ltabus>Source code</a></li>
 			<li><a href="mailto:hendry+bus@iki.fi">Please email feedback</a></li>
-			<li><a href=https://railrouter.sg />Train map</a></li>
+			<li><a href=https://railrouter.sg>Train map</a></li>
 			<li>There are {{ totalStops }} bus stops in Singapore</li>
 		</ul>
 	</footer>
@@ -74,7 +85,7 @@
 	<script>
 		let shareData = {
 			title: '🇸🇬 Bus arrival times',
-			text: 'Bus arrrivals times, hit 🚏 to find closest bus stop',
+			text: 'Bus arrivals times, hit 🚏 to find closest bus stop',
 			url: 'https://bus.dabase.com',
 		}
 
@@ -84,7 +95,7 @@
 		btn.addEventListener('click', () => {
 			navigator.share(shareData)
 				.then(() =>
-					resultPara.textContent = 'Sshared successfully'
+					resultPara.textContent = 'Shared successfully'
 				)
 				.catch((e) =>
 					resultPara.textContent = 'Error: ' + e

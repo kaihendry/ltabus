@@ -1,6 +1,6 @@
 module github.com/kaihendry/ltabus
 
-go 1.24.0
+go 1.25
 
 require (
 	github.com/apex/gateway/v2 v2.0.0
@@ -10,7 +10,7 @@ require (
 )
 
 require (
-	github.com/aws/aws-lambda-go v1.47.0 // indirect
+	github.com/aws/aws-lambda-go v1.52.0 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/stretchr/testify v1.8.1 // indirect
 )
