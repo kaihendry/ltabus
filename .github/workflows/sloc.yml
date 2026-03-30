@@ -31,7 +31,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: Setup Pages
-        uses: actions/configure-pages@v5
+        uses: actions/configure-pages@v6
       - name: Generate SLOC chart
         uses: kaihendry/lesshero@v0.1.4
       - name: Prepare site
