@@ -69,7 +69,7 @@ jobs:
           cache: true
 
       - name: Set up SAM CLI
-        uses: aws-actions/setup-sam@v2
+        uses: aws-actions/setup-sam@v3
         with:
           use-installer: true
 
