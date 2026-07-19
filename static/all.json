@@ -6727,6 +6727,20 @@
     "Longitude": 103.7009747
   },
   {
+    "BusStopCode": "27381",
+    "RoadName": "Jurong West St 75",
+    "Description": "Blk 749",
+    "Latitude": 1.348143,
+    "Longitude": 103.698209
+  },
+  {
+    "BusStopCode": "27389",
+    "RoadName": "Jurong West St 75",
+    "Description": "Gek Poh Shop Ctr",
+    "Latitude": 1.34845180903204,
+    "Longitude": 103.69810437813979
+  },
+  {
     "BusStopCode": "27391",
     "RoadName": "Jurong West St 82",
     "Description": "Blk 857",
@@ -11744,13 +11758,6 @@
     "Description": "Opp West Spring Sec Sch",
     "Latitude": 1.387188,
     "Longitude": 103.759842
-  },
-  {
-    "BusStopCode": "44821",
-    "RoadName": "Senja Link",
-    "Description": "Blk 651",
-    "Latitude": 1.38637611056002,
-    "Longitude": 103.76338435587678
   },
   {
     "BusStopCode": "44829",
@@ -25210,8 +25217,8 @@
     "BusStopCode": "70161",
     "RoadName": "Merpati Rd",
     "Description": "Opp Mattar Stn Exit A",
-    "Latitude": 1.32758635490072,
-    "Longitude": 103.88324806418214
+    "Latitude": 1.327297,
+    "Longitude": 103.882484
   },
   {
     "BusStopCode": "70171",
@@ -31493,13 +31500,6 @@
     "Longitude": 103.997946
   },
   {
-    "BusStopCode": "95089",
-    "RoadName": "Nicoll Dr",
-    "Description": "Opp Changi Beach CP 5",
-    "Latitude": 1.389665,
-    "Longitude": 103.995899
-  },
-  {
     "BusStopCode": "14031",
     "RoadName": "Lower Delta Rd",
     "Description": "St. Theresa's Convent",
@@ -34998,6 +34998,13 @@
     "Description": "Aft Jln Samulun",
     "Latitude": 1.30880721630907,
     "Longitude": 103.6965558745042
+  },
+  {
+    "BusStopCode": "95089",
+    "RoadName": "Nicoll Dr",
+    "Description": "Opp Changi Beach CP 5",
+    "Latitude": 1.389665,
+    "Longitude": 103.995899
   },
   {
     "BusStopCode": "95091",
