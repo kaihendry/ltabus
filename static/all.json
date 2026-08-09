@@ -301,13 +301,6 @@
     "Longitude": 103.85402155505173
   },
   {
-    "BusStopCode": "02051",
-    "RoadName": "Raffles Ave",
-    "Description": "The Float @ Marina Bay",
-    "Latitude": 1.289503056,
-    "Longitude": 103.8590339
-  },
-  {
     "BusStopCode": "02061",
     "RoadName": "Raffles Ave",
     "Description": "The Esplanade",
@@ -3500,11 +3493,11 @@
     "Longitude": 103.82418777803016
   },
   {
-    "BusStopCode": "22099",
-    "RoadName": "Shipyard Rd",
-    "Description": "Bef Jln Samulun",
-    "Latitude": 1.30879764761052,
-    "Longitude": 103.69688960154522
+    "BusStopCode": "14031",
+    "RoadName": "Lower Delta Rd",
+    "Description": "St. Theresa's Convent",
+    "Latitude": 1.27624277802151,
+    "Longitude": 103.82306027800865
   },
   {
     "BusStopCode": "22141",
@@ -31500,11 +31493,11 @@
     "Longitude": 103.997946
   },
   {
-    "BusStopCode": "14031",
-    "RoadName": "Lower Delta Rd",
-    "Description": "St. Theresa's Convent",
-    "Latitude": 1.27624277802151,
-    "Longitude": 103.82306027800865
+    "BusStopCode": "95089",
+    "RoadName": "Nicoll Dr",
+    "Description": "Opp Changi Beach CP 5",
+    "Latitude": 1.389665,
+    "Longitude": 103.995899
   },
   {
     "BusStopCode": "14039",
@@ -35000,11 +34993,11 @@
     "Longitude": 103.6965558745042
   },
   {
-    "BusStopCode": "95089",
-    "RoadName": "Nicoll Dr",
-    "Description": "Opp Changi Beach CP 5",
-    "Latitude": 1.389665,
-    "Longitude": 103.995899
+    "BusStopCode": "22099",
+    "RoadName": "Shipyard Rd",
+    "Description": "Bef Jln Samulun",
+    "Latitude": 1.30879764761052,
+    "Longitude": 103.69688960154522
   },
   {
     "BusStopCode": "95091",
