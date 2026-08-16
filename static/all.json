@@ -26155,8 +26155,8 @@
     "BusStopCode": "75051",
     "RoadName": "Tampines Ave 1",
     "Description": "Tampines West Stn Exit B",
-    "Latitude": 1.34503394154132,
-    "Longitude": 103.94008153173421
+    "Latitude": 1.3450165,
+    "Longitude": 103.940188
   },
   {
     "BusStopCode": "75059",
@@ -35584,8 +35584,8 @@
     "BusStopCode": "96341",
     "RoadName": "Changi Sth Ave 2",
     "Description": "Aft Sunny Metal & Engrg",
-    "Latitude": 1.33276553471842,
-    "Longitude": 103.97037694441909
+    "Latitude": 1.332935,
+    "Longitude": 103.970388
   },
   {
     "BusStopCode": "96351",
