@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang=en>
+
+<head>
+	<meta charset=utf-8>
+	<meta name=viewport content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="/static/main.css">
+	<link rel="manifest" href="/static/manifest.json">
+	<script src="/static/main.js" defer></script>
+	
+	<meta http-equiv="refresh" content="20">
+	<title>Singapore bus arrival times for stop 01019</title>
+	<meta name="apple-mobile-web-app-title" content="Bras Basah Cplx">
+	<link rel='icon' href='/icon?stop=01019'>
+	<link rel="apple-touch-icon" sizes="200x200" href="/icon?stop=01019">
+	<meta name="description" content="Bus arrival times for 01019 Bras Basah Cplx" />
+	<meta property="og:title" content="Bus 01019 Bras Basah Cplx" />
+	<meta property="og:description" content="Live bus arrival times for stop 01019" />
+	<meta property="og:url" content="https://bus.dabase.com/?id=01019" />
+	<meta property="og:image" content="https://bus.dabase.com/icon?stop=01019" />
+	
+</head>
+
+<body>
+
+	<h1><a style="text-decoration: none;" href="/">🚏</a>
+		
+		<span style="background-color: #77d219; padding: 0.2em" id="namedBusStop">Bras Basah Cplx</span>
+		
+	</h1>
+
+	<form>
+		<label for=id>Bus stop #</label>
+		<input autofocus id=id required type=text inputmode="numeric" pattern="\d{5}" value="01019"
+			name=id>
+		<input value="Bus due times" type=submit>
+	</form>
+
+	<ul class=buses>
+		
+		<li>
+			<strong>
+				<a href='https://busrouter.sg/#/services/56'>56</a>
+			</strong>
+
+			<time class="load-seats" dateTime="2026-08-24T21:03:12&#43;08:00">2026-08-24T21:03:12&#43;08:00</time>
+			
+			
+
+		</li>
+		
+		<li>
+			<strong>
+				<a href='https://busrouter.sg/#/services/857'>857</a>
+			</strong>
+
+			<time class="load-standing" dateTime="2026-08-24T21:12:31&#43;08:00">2026-08-24T21:12:31&#43;08:00</time>
+			<time class="load-full" dateTime="2026-08-24T21:24:07&#43;08:00">2026-08-24T21:24:07&#43;08:00</time>
+			<time class="load-seats" dateTime="2026-08-24T21:39:55&#43;08:00">2026-08-24T21:39:55&#43;08:00</time>
+
+		</li>
+		
+	</ul>
+
+	
+
+	<h4>Last updated: <span id=lastupdated></span></h4>
+
+	<ol id=stations></ol>
+
+	<footer>
+		<ul>
+			<li><a href=https://github.com/kaihendry/ltabus>Source code</a></li>
+			<li><a href="mailto:hendry+bus@iki.fi">Please email feedback</a></li>
+			<li><a href=https://railrouter.sg>Train map</a></li>
+			<li>There are 5208 bus stops in Singapore</li>
+		</ul>
+	</footer>
+
+	<p><button>Share this Web app!</button></p>
+
+	<p class="result"></p>
+
+	<script>
+		let shareData = {
+			title: '🇸🇬 Bus arrival times',
+			text: 'Bus arrivals times, hit 🚏 to find closest bus stop',
+			url: 'https://bus.dabase.com',
+		}
+
+		const btn = document.querySelector('button');
+		const resultPara = document.querySelector('.result');
+
+		btn.addEventListener('click', () => {
+			navigator.share(shareData)
+				.then(() =>
+					resultPara.textContent = 'Shared successfully'
+				)
+				.catch((e) =>
+					resultPara.textContent = 'Error: ' + e
+				)
+		});
+	</script>
+
+
+</body>
+
+</html>

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang=en>
+
+<head>
+	<meta charset=utf-8>
+	<meta name=viewport content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="/static/main.css">
+	<link rel="manifest" href="/static/manifest.json">
+	<script src="/static/main.js" defer></script>
+	
+	<title>Singapore bus arrival times 🇸🇬</title>
+	<link rel="icon" href="data:;base64,iVBORw0KGgo=">
+	<meta name="description" content="Bus arrival times based on your current location" />
+	<meta property="og:title" content="Singapore bus arrival times" />
+	<meta property="og:description" content="Live bus arrival times based on your current location" />
+	<meta property="og:url" content="https://bus.dabase.com/" />
+	
+</head>
+
+<body>
+
+	<h1><a style="text-decoration: none;" href="/">🚏</a>
+		
+	</h1>
+
+	<form>
+		<label for=id>Bus stop #</label>
+		<input autofocus id=id required type=text inputmode="numeric" pattern="\d{5}" value=""
+			name=id>
+		<input value="Bus due times" type=submit>
+	</form>
+
+	<ul class=buses>
+		
+	</ul>
+
+	
+	<p>Hint: Tap <a style="text-decoration: none;" href="/">🚏</a> to find closest bus stop</p>
+	
+
+	<h4>Last updated: <span id=lastupdated></span></h4>
+
+	<ol id=stations></ol>
+
+	<footer>
+		<ul>
+			<li><a href=https://github.com/kaihendry/ltabus>Source code</a></li>
+			<li><a href="mailto:hendry+bus@iki.fi">Please email feedback</a></li>
+			<li><a href=https://railrouter.sg>Train map</a></li>
+			<li>There are 5208 bus stops in Singapore</li>
+		</ul>
+	</footer>
+
+	<p><button>Share this Web app!</button></p>
+
+	<p class="result"></p>
+
+	<script>
+		let shareData = {
+			title: '🇸🇬 Bus arrival times',
+			text: 'Bus arrivals times, hit 🚏 to find closest bus stop',
+			url: 'https://bus.dabase.com',
+		}
+
+		const btn = document.querySelector('button');
+		const resultPara = document.querySelector('.result');
+
+		btn.addEventListener('click', () => {
+			navigator.share(shareData)
+				.then(() =>
+					resultPara.textContent = 'Shared successfully'
+				)
+				.catch((e) =>
+					resultPara.textContent = 'Error: ' + e
+				)
+		});
+	</script>
+
+
+</body>
+
+</html>

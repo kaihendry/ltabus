@@ -1,11 +1,13 @@
 package main
 
 import (
+	"bytes"
 	"crypto/md5"
 	"embed"
 	"encoding/json"
 	"fmt"
 	"html/template"
+	"io"
 	"io/fs"
 	"log/slog"
 	"math"
@@ -50,6 +52,8 @@ type SGBusArrivals struct {
 type Server struct {
 	mux      *http.ServeMux
 	busStops BusStops
+	// arrivals is the datamall lookup, swapped out in tests
+	arrivals func(stopID string) (SGBusArrivals, error)
 }
 
 type responseWriter struct {
@@ -133,11 +137,31 @@ func NewServer(busStopsPath string) (*Server, error) {
 	srv := Server{
 		mux:      http.NewServeMux(),
 		busStops: bs,
+		arrivals: busArrivals,
+	}
+
+	// FIXTURE=testdata/buses.json serves canned arrivals, so the app runs
+	// offline without an ACCOUNTKEY. Used by the browser tests, handy for
+	// local development too.
+	if f := os.Getenv("FIXTURE"); f != "" {
+		slog.Warn("serving canned arrivals", "fixture", f)
+		srv.arrivals = fixtureArrivals(f)
 	}
 
 	srv.routes()
 
 	return &srv, nil
+}
+
+// fixtureArrivals replaces the datamall lookup with a file on disk
+func fixtureArrivals(path string) func(stopID string) (SGBusArrivals, error) {
+	return func(string) (SGBusArrivals, error) {
+		b, err := os.ReadFile(path)
+		if err != nil {
+			return SGBusArrivals{}, err
+		}
+		return parseArrivals(bytes.NewReader(b))
+	}
 }
 
 func (s *Server) routes() {
@@ -197,7 +221,7 @@ func (s *Server) handleIndex(w http.ResponseWriter, r *http.Request) {
 		"nameBusStop":  func(id string) string { return s.busStops.nameBusStop(id) },
 		"styleBusStop": func(id string) template.CSS { return styleBusStop(id) },
 		"getEnv":       os.Getenv,
-		"loadClass": loadClass,
+		"loadClass":    loadClass,
 	}
 
 	// set html content type
@@ -214,7 +238,7 @@ func (s *Server) handleIndex(w http.ResponseWriter, r *http.Request) {
 	var arriving SGBusArrivals
 
 	if id != "" {
-		arriving, err = busArrivals(id)
+		arriving, err = s.arrivals(id)
 		if err != nil {
 			slog.Warn("failed to retrieve bus timings", "error", err)
 			http.Error(w, fmt.Sprintf("datamall API is returning, %s", err.Error()), http.StatusFailedDependency)
@@ -265,8 +289,12 @@ func busArrivals(stopID string) (arrivals SGBusArrivals, err error) {
 		return arrivals, fmt.Errorf("bad response: %d", res.StatusCode)
 	}
 
-	decoder := json.NewDecoder(res.Body)
-	err = decoder.Decode(&arrivals)
+	return parseArrivals(res.Body)
+}
+
+// parseArrivals decodes a datamall response, soonest bus first
+func parseArrivals(r io.Reader) (arrivals SGBusArrivals, err error) {
+	err = json.NewDecoder(r).Decode(&arrivals)
 	if err != nil {
 		slog.Error("failed to decode response", "error", err)
 		return
