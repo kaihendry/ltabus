@@ -1,7 +1,7 @@
 STACK = ltabus
 VERSION = $(shell git describe --tags --always --dirty)
 
-.PHONY: build deploy validate destroy
+.PHONY: build deploy validate destroy browsertest
 
 DOMAINNAME = bus.dabase.com
 ACMCERTIFICATEARN = arn:aws:acm:ap-southeast-1:407461997746:certificate/87b0fd84-fb44-4782-b7eb-d9c7f8714908
@@ -39,5 +39,12 @@ installgin:
 localdev: installgin static/style.css static/main.js
 	gin
 
+# Browser tests, deliberately not in CI: run when refactoring the HTML.
+# Installs into ./node_modules (gitignored), no package.json needed.
+browsertest: static/style.css static/main.js
+	npm install --no-save --no-package-lock @playwright/test
+	npx playwright install chromium
+	npx playwright test
+
 clean:
-	rm -rf main gin-bin static/main.*
+	rm -rf main gin-bin static/main.* node_modules test-results playwright-report
