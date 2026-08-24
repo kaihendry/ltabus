@@ -1,29 +1,29 @@
-function countdown(id, time) {
+function countdown(id, arrival) {
   if (!id) {
     return;
   }
-  // console.log(id,time);
-  var seconds = time / 1000;
+  // Recompute from the clock on every tick. A frozen tab - a locked phone,
+  // a backgrounded tab - fires no timers, so decrementing a captured value
+  // would leave a stale time on screen and drift slow.
+  var seconds = (arrival - Date.now()) / 1000;
   if (Math.abs(seconds) > 60) {
     id.innerHTML = parseInt(seconds / 60) + "m";
   } else {
     id.innerHTML = parseInt(seconds) + "s";
   }
-  setTimeout(countdown, 1000, id, time - 1000);
+  setTimeout(countdown, 1000, id, arrival);
 }
 
 window.addEventListener(
   "load",
   function () {
     var timings = document.getElementsByTagName("time");
-    var now = new Date();
     for (let i = 0; i < timings.length; i++) {
       var arr = new Date(timings[i].getAttribute("datetime"));
-      var elapsed = arr.getTime() - now.getTime();
-      countdown(timings[i], elapsed);
+      countdown(timings[i], arr.getTime());
     }
     var lastupdated = document.getElementById("lastupdated");
-    countdown(lastupdated, Date.now() - now);
+    countdown(lastupdated, Date.now());
 
     var slog = JSON.parse(window.localStorage.getItem("history")) || {};
 

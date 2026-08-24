@@ -23,6 +23,20 @@ test("arrival times count down", async ({ page }) => {
   await page.screenshot({ path: "test-results/mobile.png", fullPage: true });
 });
 
+test("countdown corrects itself after the tab is frozen", async ({ page }) => {
+  await page.clock.install({ time: NOW });
+  await page.goto("/?id=01019");
+  await expect(page.locator("time").first()).toHaveText("3m");
+
+  // a locked phone or backgrounded tab: the clock jumps forward while the
+  // timer chain does not keep up with it
+  await page.clock.fastForward("02:00");
+
+  // the first tick after waking recomputes from the clock. Decrementing a
+  // captured value would still read 3m here.
+  await expect(page.locator("time").first()).toHaveText("1m");
+});
+
 test("page weight", async ({ page }) => {
   const weights = {};
   page.on("response", async (res) => {
