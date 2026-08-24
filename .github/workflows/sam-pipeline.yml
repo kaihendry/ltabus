@@ -4,6 +4,12 @@ on:
   workflow_dispatch:
   push:
     branches: [main]
+  pull_request:
+    branches: [main]
+  schedule:
+    # An hour after the weekly bus stop update, which pushes with GITHUB_TOKEN
+    # and so cannot trigger this workflow itself.
+    - cron: '0 1 * * 0'
 
 # Cancel in-progress runs for the same branch
 concurrency:
@@ -57,6 +63,7 @@ jobs:
   deploy:
     name: Deploy
     needs: [lint, test]
+    if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout

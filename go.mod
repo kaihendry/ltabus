@@ -1,6 +1,6 @@
 module github.com/kaihendry/ltabus
 
-go 1.25.0
+go 1.27.0
 
 require (
 	github.com/apex/gateway/v2 v2.0.0
