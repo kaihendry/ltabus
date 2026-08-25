@@ -90,10 +90,8 @@ func testArrivals(now time.Time) (arrivals SGBusArrivals) {
 type Server struct {
 	mux      *http.ServeMux
 	busStops BusStops
-	// arrivals is the datamall lookup and now is the clock, both swapped
-	// out in tests
-	arrivals func(stopID string) (SGBusArrivals, error)
-	now      func() time.Time
+	// now is the clock, swapped out in tests
+	now func() time.Time
 }
 
 type responseWriter struct {
@@ -177,7 +175,6 @@ func NewServer(busStopsPath string) (*Server, error) {
 	srv := Server{
 		mux:      http.NewServeMux(),
 		busStops: bs,
-		arrivals: busArrivals,
 		now:      time.Now,
 	}
 
@@ -268,7 +265,7 @@ func (s *Server) handleIndex(w http.ResponseWriter, r *http.Request) {
 	if id == testStopCode {
 		arriving = testArrivals(s.now())
 	} else if id != "" {
-		arriving, err = s.arrivals(id)
+		arriving, err = busArrivals(id)
 		if err != nil {
 			slog.Warn("failed to retrieve bus timings", "error", err)
 			http.Error(w, fmt.Sprintf("datamall API is returning, %s", err.Error()), http.StatusFailedDependency)

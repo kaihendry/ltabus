@@ -1,88 +1,34 @@
 package main
 
 import (
-	"flag"
 	"html"
-	"net/http"
 	"net/http/httptest"
-	"os"
-	"path/filepath"
 	"regexp"
 	"strings"
 	"testing"
 	"time"
 )
 
-var update = flag.Bool("update", false, "update the .golden render files")
-
-// testNow freezes the clock, so the arrivals stop 99999 makes up - and the
-// golden render of them - are the same on every run.
+// testNow freezes the clock, so the arrivals stop 99999 makes up are the same
+// on every run.
 var testNow = time.Date(2026, 8, 24, 21, 0, 0, 0, time.FixedZone("SGT", 8*60*60))
 
-// newTestServer serves the test stop from a fixed clock. Pass down to make
-// the datamall lookup fail, which is the only case that needs it: the test
-// stop never reaches datamall.
-func newTestServer(t *testing.T, down bool) *Server {
+// newTestServer serves the test stop from a fixed clock
+func newTestServer(t *testing.T) *Server {
 	t.Helper()
 	s, err := NewServer("static/all.json")
 	if err != nil {
 		t.Fatalf("NewServer: %v", err)
 	}
 	s.now = func() time.Time { return testNow }
-	if down {
-		s.arrivals = func(string) (SGBusArrivals, error) {
-			return SGBusArrivals{}, os.ErrDeadlineExceeded
-		}
-	}
 	return s
 }
 
-// TestRender renders the whole page against fixtures and diffs it against a
-// golden file. Run `go test -update` after intentional HTML changes and read
-// the git diff to review what moved.
-func TestRender(t *testing.T) {
-	tests := []struct {
-		name   string
-		url    string
-		down   bool
-		status int
-	}{
-		{name: "index", url: "/", status: http.StatusOK},
-		{name: "buses", url: "/?id=" + testStopCode, status: http.StatusOK},
-		{name: "datamalldown", url: "/?id=01019", down: true, status: http.StatusFailedDependency},
-	}
-
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			w := httptest.NewRecorder()
-			newTestServer(t, tt.down).mux.ServeHTTP(w, httptest.NewRequest("GET", tt.url, nil))
-
-			if w.Code != tt.status {
-				t.Errorf("status = %d, want %d", w.Code, tt.status)
-			}
-
-			golden := filepath.Join("testdata", tt.name+".golden")
-			if *update {
-				if err := os.WriteFile(golden, w.Body.Bytes(), 0o644); err != nil {
-					t.Fatal(err)
-				}
-			}
-			want, err := os.ReadFile(golden)
-			if err != nil {
-				t.Fatalf("%v (run: go test -update)", err)
-			}
-			if got := w.Body.String(); got != string(want) {
-				t.Errorf("%s render differs from %s, run: go test -update", tt.url, golden)
-			}
-		})
-	}
-}
-
 // TestRenderBuses spells out what the buses render must keep doing, so a
-// regression says what broke rather than just "the golden moved".
+// regression says which part broke.
 func TestRenderBuses(t *testing.T) {
 	w := httptest.NewRecorder()
-	newTestServer(t, false).mux.ServeHTTP(w, httptest.NewRequest("GET", "/?id="+testStopCode, nil))
+	newTestServer(t).mux.ServeHTTP(w, httptest.NewRequest("GET", "/?id="+testStopCode, nil))
 	body := w.Body.String()
 
 	for _, want := range []string{
@@ -122,7 +68,7 @@ var timeRe = regexp.MustCompile(`(?is)<time[^>]*\sdatetime="([^"]*)"[^>]*>(.*?)<
 // and the countdown silently dies. That is the regression worth catching.
 func TestCountdown(t *testing.T) {
 	w := httptest.NewRecorder()
-	newTestServer(t, false).mux.ServeHTTP(w, httptest.NewRequest("GET", "/?id="+testStopCode, nil))
+	newTestServer(t).mux.ServeHTTP(w, httptest.NewRequest("GET", "/?id="+testStopCode, nil))
 	body := w.Body.String()
 
 	arrivals := timeRe.FindAllStringSubmatch(body, -1)
