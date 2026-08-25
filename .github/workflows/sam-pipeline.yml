@@ -60,6 +60,22 @@ jobs:
       - name: Run tests
         run: go test -v ./...
 
+      - name: Set up Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+          cache: npm
+
+      - name: Install browser dependencies
+        run: |
+          npm ci
+          npx playwright install --with-deps chromium
+
+      - name: Run browser tests
+        run: |
+          make static/style.css static/main.js
+          npx playwright test
+
   deploy:
     name: Deploy
     needs: [lint, test]
@@ -90,7 +106,9 @@ jobs:
         run: make deploy
 
       - name: Check deployed version
-        run: curl -is https://bus.dabase.com/?id=25269 | grep -i x-version | grep ${GITHUB_SHA::7}
+        # 99999 is the test stop, which makes up its own buses: this checks the
+        # deploy, not whether datamall happens to be up
+        run: curl -is https://bus.dabase.com/?id=99999 | grep -i x-version | grep ${GITHUB_SHA::7}
 
       - name: Audit URLs using Lighthouse
         uses: treosh/lighthouse-ci-action@v12

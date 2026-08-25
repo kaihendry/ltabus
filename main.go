@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"html/template"
+	"io"
 	"io/fs"
 	"log/slog"
 	"math"
@@ -34,22 +35,63 @@ type NextBus struct {
 	Type             string `json:"Type"`
 }
 
+// Service is one bus route calling at a stop
+type Service struct {
+	ServiceNo string  `json:"ServiceNo"`
+	Operator  string  `json:"Operator"`
+	NextBus   NextBus `json:"NextBus"`
+	NextBus2  NextBus `json:"NextBus2"`
+	NextBus3  NextBus `json:"NextBus3"`
+}
+
 // SGBusArrivals describes the response from the datamall API
 type SGBusArrivals struct {
-	OdataMetadata string `json:"odata.metadata"`
-	BusStopCode   string `json:"BusStopCode"`
-	Services      []struct {
-		ServiceNo string  `json:"ServiceNo"`
-		Operator  string  `json:"Operator"`
-		NextBus   NextBus `json:"NextBus"`
-		NextBus2  NextBus `json:"NextBus2"`
-		NextBus3  NextBus `json:"NextBus3"`
-	} `json:"Services"`
+	OdataMetadata string    `json:"odata.metadata"`
+	BusStopCode   string    `json:"BusStopCode"`
+	Services      []Service `json:"Services"`
+}
+
+// A fictional bus stop that always has buses coming. It never reaches
+// datamall, so the render can be checked - by hand, by the tests, or by the
+// deploy - without depending on LTA being up or on an ACCOUNTKEY. It is
+// marked noindex and named as a test stop so nobody mistakes it for live data.
+const (
+	testStopCode = "99999"
+	testStopName = "Test Bus Stop"
+)
+
+// testArrivals makes up buses relative to now, so the stop always looks live.
+// Every offset carries a half minute: on a whole minute the countdown would
+// already read one lower by the time the page renders.
+func testArrivals(now time.Time) (arrivals SGBusArrivals) {
+	sgt := now.In(time.FixedZone("SGT", 8*60*60))
+	at := func(d time.Duration) string { return sgt.Add(d).Format(time.RFC3339) }
+
+	arrivals.BusStopCode = testStopCode
+	// deliberately not in arrival order, so the sort has something to do
+	arrivals.Services = []Service{
+		{
+			ServiceNo: "666",
+			Operator:  "SBST",
+			NextBus:   NextBus{EstimatedArrival: at(5*time.Minute + 30*time.Second), Load: "SDA", Feature: "WAB", Type: "DD"},
+			NextBus2:  NextBus{EstimatedArrival: at(17*time.Minute + 30*time.Second), Load: "LSD", Feature: "WAB", Type: "SD"},
+			NextBus3:  NextBus{EstimatedArrival: at(32*time.Minute + 30*time.Second), Load: "SEA", Feature: "WAB", Type: "SD"},
+		},
+		{
+			ServiceNo: "42",
+			Operator:  "SBST",
+			NextBus:   NextBus{EstimatedArrival: at(time.Minute + 30*time.Second), Load: "SEA", Feature: "WAB", Type: "SD"},
+		},
+	}
+	sortByArrival(arrivals.Services)
+	return
 }
 
 type Server struct {
 	mux      *http.ServeMux
 	busStops BusStops
+	// now is the clock, swapped out in tests
+	now func() time.Time
 }
 
 type responseWriter struct {
@@ -133,6 +175,7 @@ func NewServer(busStopsPath string) (*Server, error) {
 	srv := Server{
 		mux:      http.NewServeMux(),
 		busStops: bs,
+		now:      time.Now,
 	}
 
 	srv.routes()
@@ -193,11 +236,17 @@ func (s *Server) handleClosest(w http.ResponseWriter, r *http.Request) {
 func (s *Server) handleIndex(w http.ResponseWriter, r *http.Request) {
 
 	funcs := template.FuncMap{
-		"totalStops":   func() int { return len(s.busStops) },
-		"nameBusStop":  func(id string) string { return s.busStops.nameBusStop(id) },
+		"totalStops": func() int { return len(s.busStops) },
+		"nameBusStop": func(id string) string {
+			if id == testStopCode {
+				return testStopName
+			}
+			return s.busStops.nameBusStop(id)
+		},
+		"isTestStop":   func(id string) bool { return id == testStopCode },
 		"styleBusStop": func(id string) template.CSS { return styleBusStop(id) },
 		"getEnv":       os.Getenv,
-		"loadClass": loadClass,
+		"loadClass":    loadClass,
 	}
 
 	// set html content type
@@ -213,7 +262,9 @@ func (s *Server) handleIndex(w http.ResponseWriter, r *http.Request) {
 	id := r.URL.Query().Get("id")
 	var arriving SGBusArrivals
 
-	if id != "" {
+	if id == testStopCode {
+		arriving = testArrivals(s.now())
+	} else if id != "" {
 		arriving, err = busArrivals(id)
 		if err != nil {
 			slog.Warn("failed to retrieve bus timings", "error", err)
@@ -265,19 +316,27 @@ func busArrivals(stopID string) (arrivals SGBusArrivals, err error) {
 		return arrivals, fmt.Errorf("bad response: %d", res.StatusCode)
 	}
 
-	decoder := json.NewDecoder(res.Body)
-	err = decoder.Decode(&arrivals)
+	return parseArrivals(res.Body)
+}
+
+// parseArrivals decodes a datamall response, soonest bus first
+func parseArrivals(r io.Reader) (arrivals SGBusArrivals, err error) {
+	err = json.NewDecoder(r).Decode(&arrivals)
 	if err != nil {
 		slog.Error("failed to decode response", "error", err)
 		return
 	}
 
-	// Sort by buses arriving first
-	sort.Slice(arrivals.Services, func(i, j int) bool {
-		return arrivals.Services[i].NextBus.EstimatedArrival < arrivals.Services[j].NextBus.EstimatedArrival
-	})
+	sortByArrival(arrivals.Services)
 
 	return
+}
+
+// sortByArrival puts the buses arriving soonest first
+func sortByArrival(services []Service) {
+	sort.Slice(services, func(i, j int) bool {
+		return services[i].NextBus.EstimatedArrival < services[j].NextBus.EstimatedArrival
+	})
 }
 
 type Point struct {

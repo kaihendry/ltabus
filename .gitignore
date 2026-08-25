@@ -6,3 +6,6 @@ templates/index.html
 static/main.*
 ltabus
 .aws-sam/
+node_modules
+test-results
+playwright-report

@@ -1,7 +1,7 @@
 STACK = ltabus
 VERSION = $(shell git describe --tags --always --dirty)
 
-.PHONY: build deploy validate destroy
+.PHONY: build deploy validate destroy browsertest
 
 DOMAINNAME = bus.dabase.com
 ACMCERTIFICATEARN = arn:aws:acm:ap-southeast-1:407461997746:certificate/87b0fd84-fb44-4782-b7eb-d9c7f8714908
@@ -27,11 +27,14 @@ sam-tail-logs:
 awsclitail:
 	aws logs tail /aws/lambda/ltabus --follow
 
-static/style.css: static/app.css
-	    npx esbuild --bundle static/app.css --minify --outfile=static/main.css
+node_modules/.package-lock.json: package.json package-lock.json
+	npm ci
 
-static/main.js: static/app.js
-	    npx esbuild --bundle static/app.js --minify --outfile=static/main.js
+static/style.css: static/app.css node_modules/.package-lock.json
+	npx esbuild --bundle static/app.css --minify --outfile=static/main.css
+
+static/main.js: static/app.js node_modules/.package-lock.json
+	npx esbuild --bundle static/app.js --minify --outfile=static/main.js
 
 installgin:
 	go install github.com/codegangsta/gin@latest
@@ -39,5 +42,9 @@ installgin:
 localdev: installgin static/style.css static/main.js
 	gin
 
+browsertest: static/style.css static/main.js
+	npx playwright install chromium
+	npx playwright test
+
 clean:
-	rm -rf main gin-bin static/main.*
+	rm -rf main gin-bin static/main.* node_modules test-results playwright-report

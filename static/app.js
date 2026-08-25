@@ -1,94 +1,79 @@
-function countdown(id, time) {
+function countdown(id, arrival) {
   if (!id) {
     return;
   }
-  // console.log(id,time);
-  var seconds = time / 1000;
+  // Recompute from the clock on every tick. A frozen tab - a locked phone,
+  // a backgrounded tab - fires no timers, so decrementing a captured value
+  // would leave a stale time on screen and drift slow.
+  var seconds = (arrival - Date.now()) / 1000;
   if (Math.abs(seconds) > 60) {
-    id.innerHTML = parseInt(seconds / 60) + "m";
+    id.textContent = Math.trunc(seconds / 60) + "m";
   } else {
-    id.innerHTML = parseInt(seconds) + "s";
+    id.textContent = Math.trunc(seconds) + "s";
   }
-  setTimeout(countdown, 1000, id, time - 1000);
+  setTimeout(countdown, 1000, id, arrival);
 }
 
-window.addEventListener(
-  "load",
-  function () {
-    var timings = document.getElementsByTagName("time");
-    var now = new Date();
-    for (let i = 0; i < timings.length; i++) {
-      var arr = new Date(timings[i].getAttribute("datetime"));
-      var elapsed = arr.getTime() - now.getTime();
-      countdown(timings[i], elapsed);
-    }
-    var lastupdated = document.getElementById("lastupdated");
-    countdown(lastupdated, Date.now() - now);
+// localStorage throws outright when site data is blocked, and the stored
+// value can be corrupt. Neither may take out the rest of the load handler,
+// which is also what redirects to the closest bus stop.
+function readHistory() {
+  try {
+    return JSON.parse(window.localStorage.getItem("history")) || {};
+  } catch (e) {
+    console.warn("discarding unreadable history", e);
+    return {};
+  }
+}
 
-    var slog = JSON.parse(window.localStorage.getItem("history")) || {};
+function writeHistory(history) {
+  try {
+    window.localStorage.setItem("history", JSON.stringify(history));
+  } catch (e) {
+    console.warn("history not saved", e);
+  }
+}
 
-    var busstopcode = document.getElementById("id").value;
-    var busstopname = document.getElementById("namedBusStop")?.innerHTML || "";
+window.addEventListener("load", function () {
+  var timings = document.getElementsByTagName("time");
+  for (let i = 0; i < timings.length; i++) {
+    var arrival = new Date(timings[i].getAttribute("datetime"));
+    countdown(timings[i], arrival.getTime());
+  }
+  countdown(document.getElementById("lastupdated"), Date.now());
 
-    console.log("DEBUG", busstopcode, busstopname);
+  var history = readHistory();
+  var busstopcode = document.getElementById("id")?.value;
 
-    if (busstopcode) {
-      if (typeof slog[busstopcode] === "undefined") {
-        slog[busstopcode] = {};
-        slog[busstopcode].count = 0;
-        slog[busstopcode].name = busstopname;
-      }
-      try {
-        slog[busstopcode].count++;
-        slog[busstopcode].name = busstopname;
-      } catch (e) {
-        console.log(e);
-      }
-
-      window.localStorage.setItem("history", JSON.stringify(slog));
-    } else {
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(function (position) {
-          var lat = position.coords.latitude;
-          var lng = position.coords.longitude;
-          window.location = "/closest?lat=" + lat + "&lng=" + lng;
-        });
-      }
-    }
-
-    var sortable = [];
-    for (var station in slog) {
-      sortable.push([station, slog[station]]);
-    }
-    sortable.sort(function (a, b) {
-      return a[1].count - b[1].count;
+  if (busstopcode) {
+    var stop = history[busstopcode] || { count: 0 };
+    stop.count++;
+    stop.name = document.getElementById("namedBusStop")?.textContent || "";
+    history[busstopcode] = stop;
+    writeHistory(history);
+  } else if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(function (position) {
+      window.location =
+        "/closest?lat=" +
+        position.coords.latitude +
+        "&lng=" +
+        position.coords.longitude;
     });
-    // console.debug(sortable);
-    var ul = document.getElementById("stations");
-    for (let i = sortable.length - 1; i >= 0; i--) {
-      var key = sortable[i][0];
-      var value = sortable[i][1];
-      // console.log(key, value);
+  }
 
-      var li = document.createElement("li");
+  var stations = document.getElementById("stations");
+  Object.keys(history)
+    .sort(function (a, b) {
+      return history[b].count - history[a].count;
+    })
+    .forEach(function (code) {
       var link = document.createElement("a");
-      if (value.name) {
-        link.setAttribute(
-          "href",
-          "/?id=" + key + "&name=" + encodeURI(value.name)
-        );
-        link.appendChild(
-          document.createTextNode(
-            key + " " + value.name + " (" + value.count + ")"
-          )
-        );
-      } else {
-        link.setAttribute("href", "/?id=" + key);
-        link.appendChild(document.createTextNode(key));
-      }
+      link.href = "/?id=" + code;
+      link.textContent = history[code].name
+        ? code + " " + history[code].name + " (" + history[code].count + ")"
+        : code;
+      var li = document.createElement("li");
       li.appendChild(link);
-      ul.appendChild(li);
-    }
-  },
-  false
-);
+      stations.appendChild(li);
+    });
+});
