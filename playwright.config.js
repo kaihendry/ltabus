@@ -1,6 +1,5 @@
-// Browser tests, not part of CI. Run `make browsertest` when refactoring the
-// HTML. Everything drives the test stop 99999, which makes up its own buses,
-// so no ACCOUNTKEY is needed and the countdown is the same every run.
+// Everything drives the test stop 99999, which makes up its own buses, so no
+// ACCOUNTKEY is needed and the countdown is the same every run.
 module.exports = {
   testDir: "./e2e",
   reporter: [["list"]],

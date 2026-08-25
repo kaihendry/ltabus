@@ -27,11 +27,14 @@ sam-tail-logs:
 awsclitail:
 	aws logs tail /aws/lambda/ltabus --follow
 
-static/style.css: static/app.css
-	    npx esbuild --bundle static/app.css --minify --outfile=static/main.css
+node_modules/.package-lock.json: package.json package-lock.json
+	npm ci
 
-static/main.js: static/app.js
-	    npx esbuild --bundle static/app.js --minify --outfile=static/main.js
+static/style.css: static/app.css node_modules/.package-lock.json
+	npx esbuild --bundle static/app.css --minify --outfile=static/main.css
+
+static/main.js: static/app.js node_modules/.package-lock.json
+	npx esbuild --bundle static/app.js --minify --outfile=static/main.js
 
 installgin:
 	go install github.com/codegangsta/gin@latest
@@ -39,10 +42,7 @@ installgin:
 localdev: installgin static/style.css static/main.js
 	gin
 
-# Browser tests, deliberately not in CI: run when refactoring the HTML.
-# Installs into ./node_modules (gitignored), no package.json needed.
 browsertest: static/style.css static/main.js
-	npm install --no-save --no-package-lock @playwright/test
 	npx playwright install chromium
 	npx playwright test
 

@@ -60,6 +60,22 @@ jobs:
       - name: Run tests
         run: go test -v ./...
 
+      - name: Set up Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+          cache: npm
+
+      - name: Install browser dependencies
+        run: |
+          npm ci
+          npx playwright install --with-deps chromium
+
+      - name: Run browser tests
+        run: |
+          make static/style.css static/main.js
+          npx playwright test
+
   deploy:
     name: Deploy
     needs: [lint, test]
