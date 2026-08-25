@@ -12,13 +12,13 @@ const seed = (page, value) =>
 
 test("lists visited stops, most visited first", async ({ page }) => {
   await seed(page, JSON.stringify(HISTORY));
-  await page.goto("/?id=01019");
+  await page.goto("/?id=99999");
 
-  // 01019 is this visit, so it joins the list with a count of 1
+  // 99999 is this visit, so it joins the list with a count of 1
   await expect(page.locator("#stations li")).toHaveText([
     "03219 Opp Cycle & Carriage (5)",
     "12345",
-    "01019 Bras Basah Cplx (1)",
+    "99999 Test Bus Stop (1)",
   ]);
 
   // no &name= : the server never read it, and encodeURI left the & in stop
@@ -31,21 +31,21 @@ test("records the visit in localStorage", async ({ page }) => {
   const history = () =>
     page.evaluate(() => JSON.parse(window.localStorage.getItem("history")));
 
-  await page.goto("/?id=01019");
+  await page.goto("/?id=99999");
   expect(await history()).toEqual({
-    "01019": { count: 1, name: "Bras Basah Cplx" },
+    "99999": { count: 1, name: "Test Bus Stop" },
   });
 
   await page.reload();
-  expect((await history())["01019"].count).toBe(2);
+  expect((await history())["99999"].count).toBe(2);
 });
 
 test("survives a corrupt history", async ({ page }) => {
   await seed(page, "{not json");
-  await page.goto("/?id=01019");
+  await page.goto("/?id=99999");
 
   // a bad value must not take out the rest of the load handler
   await expect(page.locator("#stations li")).toHaveText([
-    "01019 Bras Basah Cplx (1)",
+    "99999 Test Bus Stop (1)",
   ]);
 });

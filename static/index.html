@@ -9,6 +9,7 @@
 	<script src="/static/main.js" defer></script>
 	{{ if .BusStopCode }}
 	<meta http-equiv="refresh" content="20">
+	{{ if isTestStop .BusStopCode }}<meta name="robots" content="noindex">{{ end }}
 	<title>Singapore bus arrival times for stop {{ .BusStopCode }}</title>
 	<meta name="apple-mobile-web-app-title" content="{{ nameBusStop .BusStopCode }}">
 	<link rel='icon' href='/icon?stop={{ .BusStopCode }}'>

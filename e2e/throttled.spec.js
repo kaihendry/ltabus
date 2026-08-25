@@ -32,13 +32,13 @@ test("throttled first contentful paint", async ({ page }) => {
   // CACHE=warm measures a meta-refresh reload, where the assets are cached
   const warm = process.env.CACHE === "warm";
   await cdp.send("Network.setCacheDisabled", { cacheDisabled: !warm });
-  if (warm) await page.goto("/?id=01019", { waitUntil: "load" }); // prime it
+  if (warm) await page.goto("/?id=99999", { waitUntil: "load" }); // prime it
   await cdp.send("Emulation.setCPUThrottlingRate", { rate: 4 });
 
   const samples = [];
   for (let i = 0; i < RUNS; i++) {
     if (!warm) await page.goto("about:blank");
-    await page.goto("/?id=01019", { waitUntil: "load" });
+    await page.goto("/?id=99999", { waitUntil: "load" });
     samples.push(await firstPaint(page));
   }
   samples.sort((a, b) => a - b);
