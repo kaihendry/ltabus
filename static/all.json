@@ -301,6 +301,13 @@
     "Longitude": 103.85402155505173
   },
   {
+    "BusStopCode": "02051",
+    "RoadName": "Raffles Ave",
+    "Description": "The Float @ Marina Bay",
+    "Latitude": 1.289503056,
+    "Longitude": 103.8590339
+  },
+  {
     "BusStopCode": "02061",
     "RoadName": "Raffles Ave",
     "Description": "The Esplanade",
@@ -934,8 +941,8 @@
     "BusStopCode": "05259",
     "RoadName": "Neil Rd",
     "Description": "Opp Maxwell Stn Exit 3",
-    "Latitude": 1.27979447837032,
-    "Longitude": 103.84262707605177
+    "Latitude": 1.279736,
+    "Longitude": 103.8427
   },
   {
     "BusStopCode": "05269",
@@ -1328,13 +1335,6 @@
     "Description": "Opp NAFA Campus 3",
     "Latitude": 1.30095828368506,
     "Longitude": 103.85211175034802
-  },
-  {
-    "BusStopCode": "07522",
-    "RoadName": "Weld Rd",
-    "Description": "Jalan Besar S42 Boarding",
-    "Latitude": 1.30475,
-    "Longitude": 103.855619
   },
   {
     "BusStopCode": "07529",
@@ -4126,8 +4126,8 @@
     "BusStopCode": "23089",
     "RoadName": "Upp Jurong Rd",
     "Description": "S'pore Discovery Ctr",
-    "Latitude": 1.330433728881,
-    "Longitude": 103.67843466317231
+    "Latitude": 1.3303875,
+    "Longitude": 103.678594
   },
   {
     "BusStopCode": "23091",
@@ -4329,15 +4329,15 @@
     "BusStopCode": "23231",
     "RoadName": "Pioneer Rd",
     "Description": "Keppel Logistics",
-    "Latitude": 1.30926499998419,
-    "Longitude": 103.67491833296833
+    "Latitude": 1.3093,
+    "Longitude": 103.6750325
   },
   {
     "BusStopCode": "23239",
     "RoadName": "Pioneer Rd",
     "Description": "Opp Keppel Logistics",
-    "Latitude": 1.309154,
-    "Longitude": 103.675189
+    "Latitude": 1.3091795,
+    "Longitude": 103.6749895
   },
   {
     "BusStopCode": "23241",
@@ -4595,8 +4595,8 @@
     "BusStopCode": "23491",
     "RoadName": "Joo Koon Circle",
     "Description": "Joo Koon Stn Exit B",
-    "Latitude": 1.32792408366339,
-    "Longitude": 103.67780864699097
+    "Latitude": 1.327885,
+    "Longitude": 103.677849
   },
   {
     "BusStopCode": "23499",
@@ -4672,8 +4672,8 @@
     "BusStopCode": "24049",
     "RoadName": "Upp Jurong Rd",
     "Description": "Pasir Laba Camp",
-    "Latitude": 1.33094144977498,
-    "Longitude": 103.67379074701834
+    "Latitude": 1.3309125,
+    "Longitude": 103.6737755
   },
   {
     "BusStopCode": "24089",
@@ -7010,8 +7010,8 @@
     "BusStopCode": "28051",
     "RoadName": "Boon Lay Way",
     "Description": "Opp Ng Teng Fong Gen Hosp",
-    "Latitude": 1.33228999677029,
-    "Longitude": 103.74574002371804
+    "Latitude": 1.332415,
+    "Longitude": 103.745637
   },
   {
     "BusStopCode": "28059",
@@ -10909,8 +10909,8 @@
     "BusStopCode": "44121",
     "RoadName": "Choa Chu Kang Way",
     "Description": "Blk 113",
-    "Latitude": 1.37769846227758,
-    "Longitude": 103.75093552549583
+    "Latitude": 1.377619,
+    "Longitude": 103.750861
   },
   {
     "BusStopCode": "44129",
@@ -11819,8 +11819,8 @@
     "BusStopCode": "44889",
     "RoadName": "Keat Hong Link",
     "Description": "Opp Blk 816A",
-    "Latitude": 1.3755999743303,
-    "Longitude": 103.74839851286828
+    "Latitude": 1.375525,
+    "Longitude": 103.748328
   },
   {
     "BusStopCode": "44891",
@@ -25424,13 +25424,6 @@
     "Longitude": 103.88932330108935
   },
   {
-    "BusStopCode": "70372",
-    "RoadName": "Circuit Rd",
-    "Description": "MacPherson S41 Boarding",
-    "Latitude": 1.326222,
-    "Longitude": 103.888436
-  },
-  {
     "BusStopCode": "70379",
     "RoadName": "Circuit Link",
     "Description": "Opp MacPherson Stn Exit A",
@@ -31500,6 +31493,13 @@
     "Longitude": 103.997946
   },
   {
+    "BusStopCode": "95089",
+    "RoadName": "Nicoll Dr",
+    "Description": "Opp Changi Beach CP 5",
+    "Latitude": 1.389665,
+    "Longitude": 103.995899
+  },
+  {
     "BusStopCode": "14039",
     "RoadName": "Lower Delta Rd",
     "Description": "Opp St. Theresa's Convent",
@@ -33687,8 +33687,8 @@
     "BusStopCode": "20159",
     "RoadName": "West Coast Rd",
     "Description": "Blk 411",
-    "Latitude": 1.31851137522994,
-    "Longitude": 103.74640166581365
+    "Latitude": 1.3184165,
+    "Longitude": 103.746512
   },
   {
     "BusStopCode": "20161",
@@ -33701,8 +33701,8 @@
     "BusStopCode": "20169",
     "RoadName": "West Coast Rd",
     "Description": "Blk 35",
-    "Latitude": 1.31928347830225,
-    "Longitude": 103.74251246450982
+    "Latitude": 1.319148,
+    "Longitude": 103.742719
   },
   {
     "BusStopCode": "20171",
@@ -34998,13 +34998,6 @@
     "Description": "Bef Jln Samulun",
     "Latitude": 1.30879764761052,
     "Longitude": 103.69688960154522
-  },
-  {
-    "BusStopCode": "95089",
-    "RoadName": "Nicoll Dr",
-    "Description": "Opp Changi Beach CP 5",
-    "Latitude": 1.389665,
-    "Longitude": 103.995899
   },
   {
     "BusStopCode": "95091",
