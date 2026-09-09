@@ -31,6 +31,20 @@ or using another browser counts again; clients that never send the cookie back
 are missed. It is a rough audience estimate without another service or database.
 See [CloudWatch aggregation functions](https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/CWL_QuerySyntax-Stats.html).
 
+For CSV from the CLI, install `aws` and `jq` and configure AWS credentials with
+`logs:StartQuery`, `logs:GetQueryResults`, and `logs:StopQuery` access:
+
+```sh
+./visitors.sh > visitors.csv                 # last 30 complete UTC days
+AWS_PROFILE=your-profile ./visitors.sh 90 > visitors.csv
+```
+
+The script uses `ap-southeast-1` by default (`AWS_REGION` overrides it), waits
+for the query to complete, and writes `date,visitors` columns in date order.
+Days with no matching log entries get zero, including days outside log retention.
+Daily counts are distinct within each day; summing them does not give unique
+visitors for the whole period.
+
 # Accountkey
 
 Request for API access from <https://www.mytransport.sg/content/mytransport/home/dataMall/request-for-api.html>
