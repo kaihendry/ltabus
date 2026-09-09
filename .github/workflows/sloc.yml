@@ -33,7 +33,10 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v6
       - name: Generate SLOC chart
-        uses: kaihendry/lesshero@v0.1.4
+        uses: kaihendry/lesshero@42a06280ed9dce82941da7115083b03e09acc8f1 # ignore support
+        with:
+          # Include the dataset's original path so historical counts exclude it too.
+          ignore: all.json,static/all.json
       - name: Prepare site
         run: mkdir "_site" && mv lesshero.html _site/index.html
       - name: Upload artifact
