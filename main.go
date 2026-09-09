@@ -7,7 +7,6 @@ import (
 	"fmt"
 	"html/template"
 	"io"
-	"io/fs"
 	"log/slog"
 	"math"
 	"net/http"
@@ -24,21 +23,13 @@ var static embed.FS
 
 // NextBus describes when the bus is coming
 type NextBus struct {
-	OriginCode       string `json:"OriginCode"`
-	DestinationCode  string `json:"DestinationCode"`
 	EstimatedArrival string `json:"EstimatedArrival"`
-	Latitude         string `json:"Latitude"`
-	Longitude        string `json:"Longitude"`
-	VisitNumber      string `json:"VisitNumber"`
 	Load             string `json:"Load"`
-	Feature          string `json:"Feature"`
-	Type             string `json:"Type"`
 }
 
 // Service is one bus route calling at a stop
 type Service struct {
 	ServiceNo string  `json:"ServiceNo"`
-	Operator  string  `json:"Operator"`
 	NextBus   NextBus `json:"NextBus"`
 	NextBus2  NextBus `json:"NextBus2"`
 	NextBus3  NextBus `json:"NextBus3"`
@@ -46,9 +37,8 @@ type Service struct {
 
 // SGBusArrivals describes the response from the datamall API
 type SGBusArrivals struct {
-	OdataMetadata string    `json:"odata.metadata"`
-	BusStopCode   string    `json:"BusStopCode"`
-	Services      []Service `json:"Services"`
+	BusStopCode string    `json:"BusStopCode"`
+	Services    []Service `json:"Services"`
 }
 
 // A fictional bus stop that always has buses coming. It never reaches
@@ -72,15 +62,13 @@ func testArrivals(now time.Time) (arrivals SGBusArrivals) {
 	arrivals.Services = []Service{
 		{
 			ServiceNo: "666",
-			Operator:  "SBST",
-			NextBus:   NextBus{EstimatedArrival: at(5*time.Minute + 30*time.Second), Load: "SDA", Feature: "WAB", Type: "DD"},
-			NextBus2:  NextBus{EstimatedArrival: at(17*time.Minute + 30*time.Second), Load: "LSD", Feature: "WAB", Type: "SD"},
-			NextBus3:  NextBus{EstimatedArrival: at(32*time.Minute + 30*time.Second), Load: "SEA", Feature: "WAB", Type: "SD"},
+			NextBus:   NextBus{EstimatedArrival: at(5*time.Minute + 30*time.Second), Load: "SDA"},
+			NextBus2:  NextBus{EstimatedArrival: at(17*time.Minute + 30*time.Second), Load: "LSD"},
+			NextBus3:  NextBus{EstimatedArrival: at(32*time.Minute + 30*time.Second), Load: "SEA"},
 		},
 		{
 			ServiceNo: "42",
-			Operator:  "SBST",
-			NextBus:   NextBus{EstimatedArrival: at(time.Minute + 30*time.Second), Load: "SEA", Feature: "WAB", Type: "SD"},
+			NextBus:   NextBus{EstimatedArrival: at(time.Minute + 30*time.Second), Load: "SEA"},
 		},
 	}
 	sortByArrival(arrivals.Services)
@@ -90,6 +78,7 @@ func testArrivals(now time.Time) (arrivals SGBusArrivals) {
 type Server struct {
 	mux      *http.ServeMux
 	busStops BusStops
+	index    *template.Template
 	// now is the clock, swapped out in tests
 	now func() time.Time
 }
@@ -146,12 +135,13 @@ func getLogger(logLevel string) *slog.Logger {
 }
 
 func main() {
+	slog.SetDefault(getLogger(os.Getenv("LOGLEVEL")))
+
 	server, err := NewServer("static/all.json")
 	if err != nil {
 		slog.Error("failed to create server", "error", err)
+		os.Exit(1)
 	}
-
-	slog.SetDefault(getLogger(os.Getenv("LOGLEVEL")))
 
 	handler := server.middlewareChain(server.mux)
 
@@ -169,13 +159,32 @@ func main() {
 func NewServer(busStopsPath string) (*Server, error) {
 	bs, err := loadBusJSON(busStopsPath)
 	if err != nil {
-		slog.Error("unable to load bus stops", "error", err)
+		return nil, fmt.Errorf("load bus stops: %w", err)
+	}
+	if len(bs) == 0 {
+		return nil, fmt.Errorf("bus stop data is empty")
 	}
 
 	srv := Server{
 		mux:      http.NewServeMux(),
 		busStops: bs,
 		now:      time.Now,
+	}
+	funcs := template.FuncMap{
+		"totalStops": func() int { return len(srv.busStops) },
+		"nameBusStop": func(id string) string {
+			if id == testStopCode {
+				return testStopName
+			}
+			return srv.busStops.nameBusStop(id)
+		},
+		"isTestStop":   func(id string) bool { return id == testStopCode },
+		"styleBusStop": styleBusStop,
+		"loadClass":    loadClass,
+	}
+	srv.index, err = template.New("").Funcs(funcs).ParseFS(static, "static/index.html")
+	if err != nil {
+		return nil, fmt.Errorf("parse index template: %w", err)
 	}
 
 	srv.routes()
@@ -188,16 +197,11 @@ func (s *Server) routes() {
 	s.mux.HandleFunc("/closest", s.handleClosest)
 	s.mux.HandleFunc("/icon", handleIcon)
 
-	directory, err := fs.Sub(static, "static")
-	if err != nil {
-		slog.Error("unable to load static files", "error", err)
-		return
-	}
-	fileServer := http.FileServer(http.FS(directory))
-	s.mux.Handle("/static/", http.StripPrefix("/static/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	fileServer := http.FileServer(http.FS(static))
+	s.mux.Handle("/static/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Cache-Control", "public, max-age=86400")
 		fileServer.ServeHTTP(w, r)
-	})))
+	}))
 }
 
 func (s *Server) middlewareChain(handler http.Handler) http.Handler {
@@ -234,30 +238,7 @@ func (s *Server) handleClosest(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Server) handleIndex(w http.ResponseWriter, r *http.Request) {
-
-	funcs := template.FuncMap{
-		"totalStops": func() int { return len(s.busStops) },
-		"nameBusStop": func(id string) string {
-			if id == testStopCode {
-				return testStopName
-			}
-			return s.busStops.nameBusStop(id)
-		},
-		"isTestStop":   func(id string) bool { return id == testStopCode },
-		"styleBusStop": func(id string) template.CSS { return styleBusStop(id) },
-		"getEnv":       os.Getenv,
-		"loadClass":    loadClass,
-	}
-
-	// set html content type
 	w.Header().Set("Content-Type", "text/html")
-
-	t, err := template.New("").Funcs(funcs).ParseFS(static, "static/index.html")
-	if err != nil {
-		slog.Error("template failed to parse", "error", err)
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
 
 	id := r.URL.Query().Get("id")
 	var arriving SGBusArrivals
@@ -265,6 +246,7 @@ func (s *Server) handleIndex(w http.ResponseWriter, r *http.Request) {
 	if id == testStopCode {
 		arriving = testArrivals(s.now())
 	} else if id != "" {
+		var err error
 		arriving, err = busArrivals(id)
 		if err != nil {
 			slog.Warn("failed to retrieve bus timings", "error", err)
@@ -275,9 +257,8 @@ func (s *Server) handleIndex(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("X-Version", os.Getenv("VERSION"))
 
-	err = t.ExecuteTemplate(w, "index.html", arriving)
-	if err != nil {
-		slog.Error("template failed to parse", "error", err)
+	if err := s.index.ExecuteTemplate(w, "index.html", arriving); err != nil {
+		slog.Error("template failed to render", "error", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -358,7 +339,6 @@ type BusStops []BusStop
 func loadBusJSON(jsonfile string) (bs BusStops, err error) {
 	content, err := static.ReadFile(jsonfile)
 	if err != nil {
-		slog.Error("failed to read file", "error", err)
 		return
 	}
 	err = json.Unmarshal(content, &bs)

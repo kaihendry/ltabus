@@ -2,7 +2,6 @@
   "name": "ltabus",
   "private": true,
   "devDependencies": {
-    "@playwright/test": "1.62.1",
-    "esbuild": "0.28.2"
+    "@playwright/test": "1.62.1"
   }
 }

@@ -12,7 +12,7 @@ deploy:
 	--parameter-overrides DomainName=$(DOMAINNAME) ACMCertificateArn=$(ACMCERTIFICATEARN) Version=$(VERSION) \
 	--no-confirm-changeset --no-fail-on-empty-changeset --capabilities CAPABILITY_IAM
 
-build-MainFunction: static/style.css static/main.js
+build-MainFunction:
 	CGO_ENABLED=0 GOOS=linux GOARCH=arm64 go build -o ${ARTIFACTS_DIR}/bootstrap
 
 validate:
@@ -30,21 +30,15 @@ awsclitail:
 node_modules/.package-lock.json: package.json package-lock.json
 	npm ci
 
-static/style.css: static/app.css node_modules/.package-lock.json
-	npx esbuild --bundle static/app.css --minify --outfile=static/main.css
-
-static/main.js: static/app.js node_modules/.package-lock.json
-	npx esbuild --bundle static/app.js --minify --outfile=static/main.js
-
 installgin:
 	go install github.com/codegangsta/gin@latest
 
-localdev: installgin static/style.css static/main.js
+localdev: installgin
 	gin
 
-browsertest: static/style.css static/main.js
+browsertest: node_modules/.package-lock.json
 	npx playwright install chromium
 	npx playwright test
 
 clean:
-	rm -rf main gin-bin static/main.* node_modules test-results playwright-report
+	rm -rf main gin-bin node_modules test-results playwright-report

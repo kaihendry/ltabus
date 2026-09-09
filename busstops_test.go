@@ -11,6 +11,17 @@ import (
 
 var stop BusStop
 
+func TestNewServerRejectsBadStops(t *testing.T) {
+	for _, path := range []string{"static/missing.json", "static/index.html"} {
+		t.Run(path, func(t *testing.T) {
+			server, err := NewServer(path)
+			if err == nil || server != nil {
+				t.Fatalf("NewServer(%q) = %v, %v; want nil server and an error", path, server, err)
+			}
+		})
+	}
+}
+
 func Benchmark_closest(b *testing.B) {
 	bs, _ := loadBusJSON("static/all.json")
 	b.ResetTimer()

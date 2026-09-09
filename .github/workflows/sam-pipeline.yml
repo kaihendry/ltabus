@@ -72,9 +72,7 @@ jobs:
           npx playwright install --with-deps chromium
 
       - name: Run browser tests
-        run: |
-          make static/style.css static/main.js
-          npx playwright test
+        run: npx playwright test
 
   deploy:
     name: Deploy

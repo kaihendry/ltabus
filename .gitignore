@@ -3,7 +3,6 @@ gin-bin
 DejaVuSans.ttf
 server
 templates/index.html
-static/main.*
 ltabus
 .aws-sam/
 node_modules
