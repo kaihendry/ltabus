@@ -6,12 +6,30 @@ const { test, expect } = require("@playwright/test");
 // well clear of the boundary where it would tick over mid-assertion.
 const STOP = "/?id=99999";
 
-test("arrival times count down", async ({ page }) => {
+test("the initial countdown stays in place when JavaScript starts, then ticks", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
   await page.clock.install({ time: new Date() });
-  await page.goto(STOP);
+  let releaseScript;
+  const scriptGate = new Promise((resolve) => { releaseScript = resolve; });
+  await page.route("**/static/app.js", async (route) => {
+    await scriptGate;
+    await route.continue();
+  });
 
-  // static/app.js has replaced the timestamps with a countdown
+  // Hold back the real script so a later JS update cannot hide a bad first render.
+  await page.goto(STOP, { waitUntil: "commit" });
+  const buses = page.locator(".buses");
+  let initialBounds;
+  try {
+    await expect(page.locator("time")).toHaveText(["1m", "5m", "17m", "32m"]);
+    await expect(buses).toHaveCSS("display", "table");
+    initialBounds = await buses.boundingBox();
+  } finally {
+    releaseScript();
+  }
+  await page.waitForLoadState("load");
   await expect(page.locator("time")).toHaveText(["1m", "5m", "17m", "32m"]);
+  expect(await buses.boundingBox()).toEqual(initialBounds);
 
   // and it ticks: runFor fires the setTimeout chain in static/app.js,
   // fastForward would jump the clock straight past it
@@ -20,6 +38,7 @@ test("arrival times count down", async ({ page }) => {
 
   // eyeball these after an HTML change: the clock is frozen, so they only
   // differ when the rendering does
+  await page.setViewportSize({ width: 1280, height: 720 });
   await page.screenshot({ path: "test-results/desktop.png", fullPage: true });
   await page.setViewportSize({ width: 390, height: 844 });
   await page.screenshot({ path: "test-results/mobile.png", fullPage: true });

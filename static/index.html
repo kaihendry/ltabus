@@ -52,11 +52,11 @@
 			</strong>
 
 			{{ if .NextBus.EstimatedArrival }}<time class="{{ loadClass .NextBus.Load }}" dateTime="{{ .NextBus.EstimatedArrival }}">{{
-				.NextBus.EstimatedArrival }}</time>{{ end }}
+				countdown .NextBus.EstimatedArrival $.Now }}</time>{{ end }}
 			{{ if .NextBus2.EstimatedArrival }}<time class="{{ loadClass .NextBus2.Load }}" dateTime="{{ .NextBus2.EstimatedArrival }}">{{
-				.NextBus2.EstimatedArrival }}</time>{{ end }}
+				countdown .NextBus2.EstimatedArrival $.Now }}</time>{{ end }}
 			{{ if .NextBus3.EstimatedArrival }}<time class="{{ loadClass .NextBus3.Load }}" dateTime="{{ .NextBus3.EstimatedArrival }}">{{
-				.NextBus3.EstimatedArrival }}</time>{{ end }}
+				countdown .NextBus3.EstimatedArrival $.Now }}</time>{{ end }}
 
 		</li>
 		{{ end }}

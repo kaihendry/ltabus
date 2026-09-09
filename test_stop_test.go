@@ -46,9 +46,37 @@ func TestTestStop(t *testing.T) {
 		`class="load-seats"`,
 		`class="load-standing"`,
 		`class="load-full"`,
+		`>1m</time>`,
+		`>5m</time>`,
+		`>17m</time>`,
+		`>32m</time>`,
 	} {
 		if !strings.Contains(w.Body.String(), want) {
 			t.Errorf("response is missing %q", want)
 		}
+	}
+}
+
+func TestFormatCountdown(t *testing.T) {
+	for offset, want := range map[time.Duration]string{
+		90 * time.Second:          "1m",
+		60500 * time.Millisecond:  "1m",
+		60 * time.Second:          "60s",
+		59900 * time.Millisecond:  "59s",
+		0:                         "0s",
+		-500 * time.Millisecond:   "0s",
+		-60 * time.Second:         "-60s",
+		-60500 * time.Millisecond: "-1m",
+		-90 * time.Second:         "-1m",
+	} {
+		t.Run(offset.String(), func(t *testing.T) {
+			arrival := testNow.Add(offset).Format(time.RFC3339Nano)
+			if got := formatCountdown(arrival, testNow); got != want {
+				t.Errorf("countdown = %q, want %q", got, want)
+			}
+		})
+	}
+	if got := formatCountdown("unknown", testNow); got != "unknown" {
+		t.Errorf("invalid arrival = %q, want unknown", got)
 	}
 }

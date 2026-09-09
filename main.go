@@ -181,6 +181,7 @@ func NewServer(busStopsPath string) (*Server, error) {
 		"isTestStop":   func(id string) bool { return id == testStopCode },
 		"styleBusStop": styleBusStop,
 		"loadClass":    loadClass,
+		"countdown":    formatCountdown,
 	}
 	srv.index, err = template.New("").Funcs(funcs).ParseFS(static, "static/index.html")
 	if err != nil {
@@ -257,11 +258,28 @@ func (s *Server) handleIndex(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("X-Version", os.Getenv("VERSION"))
 
-	if err := s.index.ExecuteTemplate(w, "index.html", arriving); err != nil {
+	data := struct {
+		SGBusArrivals
+		Now time.Time
+	}{arriving, s.now()}
+	if err := s.index.ExecuteTemplate(w, "index.html", data); err != nil {
 		slog.Error("template failed to render", "error", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
+}
+
+// Match app.js: truncate toward zero, using seconds through +/-60 seconds.
+func formatCountdown(arrival string, now time.Time) string {
+	at, err := time.Parse(time.RFC3339, arrival)
+	if err != nil {
+		return arrival
+	}
+	seconds := at.Sub(now).Seconds()
+	if math.Abs(seconds) > 60 {
+		return fmt.Sprintf("%dm", int(seconds/60))
+	}
+	return fmt.Sprintf("%ds", int(seconds))
 }
 
 func busArrivals(stopID string) (arrivals SGBusArrivals, err error) {
