@@ -45,6 +45,22 @@ Days with no matching log entries get zero, including days outside log retention
 Daily counts are distinct within each day; summing them does not give unique
 visitors for the whole period.
 
+For weekly growth and retention:
+
+```sh
+AWS_PROFILE=mine ./visitors.sh --weekly 8 > weekly-visitors.csv
+```
+
+This reports eight complete Monday-to-Sunday UTC weeks, querying one additional
+baseline week. `growth_pct` compares unique visitors with the previous week.
+`returning_visitors` counts cookies present in both weeks, and `retention_pct`
+is that count divided by the previous week's visitors. Percentages are blank
+when the previous week had no visitors. This measures return visits by active
+visitors, rather than retention of newly acquired users. Weekly calculations
+happen in CloudWatch; individual cookie IDs are not exported.
+Keep the report and its baseline week within the log group's retention period
+to avoid comparing incomplete weeks.
+
 # Accountkey
 
 Request for API access from <https://www.mytransport.sg/content/mytransport/home/dataMall/request-for-api.html>
