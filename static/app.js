@@ -40,12 +40,24 @@ window.addEventListener("load", function () {
     var arrival = new Date(timings[i].getAttribute("datetime"));
     countdown(timings[i], arrival.getTime());
   }
-  countdown(document.getElementById("lastupdated"), Date.now());
+  var updatedAt = Date.now();
+  countdown(document.getElementById("lastupdated"), updatedAt);
 
   var history = readHistory();
-  var busstopcode = document.getElementById("id")?.value;
+  var input = document.getElementById("id");
+  var busstopcode = input?.defaultValue;
 
   if (busstopcode) {
+    // Autofocus is normal; only an edited stop number should defer a reload.
+    const refresh = () => {
+      if (!document.hidden && input.value === busstopcode &&
+          Date.now() - updatedAt >= 20000) {
+        window.location.reload();
+      }
+    };
+    setInterval(refresh, 20000);
+    document.addEventListener("visibilitychange", refresh);
+
     var stop = history[busstopcode] || { count: 0 };
     stop.count++;
     stop.name = document.getElementById("namedBusStop")?.textContent || "";

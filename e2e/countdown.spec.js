@@ -11,7 +11,7 @@ test("the initial countdown stays in place when JavaScript starts, then ticks", 
   await page.clock.install({ time: new Date() });
   let releaseScript;
   const scriptGate = new Promise((resolve) => { releaseScript = resolve; });
-  await page.route("**/static/app.js", async (route) => {
+  await page.route("**/static/app.js?*", async (route) => {
     await scriptGate;
     await route.continue();
   });
@@ -33,8 +33,11 @@ test("the initial countdown stays in place when JavaScript starts, then ticks", 
 
   // and it ticks: runFor fires the setTimeout chain in static/app.js,
   // fastForward would jump the clock straight past it
+  // An edited stop defers refresh so this tests the original arrival times.
+  await page.getByLabel("Bus stop #").fill("123");
   await page.clock.runFor("01:00");
   await expect(page.locator("time").nth(1)).toHaveText("4m");
+  await page.getByLabel("Bus stop #").fill("99999");
 
   // eyeball these after an HTML change: the clock is frozen, so they only
   // differ when the rendering does
@@ -48,6 +51,7 @@ test("countdown corrects itself after the tab is frozen", async ({ page }) => {
   await page.clock.install({ time: new Date() });
   await page.goto(STOP);
   await expect(page.locator("time").nth(1)).toHaveText("5m");
+  await page.getByLabel("Bus stop #").fill("123"); // Keep this response while time advances.
 
   // a locked phone or backgrounded tab: the clock jumps forward while the
   // timer chain does not keep up with it

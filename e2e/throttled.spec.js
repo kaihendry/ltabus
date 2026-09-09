@@ -29,7 +29,7 @@ test("throttled first contentful paint", async ({ page }) => {
   const cdp = await page.context().newCDPSession(page);
   await cdp.send("Network.enable");
   await cdp.send("Network.emulateNetworkConditions", NETWORK);
-  // CACHE=warm measures a meta-refresh reload, where the assets are cached
+  // CACHE=warm measures a repeat visit, where the assets are cached
   const warm = process.env.CACHE === "warm";
   await cdp.send("Network.setCacheDisabled", { cacheDisabled: !warm });
   if (warm) await page.goto("/?id=99999", { waitUntil: "load" }); // prime it

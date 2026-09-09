@@ -171,6 +171,7 @@ func NewServer(busStopsPath string) (*Server, error) {
 		now:      time.Now,
 	}
 	funcs := template.FuncMap{
+		"version":    func() string { return os.Getenv("VERSION") },
 		"totalStops": func() int { return len(srv.busStops) },
 		"nameBusStop": func(id string) string {
 			if id == testStopCode {
