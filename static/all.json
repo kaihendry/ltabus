@@ -8785,6 +8785,13 @@
     "Longitude": 103.73890781029746
   },
   {
+    "BusStopCode": "40319",
+    "RoadName": "Bt Batok West Ave 6",
+    "Description": "Blk 442A",
+    "Latitude": 1.3565835,
+    "Longitude": 103.7393325
+  },
+  {
     "BusStopCode": "40321",
     "RoadName": "Bt Batok West Ave 8",
     "Description": "Dulwich College",
@@ -31493,13 +31500,6 @@
     "Longitude": 103.997946
   },
   {
-    "BusStopCode": "95089",
-    "RoadName": "Nicoll Dr",
-    "Description": "Opp Changi Beach CP 5",
-    "Latitude": 1.389665,
-    "Longitude": 103.995899
-  },
-  {
     "BusStopCode": "14039",
     "RoadName": "Lower Delta Rd",
     "Description": "Opp St. Theresa's Convent",
@@ -34998,6 +34998,13 @@
     "Description": "Bef Jln Samulun",
     "Latitude": 1.30879764761052,
     "Longitude": 103.69688960154522
+  },
+  {
+    "BusStopCode": "95089",
+    "RoadName": "Nicoll Dr",
+    "Description": "Opp Changi Beach CP 5",
+    "Latitude": 1.389665,
+    "Longitude": 103.995899
   },
   {
     "BusStopCode": "95091",
