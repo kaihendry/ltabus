@@ -38,7 +38,6 @@ func handleIcon(w http.ResponseWriter, r *http.Request) {
 	dc := gg.NewContext(S, S)
 	dc.SetColor(bgColor)
 	dc.Clear()
-	dc.SetRGB(1, 1, 1)
 
 	font, err := truetype.Parse(goregular.TTF)
 	if err != nil {
@@ -49,6 +48,17 @@ func handleIcon(w http.ResponseWriter, r *http.Request) {
 	face := truetype.NewFace(font, &truetype.Options{Size: 48})
 	dc.SetFontFace(face)
 
+	// A dark outline preserves the white digits on pale stop colours.
+	const outline = 2
+	dc.SetRGB(0.12, 0.12, 0.12)
+	for dy := -outline; dy <= outline; dy++ {
+		for dx := -outline; dx <= outline; dx++ {
+			if dx*dx+dy*dy <= outline*outline {
+				dc.DrawStringWrapped(stop, S/2+float64(dx), S/2+float64(dy), 0.5, 0.5, maxWidth, 1.5, gg.AlignCenter)
+			}
+		}
+	}
+	dc.SetRGB(1, 1, 1)
 	dc.DrawStringWrapped(stop, S/2, S/2, 0.5, 0.5, maxWidth, 1.5, gg.AlignCenter)
 
 	w.Header().Set("Content-Type", "image/png")
