@@ -31,7 +31,18 @@ func Benchmark_closest(b *testing.B) {
 }
 
 func TestBusStops_closest(t *testing.T) {
-	bs, _ := loadBusJSON("static/all.json")
+	// Keep coordinates fixed: the live dataset is updated weekly.
+	bs := BusStops{
+		{BusStopCode: "farther", Latitude: 2, Longitude: 104},
+		{
+			BusStopCode: "25059",
+			RoadName:    "Tuas Sth Way",
+			Description: "Aft Tuas Sth Blvd",
+			Latitude:    1.270007,
+			Longitude:   103.61725,
+		},
+		{BusStopCode: "farthest", Latitude: 3, Longitude: 105},
+	}
 	type args struct {
 		location Point
 	}
