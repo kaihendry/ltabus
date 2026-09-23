@@ -29,8 +29,9 @@
 </head>
 
 <body>
+	<main>
 
-	<h1><a style="text-decoration: none;" href="/">🚏</a>
+	<h1><a style="text-decoration: none;" href="/" aria-label="Find closest bus stop">🚏</a>
 		{{ if .BusStopCode }}
 		<span style="{{ styleBusStop .BusStopCode }}" id="namedBusStop">{{ nameBusStop .BusStopCode }}</span>
 		{{ end }}
@@ -62,13 +63,14 @@
 	</ul>
 
 	{{ if not .BusStopCode }}
-	<p>Hint: Tap <a style="text-decoration: none;" href="/">🚏</a> to find closest bus stop</p>
+	<p>Hint: Tap <a style="text-decoration: none;" href="/" aria-label="Find closest bus stop">🚏</a> to find closest bus stop</p>
 	{{ end }}
 
-	<h4>Last updated: <span id=lastupdated></span></h4>
+	<p class="last-updated"><b>Last updated: <span id=lastupdated></span></b></p>
 
 	<ol id=stations></ol>
 
+	</main>
 	<footer>
 		<ul>
 			<li><a href=https://github.com/kaihendry/ltabus>Source code</a></li>

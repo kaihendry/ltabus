@@ -25,6 +25,7 @@ const firstPaint = (page) =>
   );
 
 test("throttled first contentful paint", async ({ page }) => {
+  test.skip(process.env.BENCHMARK !== "1", "Run explicitly with BENCHMARK=1");
   test.setTimeout(120000);
   const cdp = await page.context().newCDPSession(page);
   await cdp.send("Network.enable");

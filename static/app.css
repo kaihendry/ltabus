@@ -74,3 +74,11 @@ input[type="submit"] {
   font-size: 1em;
   display: inline-block !important;
 }
+
+.last-updated {
+  font-size: 1.25rem;
+  line-height: 1;
+  color: var(--nc-tx-1);
+  padding-top: .875rem;
+  margin-bottom: .3rem;
+}

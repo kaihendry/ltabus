@@ -1,7 +1,9 @@
 package main
 
 import (
+	"context"
 	"crypto/md5"
+	"crypto/rand"
 	"embed"
 	"encoding/json"
 	"fmt"
@@ -13,9 +15,12 @@ import (
 	"os"
 	"sort"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/apex/gateway/v2"
+	"github.com/aws/aws-lambda-go/events"
+	"github.com/aws/aws-lambda-go/lambda"
 )
 
 //go:embed static
@@ -147,7 +152,8 @@ func main() {
 
 	if _, ok := os.LookupEnv("AWS_LAMBDA_FUNCTION_NAME"); ok {
 		slog.Info("starting server", "version", os.Getenv("VERSION"))
-		err = gateway.ListenAndServe("", handler)
+		lambda.Start(lambdaHandler(handler))
+		return
 	} else {
 		slog.Info("starting local server", "version", os.Getenv("VERSION"), "port", os.Getenv("PORT"))
 		err = http.ListenAndServe(fmt.Sprintf(":%s", os.Getenv("PORT")), handler)
@@ -195,7 +201,7 @@ func NewServer(busStopsPath string) (*Server, error) {
 }
 
 func (s *Server) routes() {
-	s.mux.HandleFunc("/", s.handleIndex)
+	s.mux.Handle("/{$}", uniqueVisitor(http.HandlerFunc(s.handleIndex)))
 	s.mux.HandleFunc("/closest", s.handleClosest)
 	s.mux.HandleFunc("/icon", handleIcon)
 
@@ -207,7 +213,7 @@ func (s *Server) routes() {
 }
 
 func (s *Server) middlewareChain(handler http.Handler) http.Handler {
-	return logRequest(uniqueVisitor(recoverPanic(handler)))
+	return logRequest(recoverPanic(handler))
 }
 
 func recoverPanic(next http.Handler) http.Handler {
@@ -449,19 +455,43 @@ func logRequest(next http.Handler) http.Handler {
 func uniqueVisitor(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		cookie, _ := r.Cookie("visitor")
-		if cookie != nil {
-			slog.Info("return visitor", "unique", cookie.Value)
-		} else {
-			// Check if Set-Cookie header already exists
-			if len(w.Header().Values("Set-Cookie")) == 0 {
-				setCookie := http.Cookie{
-					Name:    "visitor",
-					Value:   fmt.Sprint("visitor-", time.Now().UnixMilli()),
-					Expires: time.Now().Add(365 * 24 * time.Hour),
-				}
-				http.SetCookie(w, &setCookie)
+		if cookie == nil || cookie.Value == "" {
+			cookie = &http.Cookie{
+				Name:    "visitor",
+				Value:   "visitor-" + rand.Text(),
+				Path:    "/",
+				Expires: time.Now().Add(365 * 24 * time.Hour),
 			}
+			http.SetCookie(w, cookie)
 		}
+		// Keep the existing log field and message for visitors.sh, including
+		// first visits that never load an asset or return to the page.
+		slog.Info("return visitor", "unique", cookie.Value)
 		next.ServeHTTP(w, r)
 	})
+}
+
+// lambdaHandler keeps cookies only in the HTTP API v2 cookies field. The
+// gateway also copies them into Headers at WriteHeader time, duplicating them.
+func lambdaHandler(handler http.Handler) func(context.Context, events.APIGatewayV2HTTPRequest) (events.APIGatewayV2HTTPResponse, error) {
+	return func(ctx context.Context, event events.APIGatewayV2HTTPRequest) (events.APIGatewayV2HTTPResponse, error) {
+		r, err := gateway.NewRequest(ctx, event)
+		if err != nil {
+			return events.APIGatewayV2HTTPResponse{}, err
+		}
+		w := gateway.NewResponse()
+		handler.ServeHTTP(w, r)
+		response := w.End()
+		for key := range response.Headers {
+			if strings.EqualFold(key, "Set-Cookie") {
+				delete(response.Headers, key)
+			}
+		}
+		for key := range response.MultiValueHeaders {
+			if strings.EqualFold(key, "Set-Cookie") {
+				delete(response.MultiValueHeaders, key)
+			}
+		}
+		return response, nil
+	}
 }
