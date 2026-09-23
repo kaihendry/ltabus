@@ -59,7 +59,9 @@ Resources:
         - arm64
       CodeUri: .
       Handler: main
-      Runtime: provided.al2
+      Runtime: provided.al2023
+      MemorySize: 512
+      Timeout: 3
       Events:
         CatchAll:
           Type: HttpApi

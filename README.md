@@ -109,3 +109,9 @@ Request for API access from <https://www.mytransport.sg/content/mytransport/home
 
 - <https://github.com/cheeaun/arrivelah>
 - <https://cheeaun.github.io/busrouter-sg/>
+
+# Lambda runtime and sizing
+
+Production uses AL2023 on ARM64 with 512 MB memory and a 3-second timeout.
+See the [Singapore memory benchmark](docs/benchmarks/2026-09-23-lambda.md)
+for measurements, cost assumptions, and the reason for this setting.
