@@ -9058,6 +9058,20 @@
     "Longitude": 103.7322
   },
   {
+    "BusStopCode": "40561",
+    "RoadName": "Tengah Ctrl",
+    "Description": "Bef Tengah Gdn Ave",
+    "Latitude": 1.3591945,
+    "Longitude": 103.7275375
+  },
+  {
+    "BusStopCode": "40569",
+    "RoadName": "Tengah Ctrl",
+    "Description": "Aft Tengah Gdn Ave",
+    "Latitude": 1.3592755,
+    "Longitude": 103.72743
+  },
+  {
     "BusStopCode": "41009",
     "RoadName": "Tengah Blvd",
     "Description": "Tengah Int",
@@ -31486,20 +31500,6 @@
     "Longitude": 103.996517
   },
   {
-    "BusStopCode": "95071",
-    "RoadName": "Nicoll Dr",
-    "Description": "Changi Beach CP 4",
-    "Latitude": 1.389939,
-    "Longitude": 103.995119
-  },
-  {
-    "BusStopCode": "95079",
-    "RoadName": "Nicoll Dr",
-    "Description": "Opp Changi Beach CP 3",
-    "Latitude": 1.39019416668503,
-    "Longitude": 103.99252027779501
-  },
-  {
     "BusStopCode": "14039",
     "RoadName": "Lower Delta Rd",
     "Description": "Opp St. Theresa's Convent",
@@ -34998,6 +34998,20 @@
     "Description": "Bef Jln Samulun",
     "Latitude": 1.30879764761052,
     "Longitude": 103.69688960154522
+  },
+  {
+    "BusStopCode": "95071",
+    "RoadName": "Nicoll Dr",
+    "Description": "Changi Beach CP 4",
+    "Latitude": 1.389939,
+    "Longitude": 103.995119
+  },
+  {
+    "BusStopCode": "95079",
+    "RoadName": "Nicoll Dr",
+    "Description": "Opp Changi Beach CP 3",
+    "Latitude": 1.39019416668503,
+    "Longitude": 103.99252027779501
   },
   {
     "BusStopCode": "95081",
