@@ -11697,13 +11697,6 @@
     "Longitude": 103.76842967593706
   },
   {
-    "BusStopCode": "44711",
-    "RoadName": "Bt Panjang Ring Rd",
-    "Description": "Opp Segar Stn",
-    "Latitude": 1.38771972200156,
-    "Longitude": 103.76918388898675
-  },
-  {
     "BusStopCode": "44721",
     "RoadName": "Bt Panjang Ring Rd",
     "Description": "Opp Jelapang Stn",
@@ -31500,6 +31493,13 @@
     "Longitude": 103.996517
   },
   {
+    "BusStopCode": "95071",
+    "RoadName": "Nicoll Dr",
+    "Description": "Changi Beach CP 4",
+    "Latitude": 1.389939,
+    "Longitude": 103.995119
+  },
+  {
     "BusStopCode": "14039",
     "RoadName": "Lower Delta Rd",
     "Description": "Opp St. Theresa's Convent",
@@ -34998,13 +34998,6 @@
     "Description": "Bef Jln Samulun",
     "Latitude": 1.30879764761052,
     "Longitude": 103.69688960154522
-  },
-  {
-    "BusStopCode": "95071",
-    "RoadName": "Nicoll Dr",
-    "Description": "Changi Beach CP 4",
-    "Latitude": 1.389939,
-    "Longitude": 103.995119
   },
   {
     "BusStopCode": "95079",
