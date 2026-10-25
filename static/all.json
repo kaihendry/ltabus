@@ -10514,6 +10514,13 @@
     "Longitude": 103.74933550929673
   },
   {
+    "BusStopCode": "43661",
+    "RoadName": "Bt Batok West Ave 7",
+    "Description": "Opp Blk 407",
+    "Latitude": 1.365316,
+    "Longitude": 103.7464085
+  },
+  {
     "BusStopCode": "43669",
     "RoadName": "Bt Batok West Ave 7",
     "Description": "Blk 406",
@@ -10750,6 +10757,13 @@
     "Description": "Bef Dairy Farm Cres",
     "Latitude": 1.363535,
     "Longitude": 103.769
+  },
+  {
+    "BusStopCode": "43909",
+    "RoadName": "Bt Batok East Ave 5",
+    "Description": "Little Guilin",
+    "Latitude": 1.3548505,
+    "Longitude": 103.754309
   },
   {
     "BusStopCode": "43961",
@@ -11644,8 +11658,8 @@
     "BusStopCode": "44669",
     "RoadName": "Jelapang Rd",
     "Description": "Opp Blk 532",
-    "Latitude": 1.38428576640159,
-    "Longitude": 103.76489752763662
+    "Latitude": 1.384273,
+    "Longitude": 103.764918
   },
   {
     "BusStopCode": "44671",
@@ -21759,8 +21773,8 @@
     "BusStopCode": "64389",
     "RoadName": "Hougang Ave 10",
     "Description": "Blk 522",
-    "Latitude": 1.37313809346006,
-    "Longitude": 103.89156818388481
+    "Latitude": 1.373103,
+    "Longitude": 103.891719
   },
   {
     "BusStopCode": "64391",
@@ -21773,8 +21787,8 @@
     "BusStopCode": "64397",
     "RoadName": "Hougang Ave 10",
     "Description": "Blk 513",
-    "Latitude": 1.371948,
-    "Longitude": 103.890003
+    "Latitude": 1.372039,
+    "Longitude": 103.890056
   },
   {
     "BusStopCode": "64399",
@@ -21976,8 +21990,8 @@
     "BusStopCode": "64571",
     "RoadName": "Hougang Ave 6",
     "Description": "Blk 438",
-    "Latitude": 1.37811157042732,
-    "Longitude": 103.89296494237695
+    "Latitude": 1.37819917,
+    "Longitude": 103.8929188
   },
   {
     "BusStopCode": "64579",
@@ -22242,15 +22256,15 @@
     "BusStopCode": "65191",
     "RoadName": "TPE",
     "Description": "Bef Punggol Rd",
-    "Latitude": 1.39527356921611,
-    "Longitude": 103.90539999997036
+    "Latitude": 1.395225,
+    "Longitude": 103.9054113
   },
   {
     "BusStopCode": "65199",
     "RoadName": "TPE",
     "Description": "Aft Punggol Rd",
-    "Latitude": 1.39591721161169,
-    "Longitude": 103.90542736761212
+    "Latitude": 1.395984,
+    "Longitude": 103.905387
   },
   {
     "BusStopCode": "65201",
@@ -23992,15 +24006,15 @@
     "BusStopCode": "67251",
     "RoadName": "Compassvale St",
     "Description": "Compassvale Stn Exit A",
-    "Latitude": 1.39442862205324,
-    "Longitude": 103.9003121852631
+    "Latitude": 1.394628165,
+    "Longitude": 103.8999871
   },
   {
     "BusStopCode": "67259",
     "RoadName": "Compassvale St",
     "Description": "Compassvale Stn Exit B",
-    "Latitude": 1.39465386086721,
-    "Longitude": 103.90046238900585
+    "Latitude": 1.394742,
+    "Longitude": 103.900043
   },
   {
     "BusStopCode": "67261",
@@ -24475,8 +24489,8 @@
     "BusStopCode": "67609",
     "RoadName": "Sengkang Ctrl",
     "Description": "Buangkok Stn Exit A",
-    "Latitude": 1.38393305306468,
-    "Longitude": 103.89303978530081
+    "Latitude": 1.382819,
+    "Longitude": 103.892976
   },
   {
     "BusStopCode": "67611",
@@ -25826,8 +25840,8 @@
     "BusStopCode": "72049",
     "RoadName": "Kaki Bt Ave 1",
     "Description": "Opp Blk 660A CP",
-    "Latitude": 1.33490332816583,
-    "Longitude": 103.90747460787432
+    "Latitude": 1.334923,
+    "Longitude": 103.907588
   },
   {
     "BusStopCode": "72051",
@@ -26974,15 +26988,15 @@
     "BusStopCode": "76141",
     "RoadName": "Tampines Ave 4",
     "Description": "Tampines Stn/Int",
-    "Latitude": 1.35366689109025,
-    "Longitude": 103.94609060451609
+    "Latitude": 1.3535345,
+    "Longitude": 103.946128
   },
   {
     "BusStopCode": "76149",
     "RoadName": "Tampines Ave 4",
     "Description": "Opp Tampines Stn/Int",
-    "Latitude": 1.35370728527221,
-    "Longitude": 103.94636710560508
+    "Latitude": 1.3537413,
+    "Longitude": 103.9463649
   },
   {
     "BusStopCode": "76151",
@@ -31486,20 +31500,6 @@
     "Longitude": 103.996517
   },
   {
-    "BusStopCode": "95071",
-    "RoadName": "Nicoll Dr",
-    "Description": "Changi Beach CP 4",
-    "Latitude": 1.389939,
-    "Longitude": 103.995119
-  },
-  {
-    "BusStopCode": "95079",
-    "RoadName": "Nicoll Dr",
-    "Description": "Opp Changi Beach CP 3",
-    "Latitude": 1.39019416668503,
-    "Longitude": 103.99252027779501
-  },
-  {
     "BusStopCode": "14039",
     "RoadName": "Lower Delta Rd",
     "Description": "Opp St. Theresa's Convent",
@@ -31748,8 +31748,8 @@
     "BusStopCode": "14241",
     "RoadName": "Henderson Rd",
     "Description": "Opp Blk 1",
-    "Latitude": 1.27914353103301,
-    "Longitude": 103.8168725087535
+    "Latitude": 1.2792315,
+    "Longitude": 103.816958
   },
   {
     "BusStopCode": "14249",
@@ -34998,6 +34998,20 @@
     "Description": "Bef Jln Samulun",
     "Latitude": 1.30879764761052,
     "Longitude": 103.69688960154522
+  },
+  {
+    "BusStopCode": "95071",
+    "RoadName": "Nicoll Dr",
+    "Description": "Changi Beach CP 4",
+    "Latitude": 1.389939,
+    "Longitude": 103.995119
+  },
+  {
+    "BusStopCode": "95079",
+    "RoadName": "Nicoll Dr",
+    "Description": "Opp Changi Beach CP 3",
+    "Latitude": 1.39019416668503,
+    "Longitude": 103.99252027779501
   },
   {
     "BusStopCode": "95081",
