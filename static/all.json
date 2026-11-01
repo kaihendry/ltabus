@@ -24577,13 +24577,6 @@
     "Longitude": 103.90712750531712
   },
   {
-    "BusStopCode": "67689",
-    "RoadName": "Sengkang Sq",
-    "Description": "Sengkang Stn Exit C",
-    "Latitude": 1.39071,
-    "Longitude": 103.895137
-  },
-  {
     "BusStopCode": "67691",
     "RoadName": "Anchorvale Cres",
     "Description": "Blk 338A",
@@ -24666,13 +24659,6 @@
     "Description": "Thanggam Stn Exit A",
     "Latitude": 1.396944,
     "Longitude": 103.8755543
-  },
-  {
-    "BusStopCode": "67759",
-    "RoadName": "Compassvale Rd",
-    "Description": "Compassvale Int",
-    "Latitude": 1.3912175,
-    "Longitude": 103.8971153
   },
   {
     "BusStopCode": "67761",
@@ -31500,6 +31486,20 @@
     "Longitude": 103.996517
   },
   {
+    "BusStopCode": "95071",
+    "RoadName": "Nicoll Dr",
+    "Description": "Changi Beach CP 4",
+    "Latitude": 1.389939,
+    "Longitude": 103.995119
+  },
+  {
+    "BusStopCode": "95079",
+    "RoadName": "Nicoll Dr",
+    "Description": "Opp Changi Beach CP 3",
+    "Latitude": 1.39019416668503,
+    "Longitude": 103.99252027779501
+  },
+  {
     "BusStopCode": "14039",
     "RoadName": "Lower Delta Rd",
     "Description": "Opp St. Theresa's Convent",
@@ -34998,20 +34998,6 @@
     "Description": "Bef Jln Samulun",
     "Latitude": 1.30879764761052,
     "Longitude": 103.69688960154522
-  },
-  {
-    "BusStopCode": "95071",
-    "RoadName": "Nicoll Dr",
-    "Description": "Changi Beach CP 4",
-    "Latitude": 1.389939,
-    "Longitude": 103.995119
-  },
-  {
-    "BusStopCode": "95079",
-    "RoadName": "Nicoll Dr",
-    "Description": "Opp Changi Beach CP 3",
-    "Latitude": 1.39019416668503,
-    "Longitude": 103.99252027779501
   },
   {
     "BusStopCode": "95081",
