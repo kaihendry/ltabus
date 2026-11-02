@@ -39,7 +39,8 @@ if [[ $mode == weekly ]]; then
 else
     start=$(( end - count * 86400 ))
     query="filter msg = \"return visitor\" and toMillis(@timestamp) < $((end * 1000))
-        | stats countDistinct(unique) as visitors by bin(1d) as day
+        | stats count(*) by bin(1d) as day, unique
+        | stats count(*) as visitors by day
         | sort day asc"
 fi
 

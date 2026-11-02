@@ -39,20 +39,18 @@ func TestRoutesAndVisitorCookies(t *testing.T) {
 			if w.Code != tc.status {
 				t.Fatalf("status = %d, want %d", w.Code, tc.status)
 			}
-			cookies := w.Result().Cookies()
-			if !tc.page {
-				if len(cookies) != 0 || strings.Contains(logs.String(), `"unique"`) {
-					t.Fatal("non-page request created or logged a visitor")
-				}
-				return
+			want := 0
+			if tc.page {
+				want = 1
 			}
-			if len(cookies) != 1 {
-				t.Fatalf("cookies = %v", cookies)
+			if cookies := w.Result().Cookies(); len(cookies) != want {
+				t.Fatalf("cookies = %v, want %d", cookies, want)
 			}
-			id := cookies[0].Value
-			if !strings.Contains(logs.String(), `"unique":"`+id+`"`) {
-				t.Fatal("first page visit not counted")
+			if strings.Contains(logs.String(), `"unique"`) || !strings.Contains(logs.String(), `"visitor_cookie":false`) {
+				t.Fatalf("cookieless request counted as a visitor: %s", logs.String())
 			}
+			// Any request that sends the cookie back counts, so a first visit
+			// is confirmed by the page's own stylesheet, script or icon.
 			logs.Reset()
 			r := httptest.NewRequest("GET", tc.path, nil)
 			r.AddCookie(&http.Cookie{Name: "visitor", Value: "visitor-existing"})
@@ -61,8 +59,8 @@ func TestRoutesAndVisitorCookies(t *testing.T) {
 			if len(w.Result().Cookies()) != 0 {
 				t.Fatal("returning visitor cookie replaced")
 			}
-			if !strings.Contains(logs.String(), `"unique":"visitor-existing"`) {
-				t.Fatal("existing ID not preserved")
+			if !strings.Contains(logs.String(), `"unique":"visitor-existing"`) || !strings.Contains(logs.String(), `"visitor_cookie":true`) {
+				t.Fatalf("returned cookie not counted: %s", logs.String())
 			}
 		})
 	}

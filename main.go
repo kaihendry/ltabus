@@ -201,7 +201,7 @@ func NewServer(busStopsPath string) (*Server, error) {
 }
 
 func (s *Server) routes() {
-	s.mux.Handle("/{$}", uniqueVisitor(http.HandlerFunc(s.handleIndex)))
+	s.mux.Handle("/{$}", setVisitorCookie(http.HandlerFunc(s.handleIndex)))
 	s.mux.HandleFunc("/closest", s.handleClosest)
 	s.mux.HandleFunc("/icon", handleIcon)
 
@@ -425,6 +425,15 @@ func (p Point) distance(p2 Point) float64 {
 func logRequest(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		start := time.Now()
+		// Count a visitor only once the browser sends the cookie back. A new
+		// browser does so at once for the page's stylesheet, script and icon;
+		// clients that never do (bots, cookie-blocking kiosks) are left out of
+		// visitors.sh and show up as visitor_cookie=false instead.
+		visitor, _ := r.Cookie("visitor")
+		hasVisitor := visitor != nil && visitor.Value != ""
+		if hasVisitor {
+			slog.Info("return visitor", "unique", visitor.Value)
+		}
 		rw := &responseWriter{
 			ResponseWriter: w,
 			status:         http.StatusOK,
@@ -446,27 +455,26 @@ func logRequest(next http.Handler) http.Handler {
 				"res_size", rw.BytesWritten(),
 				"res_content_type", rw.Header().Get("Content-Type"),
 				"duration", time.Since(start).Milliseconds(),
+				"visitor_cookie", hasVisitor,
 			)
 		}()
 		next.ServeHTTP(rw, r)
 	})
 }
 
-func uniqueVisitor(next http.Handler) http.Handler {
+// setVisitorCookie gives a page visitor without a cookie a new random ID. It is
+// not logged here, so a client that drops cookies is not a new visitor on
+// every request; logRequest counts the ID when the browser sends it back.
+func setVisitorCookie(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		cookie, _ := r.Cookie("visitor")
-		if cookie == nil || cookie.Value == "" {
-			cookie = &http.Cookie{
+		if cookie, err := r.Cookie("visitor"); err != nil || cookie.Value == "" {
+			http.SetCookie(w, &http.Cookie{
 				Name:    "visitor",
 				Value:   "visitor-" + rand.Text(),
 				Path:    "/",
 				Expires: time.Now().Add(365 * 24 * time.Hour),
-			}
-			http.SetCookie(w, cookie)
+			})
 		}
-		// Keep the existing log field and message for visitors.sh, including
-		// first visits that never load an asset or return to the page.
-		slog.Info("return visitor", "unique", cookie.Value)
 		next.ServeHTTP(w, r)
 	})
 }
