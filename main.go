@@ -425,15 +425,6 @@ func (p Point) distance(p2 Point) float64 {
 func logRequest(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		start := time.Now()
-		// Count a visitor only once the browser sends the cookie back. A new
-		// browser does so at once for the page's stylesheet, script and icon;
-		// clients that never do (bots, cookie-blocking kiosks) are left out of
-		// visitors.sh and show up as visitor_cookie=false instead.
-		visitor, _ := r.Cookie("visitor")
-		hasVisitor := visitor != nil && visitor.Value != ""
-		if hasVisitor {
-			slog.Info("return visitor", "unique", visitor.Value)
-		}
 		rw := &responseWriter{
 			ResponseWriter: w,
 			status:         http.StatusOK,
@@ -447,7 +438,7 @@ func logRequest(next http.Handler) http.Handler {
 				}
 			}
 
-			slog.Info("response",
+			attrs := []any{
 				"req_method", r.Method,
 				"req_ip", r.RemoteAddr,
 				"req_path", r.RequestURI,
@@ -455,8 +446,15 @@ func logRequest(next http.Handler) http.Handler {
 				"res_size", rw.BytesWritten(),
 				"res_content_type", rw.Header().Get("Content-Type"),
 				"duration", time.Since(start).Milliseconds(),
-				"visitor_cookie", hasVisitor,
-			)
+			}
+			// A visitor counts once the browser sends the cookie back, which a
+			// new browser does at once for the page's stylesheet, script, icon
+			// and manifest. Clients that never do (bots, cookie-blocking
+			// kiosks) have no unique field, so visitors.sh leaves them out.
+			if visitor, err := r.Cookie("visitor"); err == nil && visitor.Value != "" {
+				attrs = append(attrs, "unique", visitor.Value)
+			}
+			slog.Info("response", attrs...)
 		}()
 		next.ServeHTTP(rw, r)
 	})

@@ -46,7 +46,7 @@ func TestRoutesAndVisitorCookies(t *testing.T) {
 			if cookies := w.Result().Cookies(); len(cookies) != want {
 				t.Fatalf("cookies = %v, want %d", cookies, want)
 			}
-			if strings.Contains(logs.String(), `"unique"`) || !strings.Contains(logs.String(), `"visitor_cookie":false`) {
+			if strings.Contains(logs.String(), `"unique"`) {
 				t.Fatalf("cookieless request counted as a visitor: %s", logs.String())
 			}
 			// Any request that sends the cookie back counts, so a first visit
@@ -59,7 +59,7 @@ func TestRoutesAndVisitorCookies(t *testing.T) {
 			if len(w.Result().Cookies()) != 0 {
 				t.Fatal("returning visitor cookie replaced")
 			}
-			if !strings.Contains(logs.String(), `"unique":"visitor-existing"`) || !strings.Contains(logs.String(), `"visitor_cookie":true`) {
+			if !strings.Contains(logs.String(), `"msg":"response"`) || !strings.Contains(logs.String(), `"unique":"visitor-existing"`) {
 				t.Fatalf("returned cookie not counted: %s", logs.String())
 			}
 		})
