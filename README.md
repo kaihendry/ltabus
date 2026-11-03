@@ -55,20 +55,26 @@ reliability problem.
 
 # Rough visitor count
 
-The `visitor` cookie is logged as `unique` on every page request, including
-the first visit. Existing cookie IDs are preserved; static assets and icons
-neither create nor log visitor identities. In CloudWatch
+Pages set a `visitor` cookie, and every request that sends it back logs it as
+`unique` on its `response` line. A new browser sends it back straight away for
+the page's stylesheet, script, icon and manifest, so first visits count.
+Older logs have `unique` on separate `return visitor` lines, which the same
+queries match. Existing cookie IDs are preserved;
+static assets and icons never create one. In CloudWatch
 Logs Insights, select `/aws/lambda/ltabus` in `ap-southeast-1`, choose a time
 range, and run:
 
 ```text
-filter msg = "return visitor"
-| stats countDistinct(unique) as visitors
+filter ispresent(unique)
+| stats count(*) by unique
+| stats count(*) as visitors
 ```
 
-Add `by bin(1d)` for daily counts. This counts cookie IDs, so clearing cookies
-or using another browser counts again; clients that never send the cookie back
-can be counted again on each page request. It is a rough audience estimate without another service or database.
+The two `stats` give an exact count; `countDistinct` is approximate at this
+cardinality. `visitors.sh` below gives daily counts. This counts cookie IDs, so
+clearing cookies or using another browser counts again. Clients that never send
+the cookie back, such as bots and cookie-blocking kiosks, are not counted; their
+`response` lines have no `unique`. It is a rough audience estimate without another service or database.
 See [CloudWatch aggregation functions](https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/CWL_QuerySyntax-Stats.html).
 
 For CSV from the CLI, install `aws` and `jq` and configure AWS credentials with

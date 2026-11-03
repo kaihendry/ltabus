@@ -24,7 +24,7 @@ if [[ $mode == weekly ]]; then
     end=$(( (end - 4 * 86400) / 604800 * 604800 + 4 * 86400 ))
     start=$(( end - (count + 1) * 604800 ))
     # Include a baseline week; one flag per cookie per week ignores repeat hits.
-    query="filter msg = \"return visitor\" and toMillis(@timestamp) < $((end * 1000))
+    query="filter ispresent(unique) and toMillis(@timestamp) < $((end * 1000))
         | fields floor((toMillis(@timestamp) - $((start * 1000))) / 604800000) as week
         | stats "
     separator=""
@@ -38,8 +38,9 @@ if [[ $mode == weekly ]]; then
     done
 else
     start=$(( end - count * 86400 ))
-    query="filter msg = \"return visitor\" and toMillis(@timestamp) < $((end * 1000))
-        | stats countDistinct(unique) as visitors by bin(1d) as day
+    query="filter ispresent(unique) and toMillis(@timestamp) < $((end * 1000))
+        | stats count(*) by bin(1d) as day, unique
+        | stats count(*) as visitors by day
         | sort day asc"
 fi
 

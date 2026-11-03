@@ -5,7 +5,8 @@
 	<meta charset=utf-8>
 	<meta name=viewport content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="/static/app.css">
-	<link rel="manifest" href="/static/manifest.json">
+	{{/* Manifests are fetched without cookies unless asked, even from this origin. */}}
+	<link rel="manifest" href="/static/manifest.json" crossorigin="use-credentials">
 	<script src="/static/app.js?v={{ version }}" defer></script>
 	{{ if .BusStopCode }}
 	{{ if isTestStop .BusStopCode }}<meta name="robots" content="noindex">{{ end }}
