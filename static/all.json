@@ -8529,8 +8529,8 @@
     "BusStopCode": "40079",
     "RoadName": "Dunearn Rd",
     "Description": "Bef Swiss Cottage Est",
-    "Latitude": 1.3197216415795,
-    "Longitude": 103.8299145659947
+    "Latitude": 1.319664,
+    "Longitude": 103.830071
   },
   {
     "BusStopCode": "40081",
@@ -24447,8 +24447,8 @@
     "BusStopCode": "67569",
     "RoadName": "Sengkang West Way",
     "Description": "Bet Blks 430D/433A",
-    "Latitude": 1.39504999232889,
-    "Longitude": 103.87700000087196
+    "Latitude": 1.3952835,
+    "Longitude": 103.87772
   },
   {
     "BusStopCode": "67571",
@@ -35479,8 +35479,8 @@
     "BusStopCode": "96249",
     "RoadName": "Xilin Ave",
     "Description": "Builders Ctr",
-    "Latitude": 1.32796,
-    "Longitude": 103.966828
+    "Latitude": 1.32832448,
+    "Longitude": 103.96631
   },
   {
     "BusStopCode": "96251",
@@ -35514,8 +35514,8 @@
     "BusStopCode": "96271",
     "RoadName": "Xilin Ave",
     "Description": "Opp Global Logistics Ctr",
-    "Latitude": 1.32913596796858,
-    "Longitude": 103.96366258799002
+    "Latitude": 1.329199,
+    "Longitude": 103.963504
   },
   {
     "BusStopCode": "96281",
