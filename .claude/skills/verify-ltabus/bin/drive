@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+# Run journeys against the instance in RUN. Extra args go to `playwright test`:
+# journey file names to filter, --grep, --grep-invert, --headed, ...
+set -uo pipefail
+run=${1:?usage: drive <run dir> [journey...] [playwright args...]}
+shift
+run=$(cd "$run" && pwd)
+here=$(cd "$(dirname "$0")" && pwd)
+skill=$(dirname "$here")
+
+"$here/doctor" "$run" >/dev/null || { "$here/doctor" "$run"; exit 1; }
+
+out="$run/drive-$(date +%H%M%S)"
+mkdir -p "$out"
+cd "$(git -C "$here" rev-parse --show-toplevel)"
+LTABUS_URL=$(cat "$run/url") VERIFY_RUN=$run VERIFY_OUT=$out \
+	npx playwright test -c "$skill/playwright.config.js" "$@" 2>&1 | tee "$out/report.txt"
+status=${PIPESTATUS[0]}
+echo "evidence: $out"
+exit "$status"

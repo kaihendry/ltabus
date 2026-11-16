@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+# Hash of everything compiled into the binary, so doctor can spot a stale build.
+set -euo pipefail
+cd "$(git -C "$(dirname "$0")" rev-parse --show-toplevel)"
+git ls-files -co --exclude-standard -- ':(glob)*.go' go.mod go.sum ':(glob)static/**' |
+	sort | xargs shasum | shasum | cut -c1-12

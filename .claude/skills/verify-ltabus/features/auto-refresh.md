@@ -1,0 +1,34 @@
+# Auto-refresh
+
+A stop page stays current without a tap. The countdowns tick every second, "Last updated" counts up from the load, and the page reloads itself every 20 seconds while it is visible. It does not reload while the user is editing the stop number.
+
+## Sub-features
+
+- `refresh-tick`: the `<time>` countdowns and `#lastupdated` recompute from the clock every second.
+- `refresh-reload`: a visible, untouched stop page reloads after 20s, with no extra browser history entry.
+- `refresh-edit-guard`: an edited "Bus stop #" value is not wiped by the reload.
+- `refresh-return`: returning to a hidden tab whose data is at least 20s old reloads it.
+
+## How to get to it (user POV)
+
+- Open any stop page and leave it open.
+- Switch away from the tab or lock the phone, then come back after 20s or more.
+
+## Driving it with bin/drive
+
+Preconditions:
+
+- `bin/doctor $RUN` passes.
+
+Run `bin/drive $RUN auto-refresh`. It takes about 45s of real time.
+
+- **Tick.** Go to `/?id=99999`. `#lastupdated` changes text within a few seconds.
+- **Reload.** Wait for the next `load` event, up to 30s. The URL is still `/?id=99999`, the first `.buses time` has a new `datetime`, and `history.length` is unchanged.
+- **Edit guard.** Go to `/?id=99999` and fill "Bus stop #" with `123`. After 25s the value is still `123` and the main frame navigated only once.
+- **Proof.** Compare `1-before` with `2-reloaded`, and check `edited`. The traces show the reload navigation.
+
+## Gotchas
+
+- `refresh-return` is not in the journey. Headless Chromium is always visible, and faking `document.hidden` is not a user path. `e2e/refresh.spec.js` covers it with a mocked clock. To prove it for real, run with `--headed` and switch tabs by hand, or use a phone.
+- `#lastupdated` counts negative (`0s`, `-1s`, `-2s`, …) because it reuses the arrival countdown. That is current behaviour, not a test failure.
+- The page reloads only if "Bus stop #" still equals the loaded stop. Clicking into the field does not block the reload, but typing does.

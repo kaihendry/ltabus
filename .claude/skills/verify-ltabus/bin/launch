@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+# Build ltabus from this checkout and start it on a free port.
+# Prints RUN=<run dir> and URL=<base url>. Pass RUN to doctor, drive and cleanup.
+# ACCOUNTKEY is passed through from the environment when set (real stops need it).
+set -euo pipefail
+repo=$(git -C "$(dirname "$0")" rev-parse --show-toplevel)
+cd "$repo"
+here=$(cd "$(dirname "$0")" && pwd)
+
+run="$repo/.verify/$(date +%Y%m%d-%H%M%S)-$$"
+mkdir -p "$run"
+git describe --tags --always --dirty >"$run/version"
+"$here/fingerprint" >"$run/fingerprint"
+go build -o "$run/ltabus" .
+
+port=$(node -e 'const s=require("net").createServer().listen(0,"127.0.0.1",()=>{console.log(s.address().port);s.close()})')
+url="http://127.0.0.1:$port"
+echo "$url" >"$run/url"
+echo "${ACCOUNTKEY:+yes}" >"$run/accountkey"
+
+PORT=$port VERSION=$(cat "$run/version") nohup "$run/ltabus" >"$run/server.log" 2>&1 </dev/null &
+echo $! >"$run/pid"
+
+# Ready means the test stop renders its four buses, not just that the port answers.
+for _ in $(seq 50); do
+	if ! kill -0 "$(cat "$run/pid")" 2>/dev/null; then
+		echo "ltabus exited during startup:" >&2
+		cat "$run/server.log" >&2
+		exit 1
+	fi
+	if [ "$(curl -fsS "$url/?id=99999" 2>/dev/null | grep -c '<time ')" -ge 4 ]; then
+		echo "RUN=$run"
+		echo "URL=$url"
+		exit 0
+	fi
+	sleep 0.2
+done
+echo "ltabus did not become ready at $url; log: $run/server.log" >&2
+exit 1

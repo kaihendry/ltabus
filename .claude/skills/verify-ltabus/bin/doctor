@@ -1,0 +1,42 @@
+#!/usr/bin/env bash
+# Read-only: is the instance in RUN worth driving? Exits non-zero if not.
+set -uo pipefail
+run=${1:?usage: doctor <run dir>}
+here=$(cd "$(dirname "$0")" && pwd)
+fail=0
+ok() { echo "ok    $*"; }
+bad() { echo "FAIL  $*"; fail=1; }
+
+[ -f "$run/pid" ] || { echo "FAIL  no $run/pid: not launched, or already cleaned up"; exit 1; }
+pid=$(cat "$run/pid") url=$(cat "$run/url") port=${url##*:}
+
+if kill -0 "$pid" 2>/dev/null; then ok "process $pid is up"; else bad "process $pid is not running; see $run/server.log"; fi
+if lsof -nP -a -p "$pid" -iTCP:"$port" -sTCP:LISTEN >/dev/null 2>&1; then
+	ok "port $port is ours"
+else
+	bad "port $port is not owned by pid $pid"
+fi
+
+want=$(cat "$run/version")
+got=$(curl -fsSI "$url/?id=99999" 2>/dev/null | tr -d '\r' | awk -F': ' 'tolower($1)=="x-version"{print $2}')
+if [ "$got" = "$want" ]; then ok "X-Version $got"; else bad "X-Version '$got', launched '$want'"; fi
+
+if [ "$("$here/fingerprint")" = "$(cat "$run/fingerprint")" ]; then
+	ok "build matches the source"
+else
+	bad "STALE: Go or static/ changed since launch; cleanup and relaunch"
+fi
+
+page=$(curl -fsS "$url/?id=99999" 2>/dev/null)
+if grep -q 'Test Bus Stop' <<<"$page" && [ "$(grep -c '<time ' <<<"$page")" -ge 4 ]; then
+	ok "test stop 99999 renders"
+else
+	bad "test stop 99999 does not render"
+fi
+
+if [ "$(cat "$run/accountkey")" = yes ]; then
+	ok "ACCOUNTKEY set: real stops reach datamall"
+else
+	echo "note  no ACCOUNTKEY: real stops answer 424, so [needs ACCOUNTKEY] journeys fail"
+fi
+exit $fail
