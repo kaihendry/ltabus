@@ -1,6 +1,6 @@
 # ltabus verification map
 
-This map is the maintained source for verifying the user-facing behaviour of ltabus. Read this index first, then use the matching feature file as the recipe. Each feature has a journey in `../journeys/<feature>.spec.js`.
+This map is the maintained source for verifying the user-facing behaviour of ltabus. Read this index first, then use the matching feature file as the recipe. Each feature has a journey in `../journeys/<feature>.spec.js`. Sub-features that `e2e/` or the Go tests already cover say so instead of having a second journey. `bin/drive` runs `e2e/` too. The Go tests run with `go test ./...`.
 
 ## Baseline preconditions
 

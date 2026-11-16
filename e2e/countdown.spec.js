@@ -6,7 +6,7 @@ const { test, expect } = require("@playwright/test");
 // well clear of the boundary where it would tick over mid-assertion.
 const STOP = "/?id=99999";
 
-test("the initial countdown stays in place when JavaScript starts, then ticks", async ({ page }) => {
+test("the initial countdown stays in place when JavaScript starts, then ticks", async ({ page }, testInfo) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.clock.install({ time: new Date() });
   let releaseScript;
@@ -42,9 +42,9 @@ test("the initial countdown stays in place when JavaScript starts, then ticks", 
   // eyeball these after an HTML change: the clock is frozen, so they only
   // differ when the rendering does
   await page.setViewportSize({ width: 1280, height: 720 });
-  await page.screenshot({ path: "test-results/desktop.png", fullPage: true });
+  await page.screenshot({ path: testInfo.outputPath("desktop.png"), fullPage: true });
   await page.setViewportSize({ width: 390, height: 844 });
-  await page.screenshot({ path: "test-results/mobile.png", fullPage: true });
+  await page.screenshot({ path: testInfo.outputPath("mobile.png"), fullPage: true });
 });
 
 test("countdown corrects itself after the tab is frozen", async ({ page }) => {

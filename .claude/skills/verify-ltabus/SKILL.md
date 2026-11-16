@@ -32,12 +32,18 @@ Doctor is read-only. It checks that the process is up, that the port belongs to 
 ## Drive
 
 ```sh
-.claude/skills/verify-ltabus/bin/drive $RUN                              # every journey (~55s)
-.claude/skills/verify-ltabus/bin/drive $RUN stop-arrivals                # one feature
+.claude/skills/verify-ltabus/bin/drive $RUN                              # journeys and e2e/ (~60s)
+.claude/skills/verify-ltabus/bin/drive $RUN --project journeys           # user-path proof only
+.claude/skills/verify-ltabus/bin/drive $RUN stop-arrivals nojs           # one feature (file-name filters)
 .claude/skills/verify-ltabus/bin/drive $RUN --grep-invert ACCOUNTKEY     # skip live-datamall journeys
 ```
 
-Journeys are Playwright specs in `journeys/`, one per feature in `features/`. Any arguments after `$RUN` go to `npx playwright test`, so `--headed`, `--grep` and file filters all work. The config is `playwright.config.js` in this skill. It never starts a server and never reuses one. Do not use the repo's `make browsertest` for proof: its config reuses whatever is already listening on :8081, which may be the user's own stale `go run`.
+The config is `playwright.config.js` in this skill. It never starts a server and never reuses one. It has two projects:
+
+- **`journeys`** are the specs in `journeys/`, one per feature in `features/`. They drive real user paths and are the proof.
+- **`e2e`** is the repo's own regression suite in `e2e/`, the same tests CI runs before deploy. Some of these tests fake the clock, the tab's visibility or localStorage, so report them as regression results, not as user-path proof.
+
+Each journey covers only what `e2e/` and the Go tests do not. The feature files say which test covers each sub-feature. Any arguments after `$RUN` go to `npx playwright test`, so `--headed`, `--grep`, `--project` and file filters all work. Do not use the repo's `make browsertest` for proof: its config reuses whatever is already listening on :8081, which may be the user's own stale `go run`.
 
 To prove a new behaviour, add a test to the matching journey, or a new journey plus a feature file. Drive through user handles only: `getByLabel("Bus stop #")`, `getByRole("button", { name: "Bus due times" })`, `getByRole("link", { name: "Find closest bus stop" })`, `#namedBusStop`, `.buses li`, `.buses time`, `#lastupdated`, `#stations li`. Call `proof(page, testInfo, name)` from `journeys/proof.js` before and after each action that matters. Use `serverLog()` to check side effects.
 

@@ -20,13 +20,12 @@ Preconditions:
 - `bin/doctor $RUN` passes.
 - The browser context is fresh, with no cookies.
 
-Run `bin/drive $RUN visitor-count`.
+Run `bin/drive $RUN visitor-count` and `go test -run TestRoutesAndVisitorCookies`.
 
 - **Set.** Go to `/?id=99999`. The document response has `set-cookie` matching `^visitor=visitor-[A-Z0-9]+;`.
-- **Count.** `server.log` lines after the visit include `unique=<that id>` on the asset requests. The first document line has no `unique=`.
-- **Keep.** Reload. There is no `set-cookie`, and the context cookie is unchanged.
-- **Assets.** A cookie-less request for `/static/app.css` has no `set-cookie`.
-- **Proof.** Check `server-log.txt` in the test's artifacts, which holds exactly the lines this visit caused.
+- **Count.** `server.log` lines after the visit include `unique=<that id>` on the asset requests.
+- **Keep and assets.** Covered by the Go test. A request that sends a cookie gets no new one and is logged with `unique`. `/static/*` and `/icon` never set a cookie. A cookie-less request is never counted.
+- **Proof.** Check `server-log.txt` in the test's artifacts, which holds exactly the lines this visit caused, plus the Go test's `ok`.
 
 ## Gotchas
 

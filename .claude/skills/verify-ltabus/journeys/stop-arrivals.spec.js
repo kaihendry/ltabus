@@ -43,19 +43,6 @@ test("the stop has its own icon", async ({ page }, testInfo) => {
   expect((await page.request.get("/icon?stop=abc")).status()).toBe(400);
 });
 
-test.describe("without JavaScript", () => {
-  test.use({ javaScriptEnabled: false });
-
-  test("the server-rendered countdown is already right", async ({ page }, testInfo) => {
-    await page.goto("/");
-    await page.getByLabel("Bus stop #").fill("99999");
-    await page.getByRole("button", { name: "Bus due times" }).click();
-    await expect(page).toHaveURL(/\?id=99999$/);
-    await expect(page.locator(".buses time")).toHaveText(TIMES);
-    await proof(page, testInfo, "nojs");
-  });
-});
-
 test("[needs ACCOUNTKEY] a real stop shows live datamall arrivals", async ({ page }, testInfo) => {
   const res = await page.goto("/?id=01012");
   await proof(page, testInfo, "real-stop");

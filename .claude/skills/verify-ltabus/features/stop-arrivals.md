@@ -25,16 +25,16 @@ Preconditions:
 - `bin/doctor $RUN` passes.
 - `arrivals-live` additionally needs `ACCOUNTKEY` set at launch.
 
-Run `bin/drive $RUN stop-arrivals`.
+Run `bin/drive $RUN stop-arrivals nojs countdown`. That runs the journey plus the e2e specs it relies on.
 
 - **Look up.** Go to `/`. Fill `getByLabel("Bus stop #")` with `99999` and click `getByRole("button", { name: "Bus due times" })`. The URL becomes `/?id=99999`, the title is `Singapore bus arrival times for stop 99999`, and `#namedBusStop` reads `Test Bus Stop`.
 - **Order and countdowns.** `.buses li strong` reads `42`, `666` and `.buses time` reads `1m`, `5m`, `17m`, `32m`.
 - **Load colours.** `.buses time` has the classes `load-seats`, `load-standing`, `load-full`, `load-seats`. The service link `42` points to `https://busrouter.sg/#/services/42`.
 - **Validate.** Fill `123` and submit. The URL stays at `/` and no `.buses li` appears.
 - **Icon.** `link[rel=icon]` is `/icon?stop=99999`. That URL returns a 200 `image/png` of 200×200, which is saved as `icon-99999.png`. `/icon?stop=abc` returns 400.
-- **No JS.** With JavaScript disabled, the same lookup shows the same four countdowns.
+- **No JS.** Covered by `e2e/nojs.spec.js` in the `e2e` project. With JavaScript disabled, the same lookup shows the same four countdowns, and pressing "Bus due times" again refreshes them.
 - **Live.** `[needs ACCOUNTKEY]` Go to `/?id=01012`. Status 200 and `#namedBusStop` reads `Hotel Grand Pacific`.
-- **Proof.** Check `1-entered` and `2-arrivals` (`.png` and `.aria.yml`), `rejected`, `nojs`, `icon-99999.png`, and each test's `trace.zip`.
+- **Proof.** Check `1-entered` and `2-arrivals` (`.png` and `.aria.yml`), `rejected`, `icon-99999.png`, and each test's `trace.zip`. For the layout, check the `desktop.png` and `mobile.png` screenshots that `e2e/countdown.spec.js` saves.
 
 ## Gotchas
 
