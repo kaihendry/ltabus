@@ -30,5 +30,5 @@ Run `bin/drive $RUN auto-refresh refresh`. That runs the journey plus `e2e/refre
 ## Gotchas
 
 - `refresh-return` has no user-path journey. Headless Chromium is always visible. `e2e/refresh.spec.js` covers it as a regression test by faking `document.hidden` and the clock. To prove it for real, run with `--headed` and switch tabs by hand, or use a phone.
-- `#lastupdated` counts negative (`0s`, `-1s`, `-2s`, …) because it reuses the arrival countdown. That is current behaviour, not a test failure.
+- `#lastupdated` counts negative (`0s`, `-1s`, `-2s`, …) on purpose: it shows how long ago the times were fetched, for reference. Do not report it as a bug.
 - The page reloads only if "Bus stop #" still equals the loaded stop. Clicking into the field does not block the reload, but typing does.

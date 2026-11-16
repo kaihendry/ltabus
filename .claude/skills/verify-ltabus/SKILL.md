@@ -17,7 +17,7 @@ All helpers live in `.claude/skills/verify-ltabus/bin/` (written `bin/` below). 
 .claude/skills/verify-ltabus/bin/launch        # prints RUN=<dir> and URL=<url>
 ```
 
-Launch builds this checkout with `go build`, starts the binary on a free port bound to 127.0.0.1, and returns once `/?id=99999` renders its four `<time>` elements. That takes about 3s. `ACCOUNTKEY` is passed through when your environment has it. Every later command takes the printed `RUN` dir. Pass it explicitly, because shell state does not persist between tool calls. Each launch is isolated: its own port and its own `RUN` dir under `.verify/` (gitignored). Concurrent runs do not collide, and there is no database or other shared state.
+Launch builds this checkout with `go build`, starts the binary on a free port bound to 127.0.0.1, and returns once `/?id=99999` renders its four `<time>` elements. That takes about 3s. `ACCOUNTKEY` is passed through when your environment has it. The repo's gitignored `.envrc` provides the key. If your shell doesn't have it (doctor says so), launch with `direnv exec . .claude/skills/verify-ltabus/bin/launch`. Never print or read the key's value. Every later command takes the printed `RUN` dir. Pass it explicitly, because shell state does not persist between tool calls. Each launch is isolated: its own port and its own `RUN` dir under `.verify/` (gitignored). Concurrent runs do not collide, and there is no database or other shared state.
 
 Restart after any change to `*.go` or `static/`, because both are embedded in the binary at build time. To restart, run `bin/cleanup $RUN` and then `bin/launch`. Doctor reports a forgotten restart as `STALE`.
 
