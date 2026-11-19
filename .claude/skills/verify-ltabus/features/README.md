@@ -6,7 +6,7 @@ This map is the maintained source for verifying the user-facing behaviour of lta
 
 - Launch a fresh instance with `bin/launch` and keep its `RUN`.
 - `bin/doctor $RUN` reports no `FAIL`.
-- Chromium for Playwright 1.62.1 is installed. If it is not, run `npx playwright install chromium`.
+- Install the locked Playwright dependency with `npm ci` and its matching browser with `npx playwright install chromium`.
 - `ACCOUNTKEY` is only needed for journeys tagged `[needs ACCOUNTKEY]`.
 - Never drive an instance this run did not launch, and never drive bus.dabase.com.
 

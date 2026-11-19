@@ -1,6 +1,6 @@
 ---
 name: verify-ltabus
-description: Launch, drive and prove the ltabus Singapore bus-arrival web app (Go server rendering HTML, plus static/app.js) in a real Chromium browser. Use to confirm that a change to stop arrivals, the countdown or auto-refresh, the closest-stop redirect, the visit history, or the visitor cookie logging works end to end. Each run leaves screenshots, ARIA snapshots, Playwright traces and the server log as evidence.
+description: Verify ltabus changes in Chromium. Use for end-to-end checks of bus arrivals, countdowns, auto-refresh, geolocation, visit history or visitor cookies.
 ---
 
 # Verify ltabus
@@ -9,7 +9,18 @@ The user touches one surface: the web page at `/` and `/?id=<5-digit stop>`. Oth
 
 Stop `99999` is a fictional test stop. Its buses are made up relative to the server clock (42 in 1m30s; 666 in 5m30s, 17m30s and 32m30s), and it needs no network or key. Real stops call LTA datamall and need `ACCOUNTKEY` in the environment. Without it they answer HTTP 424.
 
-All helpers live in `.claude/skills/verify-ltabus/bin/` (written `bin/` below). Run them from the repo root.
+Run the helpers from the repository root. Claude and Codex share this skill through the repository's `.agents/skills/verify-ltabus` symlink.
+
+## Run a check
+
+On a fresh checkout, run `npm ci` and `npx playwright install chromium` once. Choose a command based on what you want to verify.
+
+```sh
+.claude/skills/verify-ltabus/bin/verify visitor-count    # visitor cookie and server log
+direnv exec . .claude/skills/verify-ltabus/bin/verify    # full suite including live DataMall
+```
+
+`bin/verify` builds the app, checks the server, runs the selected Playwright tests and stops the server in one shell invocation. Use it in Codex, where a background server can exit between commands. It returns Playwright's status and prints the evidence directory even when a test fails. Pass the same filters as for `bin/drive` below.
 
 ## Launch
 
@@ -17,7 +28,9 @@ All helpers live in `.claude/skills/verify-ltabus/bin/` (written `bin/` below). 
 .claude/skills/verify-ltabus/bin/launch        # prints RUN=<dir> and URL=<url>
 ```
 
-Launch builds this checkout with `go build`, starts the binary on a free port bound to 127.0.0.1, and returns once `/?id=99999` renders its four `<time>` elements. That takes about 3s. `ACCOUNTKEY` is passed through when your environment has it. The repo's `.envrc` fetches the key from SSM, so it needs the `mine` AWS profile. If your shell doesn't have it (doctor says so), launch with `direnv exec . .claude/skills/verify-ltabus/bin/launch`. Never print or read the key's value. Every later command takes the printed `RUN` dir. Pass it explicitly, because shell state does not persist between tool calls. Each launch is isolated: its own port and its own `RUN` dir under `.verify/` (gitignored). Concurrent runs do not collide, and there is no database or other shared state.
+Use the separate launch, drive and cleanup commands in a persistent terminal when you want to inspect the running app. Launch builds this checkout, binds to 127.0.0.1 on a free port, and prints `RUN` and `URL` once the test stop renders. Pass the printed run directory to later commands. Each launch has its own port and directory under the gitignored `.verify/`.
+
+Launch inherits `ACCOUNTKEY`. For live journeys the repo's `.envrc` obtains it from SSM using the `mine` AWS profile. Use `direnv exec .` as above when the key is absent from the current shell. Keep the key out of logs and reports.
 
 Restart after any change to `*.go` or `static/`, because both are embedded in the binary at build time. To restart, run `bin/cleanup $RUN` and then `bin/launch`. Doctor reports a forgotten restart as `STALE`.
 

@@ -18,8 +18,9 @@ url="http://127.0.0.1:$port"
 echo "$url" >"$run/url"
 echo "${ACCOUNTKEY:+yes}" >"$run/accountkey"
 
-PORT=$port VERSION=$(cat "$run/version") nohup "$run/ltabus" >"$run/server.log" 2>&1 </dev/null &
+LTABUS_LISTEN_HOST=127.0.0.1 PORT=$port VERSION=$(cat "$run/version") nohup "$run/ltabus" >"$run/server.log" 2>&1 </dev/null &
 echo $! >"$run/pid"
+trap '"$here/cleanup" "$run" >&2' EXIT
 
 # Ready means the test stop renders its four buses, not just that the port answers.
 for _ in $(seq 50); do
@@ -29,6 +30,7 @@ for _ in $(seq 50); do
 		exit 1
 	fi
 	if [ "$(curl -fsS "$url/?id=99999" 2>/dev/null | grep -c '<time ')" -ge 4 ]; then
+		trap - EXIT
 		echo "RUN=$run"
 		echo "URL=$url"
 		exit 0

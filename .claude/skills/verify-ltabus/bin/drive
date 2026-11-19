@@ -8,7 +8,7 @@ run=$(cd "$run" && pwd)
 here=$(cd "$(dirname "$0")" && pwd)
 skill=$(dirname "$here")
 
-"$here/doctor" "$run" >/dev/null || { "$here/doctor" "$run"; exit 1; }
+"$here/doctor" "$run" || exit 1
 
 out="$run/drive-$(date +%H%M%S)"
 mkdir -p "$out"

@@ -11,6 +11,7 @@ import (
 	"io"
 	"log/slog"
 	"math"
+	"net"
 	"net/http"
 	"os"
 	"sort"
@@ -156,7 +157,7 @@ func main() {
 		return
 	} else {
 		slog.Info("starting local server", "version", os.Getenv("VERSION"), "port", os.Getenv("PORT"))
-		err = http.ListenAndServe(fmt.Sprintf(":%s", os.Getenv("PORT")), handler)
+		err = http.ListenAndServe(net.JoinHostPort(os.Getenv("LTABUS_LISTEN_HOST"), os.Getenv("PORT")), handler)
 	}
 
 	slog.Error("error listening", "error", err)

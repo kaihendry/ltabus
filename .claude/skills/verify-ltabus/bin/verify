@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+# Keep launch, Playwright and cleanup in one shell invocation.
+set -euo pipefail
+here=$(cd "$(dirname "$0")" && pwd -P)
+launched=$("$here/launch")
+run=$(sed -n 's/^RUN=//p' <<<"$launched")
+trap '"$here/cleanup" "$run"' EXIT
+printf '%s\n' "$launched"
+"$here/drive" "$run" "$@"
